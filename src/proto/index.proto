@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package index;
+
+option go_package = "./proto" ;
+
+// import "google/protobuf/empty.proto";
+
+// service LogIn {
+service User {
+    // rpc GetFeature(Point) returns (Feature) {}
+    rpc Login(UserInfo) returns (SuccessLogIn);
+}
+
+message UserInfo {
+    string name = 1;
+    string password = 2;
+}
+
+message SuccessLogIn {
+    bool isSuccess = 1;
+}
+
