@@ -1,4 +1,4 @@
-module github.com/drunkards_second
+module github.com/Tonipenyallop/drunkards_second
 
 go 1.18
 

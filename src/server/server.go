@@ -6,7 +6,7 @@ import (
 	// "context"
 	"google.golang.org/grpc"
 
-	pb "github.com/drunkards_second/src/proto"
+	pb "github.com/Tonipenyallop/drunkards_second/src/proto"
 )
 
 type LoginServer struct {
