@@ -8,7 +8,7 @@ module.exports = {
     client: "pg",
     connection: {
       database: "drunkards",
-      user: "taesukim",
+      user: process.env.DB_USER,
       password: "",
     },
     pool: {
