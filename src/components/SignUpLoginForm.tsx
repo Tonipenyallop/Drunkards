@@ -1,13 +1,10 @@
 import axios from "axios";
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// import { UserInfo, SuccessLogIn, User } from "./index";
-// const toni = require("./temp");
-// import {} from "../../drunkards-server/proto/index.pb";
-// import Web3 from "web3/dist/web3.min.js";
-
-// import * as newService from "./temp"; // it is gonna throw the error
-// console.log(newService);
+// const dragon = require("../proto/index_grpc_pb");
+import { UserClient } from "../proto/index_grpc_pb";
+import { UserInfo } from "../proto/index/UserInfo";
 
 export default function SignUpLogInForm() {
   const navigate = useNavigate();
@@ -31,6 +28,11 @@ export default function SignUpLogInForm() {
   // console.log(UserClient);
 
   async function toni() {
+    // from here
+    const client = new UserClient("http://localhost:8882", null);
+    console.log(client);
+    const user: UserInfo = { name: "SUPER HAPPY TAESU", password: "2919w02s" };
+    // client.login(user, () => {});
     // const tt = await axios.get("http://localhost:9999/hello");
     // console.log(tt.data);
   }
