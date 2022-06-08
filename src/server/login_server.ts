@@ -38,7 +38,8 @@ function getServer() {
   const server = new grpc.Server();
   server.addService(index.User.service, {
     Login: (req: any, res: any) => {
-      console.log(req, res);
+      console.log(req.request);
+      res(null, { isSuccess: true });
     },
   });
   return server;

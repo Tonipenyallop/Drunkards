@@ -23,7 +23,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "sh build.sh",
-    "client": "ts-node client/index.ts",
+    "client": "ts-node src/server/client_server.ts",
     "server": "ts-node src/server/login_server.ts",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
