@@ -2,39 +2,24 @@ import axios from "axios";
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// const dragon = require("../proto/index_grpc_pb");
+
 import { UserClient } from "../proto/index_grpc_pb";
 import { UserInfo } from "../proto/index/UserInfo";
 
 export default function SignUpLogInForm() {
   const navigate = useNavigate();
-  // console.log(newService.Login);
-  function fakeLove(): void {
-    return;
-  }
-
-  // console.log(newService);
-  // const client = new newService("localhost://7777", null, null);
-  // console.log(client);
 
   const [password, setPassword] = useState<string>("");
   const [phoneOrEmail, setPhoneOrEmail] = useState<string>("");
   const [loginPassword, setLoginPassword] = useState<string>("");
   const [loginPhoneOrEmail, setLoginPhoneOrEmail] = useState<string>("");
 
-  // const a = new client("http://localhost:7777", null, null);
-
-  // console.log("a.Login");
-  // console.log(UserClient);
-
   async function toni() {
     // from here
-    const client = new UserClient("http://localhost:8882", null);
-    console.log(client);
-    const user: UserInfo = { name: "SUPER HAPPY TAESU", password: "2919w02s" };
+    // const client = new UserClient("http://localhost:8080", null);
+    // console.log(client);
+    // const user: UserInfo = { name: "SUPER HAPPY TAESU", password: "2919w02s" };
     // client.login(user, () => {});
-    // const tt = await axios.get("http://localhost:9999/hello");
-    // console.log(tt.data);
   }
 
   useEffect(() => {
