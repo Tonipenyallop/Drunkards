@@ -2,10 +2,11 @@ import axios from "axios";
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { UserClient } from "../proto/index_grpc_pb";
-import { UserInfo } from "../proto/index/UserInfo";
+// const UserClient = require("../proto/index_grpc_pb");
 
+// import { UserInfo } from "../proto/index/UserInfo";
+// import { UserInfo } from "../proto/index_pb";
 export default function SignUpLogInForm() {
   const navigate = useNavigate();
 
@@ -16,9 +17,11 @@ export default function SignUpLogInForm() {
 
   async function toni() {
     // from here
+    // console.log(UserClient);
     // const client = new UserClient("http://localhost:8080", null);
     // console.log(client);
     // const user: UserInfo = { name: "SUPER HAPPY TAESU", password: "2919w02s" };
+    // console.log(user);
     // client.login(user, () => {});
   }
 
