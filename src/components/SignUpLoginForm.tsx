@@ -8,7 +8,7 @@ import { UserInfo } from "../proto/index/UserInfo";
 import { client, PORT } from "../server/client_server";
 import { main } from "../server/login_server";
 // console.log(main);
-// console.log(PORT);
+console.log(PORT);
 export default function SignUpLogInForm() {
   const navigate = useNavigate();
 
