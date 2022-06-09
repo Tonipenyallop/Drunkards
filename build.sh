@@ -10,7 +10,9 @@
 # from thomas(sort of working)
 protoc -I=. src/proto/*.proto \
   --ts_out=import_style=commonjs:./ \
-  # --grpc_web_out=./
+  # --grpc-web_out=import_style=commonjs,mode=grpcwebtext:./
+
+  # --grpc_web_out=./ \
 #   import_style=commonjs:./src \
 #   --grpc-web_out=import_style=typescript,mode=grpcwebtext:./src
   # --grpc-web_out=import_style=commonjs,mode=grpcwebtext:$OUT_DIR

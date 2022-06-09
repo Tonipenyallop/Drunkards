@@ -2,11 +2,13 @@ import axios from "axios";
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserClient } from "../proto/index_grpc_pb";
-// const UserClient = require("../proto/index_grpc_pb");
+import { UserClient } from "../proto/index/User";
+import { UserInfo } from "../proto/index/UserInfo";
 
-// import { UserInfo } from "../proto/index/UserInfo";
-// import { UserInfo } from "../proto/index_pb";
+import { client, PORT } from "../server/client_server";
+import { main } from "../server/login_server";
+// console.log(main);
+// console.log(PORT);
 export default function SignUpLogInForm() {
   const navigate = useNavigate();
 
@@ -15,18 +17,23 @@ export default function SignUpLogInForm() {
   const [loginPassword, setLoginPassword] = useState<string>("");
   const [loginPhoneOrEmail, setLoginPhoneOrEmail] = useState<string>("");
 
-  async function toni() {
+  async function tempTest() {
     // from here
-    // console.log(UserClient);
+
+    // const myUserInfo: UserInfo = {
+    //   name: "Test",
+    //   password: "Yessir",
+    // };
+    // console.log(myUserInfo);
     // const client = new UserClient("http://localhost:8080", null);
-    // console.log(client);
-    // const user: UserInfo = { name: "SUPER HAPPY TAESU", password: "2919w02s" };
+
+    const user: UserInfo = { name: "SUPER HAPPY TAESU", password: "2919w02s" };
     // console.log(user);
     // client.login(user, () => {});
   }
 
   useEffect(() => {
-    toni();
+    tempTest();
   }, []);
 
   async function signUp() {
@@ -50,7 +57,20 @@ export default function SignUpLogInForm() {
   async function login() {
     if (!loginPhoneOrEmail || !loginPassword) return;
     console.log("login");
+    const user: UserInfo = {
+      name: "i wont tell you mate!",
+      password: "I am so proud of you mate!",
+    };
 
+    // console.log(client);
+
+    // client.Login(user, (one: any, two: any) => {
+    // console.log("login was called here");
+    // console.log(one);
+    // console.log(two);
+    // });
+
+    // backendClient.login("taeuosusuc", "secret");
     // console.log(SuccessLogIn);
     // const newUser: UserInfo = {
     //   name: loginPhoneOrEmail,

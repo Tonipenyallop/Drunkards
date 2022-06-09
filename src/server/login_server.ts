@@ -1,5 +1,4 @@
 import path from "path";
-const toni = require("path");
 import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
 import { ProtoGrpcType } from "../proto/index";
@@ -18,7 +17,7 @@ const index = grpcObj.index;
 
 const PORT = 8882;
 
-function main() {
+export function main() {
   const server = getServer();
   server.bindAsync(
     `0.0.0.0:${PORT}`,
