@@ -35,8 +35,11 @@ export function main() {
 
 function getServer() {
   const server = new grpc.Server();
+  // console.log("server running!");
+
   server.addService(index.User.service, {
     Login: (req: any, res: any) => {
+      console.log("server running!");
       console.log(req.request);
       res(null, { isSuccess: true });
     },

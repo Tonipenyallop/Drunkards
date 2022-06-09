@@ -1,12 +1,11 @@
 version: "3"
 services:
   envoy:
-    image: envoyproxy/envoy-dev:e4955aed5694f9935d674419dbb364e744f697b4
+    image: envoyproxy/envoy-dev:0bb12b182d18460e787b3e6b47dfeb36e717b1a4
     volumes:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
     ports:
-      - "9901:9901"
-      - "8080:8080"
+      - "10000:10000"
   redis:
     image: bitnami/redis
     volumes:

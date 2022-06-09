@@ -13,14 +13,12 @@ const grpcObj = grpc.loadPackageDefinition(
   packageDefinition
 ) as unknown as ProtoGrpcType;
 
-export const PORT = 8080;
+const PORT = 8080;
 
-export const client = new grpcObj.index.User(
+const client = new grpcObj.index.User(
   `0.0.0.0:${PORT}`,
   grpc.credentials.createInsecure()
 );
-console.log("client");
-console.log(client);
 
 const deadLine = new Date();
 
@@ -33,17 +31,6 @@ client.waitForReady(deadLine, (err) => {
   }
   onClientReady();
 });
-
-// const callLogin = () => {
-//   client.Login({ name: "super Taesu", password: "secret" }, (err, result) => {
-//     if (err) {
-//       console.error(err);
-//       return;
-//     }
-//     console.log(result);
-//   });
-// };
-// export { callLogin };
 
 function onClientReady() {
   client.Login({ name: "super Taesu", password: "secret" }, (err, result) => {
