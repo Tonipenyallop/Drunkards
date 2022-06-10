@@ -16,21 +16,22 @@ export default function SignUpLogInForm() {
   const [loginPassword, setLoginPassword] = useState<string>("");
   const [loginPhoneOrEmail, setLoginPhoneOrEmail] = useState<string>("");
 
-  const client = new UserClient("http://localhost:8882", null);
+  const client = new UserClient("http://localhost:8080", null, null);
+  // const client = new UserClient("http://localhost:8080", null);
 
   async function tempTest() {
-    // from here
-    // const myUserInfo: UserInfo = {
-    //   name: "Test",
-    //   password: "Yessir",
-    // };
-    // console.log(myUserInfo);
-
     const user = new UserInfo();
     user.setName("toni");
-    user.setPassword("super secret");
+    user.setPassword("secret");
     console.log(user);
-    const a = await client.login(user, null);
+    console.log(client.login);
+    client.login(user, null, (err, response) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log(`Yeah I got response ${response}`);
+    });
     // console.log(a);
     // console.log(user);
   }

@@ -13,33 +13,37 @@ const grpcObj = grpc.loadPackageDefinition(
   packageDefinition
 ) as unknown as ProtoGrpcType;
 
-const PORT = 8080;
+const PORT = 8882;
+// tryna make it same as envoy port
 
 const client = new grpcObj.index.User(
   `0.0.0.0:${PORT}`,
   grpc.credentials.createInsecure()
 );
 
-const deadLine = new Date();
+// const deadLine = new Date();
 
-deadLine.setSeconds(deadLine.getSeconds() + 5);
+// deadLine.setSeconds(deadLine.getSeconds());
 
-client.waitForReady(deadLine, (err) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-  onClientReady();
-});
+// client.waitForReady(deadLine, (err) => {
+//   if (err) {
+//     console.error(err);
+//     return;
+//   }
+onClientReady();
+// });
 
 function onClientReady() {
-  client.Login({ name: "super Taesu", password: "secret" }, (err, result) => {
-    if (err) {
-      console.error(err);
-      return;
+  client.Login(
+    { name: "MUI GRANDE", password: "fromClient_server" },
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log(result);
     }
-    console.log(result);
-  });
+  );
 }
 
 const errorHandler = (err: any, result: any) => {

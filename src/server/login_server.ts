@@ -16,6 +16,8 @@ const grpcObj = grpc.loadPackageDefinition(
 const index = grpcObj.index;
 
 const PORT = 8882;
+// when PORT is same it worked
+// const PORT = 8080;
 
 export function main() {
   const server = getServer();
@@ -24,6 +26,7 @@ export function main() {
     grpc.ServerCredentials.createInsecure(),
     (err, port) => {
       if (err) {
+        console.log("error detected");
         console.error(err);
         return;
       }
@@ -35,11 +38,12 @@ export function main() {
 
 function getServer() {
   const server = new grpc.Server();
-  // console.log("server running!");
+
+  console.log("getServer function was called!");
 
   server.addService(index.User.service, {
     Login: (req: any, res: any) => {
-      console.log("server running!");
+      console.log("LOGIN FUNCTION WAS CALLED!!!");
       console.log(req.request);
       res(null, { isSuccess: true });
     },
