@@ -53,3 +53,7 @@ const errorHandler = (err: any, result: any) => {
   }
   console.log(result);
 };
+
+export default {
+  client
+};

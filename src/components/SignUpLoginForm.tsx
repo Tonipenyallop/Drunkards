@@ -1,13 +1,15 @@
-import axios from "axios";
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 import { UserInfo } from "../proto/index_pb";
 
 import { main } from "../server/login_server";
 // console.log(main);
-import { UserClient } from "../proto/IndexServiceClientPb";
+// import { UserClient } from "../proto/IndexServiceClientPb";
+import path from "path";
+import * as grpc from "@grpc/grpc-js";
+import * as protoLoader from "@grpc/proto-loader";
+import { ProtoGrpcType } from "../proto/index";
 
 export default function SignUpLogInForm() {
   const navigate = useNavigate();
@@ -16,23 +18,29 @@ export default function SignUpLogInForm() {
   const [loginPassword, setLoginPassword] = useState<string>("");
   const [loginPhoneOrEmail, setLoginPhoneOrEmail] = useState<string>("");
 
-  const client = new UserClient("http://localhost:8882");
+  // const client = new UserClient("http://localhost:8882");
 
   async function tempTest() {
-    const user = new UserInfo();
-    user.setName("toni");
-    user.setPassword("secret");
+    const user = {
+      name: "toni",
+      password: "passwrod",
+    };
+    const req = await axios.get("http://localhost:8080/");
+    console.log(req.data);
+    // new UserInfo();
+    // user.setName("toni");
+    // user.setPassword("secret");
 
     // console.log(user);
     // console.log(client.login);
-    console.log(client);
-    client.login(user, null, (err, response) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      console.log(`Yeah I got response ${response}`);
-    });
+    // console.log(client);
+    // client.login(user, (err, response) => {
+    //   if (err) {
+    //     console.error(err);
+    //     return;
+    //   }
+    //   console.log(`Yeah I got response ${response}`);
+    // });
     // console.log(a);
     // console.log(user);
   }
