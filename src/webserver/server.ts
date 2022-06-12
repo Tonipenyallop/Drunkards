@@ -92,6 +92,11 @@ app.post("/login", async( req: Request, res: Response ) => {
 app.post("/signUp", async (req: Request, res: Response)=> {
     res.send("SIGNUP")
 })
+
+app.post("/reservation", async (req:Request, res: Response) => {
+    console.log(req.body)
+    res.send("OKIDOKI")
+})
 // start the Express server
 app.listen( expressPORT, () => {
     console.log(`server started at http://localhost:${ expressPORT }` );

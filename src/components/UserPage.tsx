@@ -1,16 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {CreateReservationRequest} from "../proto/index/CreateReservationRequest"
+import axios from "axios"
 export default function UserPage() {
   const navigate = useNavigate();
+  const [startLocation, setStartLocation] = useState<string>("");
+  const [destination, setDestination] = useState<string>("");
+  const [pickupTime, setPickupTime] = useState<string>();
   const temp = () => {
-
+      const token  = window.localStorage.getItem("sessionToken")
+      const request : CreateReservationRequest = {sessionToken : token?.toString() }
+      console.log(startLocation)
+      console.log(destination)
+      console.log(pickupTime)
+      axios.post("http://localhost:8080/reservation", {startLocation, destination, pickupTime} )
   }
   return (
     <div>
       WELCOME YOO <br />
-      <input type="text" placeholder="From" />
-      <input type="text" placeholder="To" />
-      <input type="text" placeholder="When" />
+      <input type="text" placeholder="From" onChange={(e)=>{
+        setStartLocation(e.target.value)
+      }} />
+      <input type="text" placeholder="To" onChange={(e)=>{
+        setDestination(e.target.value)
+      }} />
+      <input type="time" placeholder="When" onChange={(e)=>{
+
+
+        setPickupTime(e.target.value)
+
+      }} />
       <button onClick={temp}>Search</button>
       {/* <button className="" onClick={() => navigate("/detail")}>
         Fake companyA
