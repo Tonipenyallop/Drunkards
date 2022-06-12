@@ -45,8 +45,7 @@ const client = new grpcObj.index.User(
 
 // define a route handler for the default home page
 app.post("/login", ( req: Request, res: Response ) => {
-    console.log('req.body')
-    console.log(req.body)
+
     client.Login(
         { name: req.body.name, password: req.body.password },
         (err, result) => {

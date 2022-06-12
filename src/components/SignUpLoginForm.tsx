@@ -16,7 +16,7 @@ export default function SignUpLogInForm() {
 
   // const client = new UserClient("http://localhost:8882");
 
-  async function tempTest() {
+  async function requestLogin() {
     const user = {
       name: "toni",
       password: "passwrod",
@@ -24,16 +24,16 @@ export default function SignUpLogInForm() {
 
     console.log("is Here working?");
     const toni = await axios.post("http://localhost:8080/login", {
-      name: "PRACTICE",
-      password: "WOOOOOORKINGGGG!",
+      name: loginPhoneOrEmail,
+      password: loginPassword,
     });
     console.log(toni.data);
     console.log("AFTER THE CODE WORKING?");
   }
 
-  useEffect(() => {
-    tempTest();
-  }, []);
+  // useEffect(() => {
+  //   requestLogin();
+  // }, []);
 
   async function signUp() {
     console.log("clicked");
@@ -65,7 +65,7 @@ export default function SignUpLogInForm() {
           placeholder="Password"
           onChange={(e) => setLoginPassword(e.target.value)}
         />
-        <button onClick={() => login()}>LOGIN</button>
+        <button onClick={() => requestLogin()}>LOGIN</button>
       </div>
 
       <div className="">
