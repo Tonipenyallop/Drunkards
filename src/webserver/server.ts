@@ -14,6 +14,13 @@ const port = 8080; // default port to listen
 
 
 app.use(cors());
+app.use(
+    express.urlencoded({
+      extended: true,
+    })
+  );
+app.use(express.json());
+
 
 const PROTO_PATH = "../proto/index.proto";
 
@@ -37,15 +44,17 @@ const client = new grpcObj.index.User(
 
 
 // define a route handler for the default home page
-app.get("/", ( req: Request, res: Response ) => {
+app.post("/login", ( req: Request, res: Response ) => {
+    console.log('req.body')
     console.log(req.body)
     client.Login(
-        { name: "MUI GRANDE", password: "fromClient_server" },
+        { name: req.body.name, password: req.body.password },
         (err, result) => {
             if (err) {
                 console.error(err);
                 return;
             }
+            console.log('result');
             
             console.log(result);
             

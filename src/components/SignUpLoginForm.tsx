@@ -23,7 +23,10 @@ export default function SignUpLogInForm() {
     };
 
     console.log("is Here working?");
-    const toni = await axios.get("http://localhost:8080/");
+    const toni = await axios.post("http://localhost:8080/login", {
+      name: "PRACTICE",
+      password: "WOOOOOORKINGGGG!",
+    });
     console.log(toni.data);
     console.log("AFTER THE CODE WORKING?");
   }
