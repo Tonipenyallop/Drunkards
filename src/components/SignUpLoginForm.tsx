@@ -15,11 +15,11 @@ export default function SignUpLogInForm() {
   const [loginPhoneOrEmail, setLoginPhoneOrEmail] = useState<string>("");
 
   async function requestLogin() {
-    const toni = await axios.post("http://localhost:8080/login", {
+    const response = await axios.post("http://localhost:8080/login", {
       name: loginPhoneOrEmail,
       password: loginPassword,
     });
-    console.log(toni.data);
+    if (response.status === 200) navigate("/user");
   }
 
   async function signUp() {

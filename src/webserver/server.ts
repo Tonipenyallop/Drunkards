@@ -3,6 +3,8 @@ import path from "path";
 import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
 import { ProtoGrpcType } from "../proto/index";
+import { LoginResponse } from "../proto/index_pb";
+import { LoginResponse as LoginResponseType } from "../proto/index/LoginResponse";
 import { randomUUID } from "crypto";
 import {v4 as uuidv4} from 'uuid';
 
@@ -46,9 +48,11 @@ app.post("/login", async( req: Request, res: Response ) => {
         return 
     }
 
-    client.Login(
+    let response : LoginResponse= new LoginResponse();
+
+    await client.Login(
         { username: user[0].name, password: user[0].password },
-        (err, result) => {
+        async(err, result) => {
             if (err) {
                 console.error(err);
                 return;
@@ -61,10 +65,24 @@ app.post("/login", async( req: Request, res: Response ) => {
             const sessionToken : string = uuidv4()
             console.log("sessionToken")
             console.log(sessionToken)
-            
+            console.log("user")
+            console.log(user[0].id)
+            const temp = response.setSessiontoken(sessionToken)
+            // const a = temp.getSessiontoken();
+            console.log("temp")
+            console.log(temp)
+            await database("sessions").insert({userId: user[0].id, sessionToken })
+
+            res.sendStatus(200)
+            // response.sessionToken = sessionToken;
+             
         }
         );
-        res.send( "HOLA TONI" );
+        // console.log("response")
+        // console.log(response)
+        
+        // console.log(response.toObject())
+        // res.send("successfully login ");
     }
     catch (err){
         res.send({message : err})
