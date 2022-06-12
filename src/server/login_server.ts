@@ -2,10 +2,6 @@ import path from "path";
 import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
 import { ProtoGrpcType } from "../proto/index";
-import { UserInfo } from "../proto/index/UserInfo";
-import { SuccessLogIn } from "../proto/index/SuccessLogIn";
-
-import UserPage from "../components/UserPage";
 const PROTO_PATH = "../proto/index.proto";
 const packageDefinition = protoLoader.loadSync(
   path.resolve(__dirname, PROTO_PATH)
@@ -16,8 +12,6 @@ const grpcObj = grpc.loadPackageDefinition(
 const index = grpcObj.index;
 
 const PORT = 8882;
-// when PORT is same it worked
-// const PORT = 8080;
 
 export function main() {
   const server = getServer();

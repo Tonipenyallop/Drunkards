@@ -14,26 +14,18 @@ export default function SignUpLogInForm() {
   const [loginPassword, setLoginPassword] = useState<string>("");
   const [loginPhoneOrEmail, setLoginPhoneOrEmail] = useState<string>("");
 
-  // const client = new UserClient("http://localhost:8882");
-
   async function requestLogin() {
     const user = {
       name: "toni",
       password: "passwrod",
     };
 
-    console.log("is Here working?");
     const toni = await axios.post("http://localhost:8080/login", {
       name: loginPhoneOrEmail,
       password: loginPassword,
     });
     console.log(toni.data);
-    console.log("AFTER THE CODE WORKING?");
   }
-
-  // useEffect(() => {
-  //   requestLogin();
-  // }, []);
 
   async function signUp() {
     console.log("clicked");
@@ -44,11 +36,6 @@ export default function SignUpLogInForm() {
       password,
     };
     const stringifiedInfo = JSON.stringify(userInfo);
-  }
-
-  async function login() {
-    if (!loginPhoneOrEmail || !loginPassword) return;
-    console.log("login");
   }
 
   return (
