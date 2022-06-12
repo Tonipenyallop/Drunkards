@@ -4,20 +4,84 @@ package index;
 
 option go_package = "./proto" ;
 
-// import "google/protobuf/empty.proto";
 
-// service LogIn {
+
+
 service User {
-    // rpc GetFeature(Point) returns (Feature) {}
-    rpc Login(UserInfo) returns (SuccessLogIn);
+
+    rpc Login(LoginRequest) returns (LoginResponse);
+    rpc SignUp(RegisterRequest) returns (RegisterResponse);
+    rpc CreateReservation(CreateReservationRequest) returns (CreateReservationResponse);
+    rpc GetReservation(GetReservationRequest) returns  (GetReservationResponse);
+    rpc CancelReservation(CancelReservationRequest) returns (CancelReservationResponse);
+    rpc GetLatestReservation(GetLatestReservationRequest) returns (GetLatestReservationResponse);
 }
 
-message UserInfo {
-    string name = 1;
+message LoginRequest {
+    string username = 1;
     string password = 2;
 }
 
-message SuccessLogIn {
-    bool isSuccess = 1;
+
+message LoginResponse {
+    string sessionToken = 1;
 }
 
+message RegisterRequest {
+    string username = 1;
+    string password = 2;
+}
+
+message RegisterResponse {
+    string sessionToken = 1;
+}
+
+message CreateReservationRequest {
+    string startLocation = 1;
+    string destination = 2;
+    int64 pickupTime = 3;
+    string sessionToken = 4;
+}
+
+message CreateReservationResponse {
+
+}
+
+message GetReservationRequest {
+    string sessionToken = 1;
+}
+
+message GetReservationResponse {
+    repeated Reservation reservations = 1;
+}
+
+message Reservation {
+    string startLocation = 1;
+    string destination = 2;
+    int64 pickupTime = 3;
+    int64 reservationID = 4;
+}
+
+message CancelReservationRequest {
+    int64 reservationID = 1;
+    string sessionToken = 2;
+}
+
+message CancelReservationResponse {
+
+}
+
+message GetLatestReservationRequest {
+    string sessionToken = 1;
+
+}
+
+message GetLatestReservationResponse {
+    Reservation latestReservation = 1;
+    int64 estimatedTimeOnArrival = 2;
+}
+
+message Exceptions {
+    string invalidInput = 1;
+    string unauthorizedUser = 2;
+}
