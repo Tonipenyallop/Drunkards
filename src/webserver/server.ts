@@ -3,7 +3,7 @@ import path from "path";
 import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
 import { ProtoGrpcType } from "../proto/index";
-const db = require("../db/db")
+const database = require("../db/db")
 const express = require("express")
 const cors = require("cors")
 const app = express();
@@ -34,9 +34,12 @@ const client = new grpcObj.index.User(
 );
 
 
-app.post("/login", ( req: Request, res: Response ) => {
-    console.log("db")
-    console.log(db.select("*").from())
+app.post("/login", async( req: Request, res: Response ) => {
+
+    const users = await database.select("*").from("users")
+    console.log(users)
+
+    // console.log(users)
     client.Login(
         { username: req.body.name, password: req.body.password },
         (err, result) => {
