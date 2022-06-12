@@ -45,7 +45,6 @@
     "start": "react-scripts start",
     "webserver": "ts-node src/webserver/server.ts",
     "build": "sh build.sh && react-scripts build",
-    "client": "ts-node src/server/client_server.ts",
     "server": "ts-node src/server/login_server.ts",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
