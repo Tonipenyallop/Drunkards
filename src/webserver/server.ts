@@ -73,7 +73,7 @@ app.post("/login", async( req: Request, res: Response ) => {
             console.log(temp)
             await database("sessions").insert({userId: user[0].id, sessionToken })
 
-            res.sendStatus(200)
+            res.send({sessionToken}).status(200)
             // response.sessionToken = sessionToken;
              
         }
