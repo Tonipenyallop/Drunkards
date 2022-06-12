@@ -56,6 +56,8 @@ app.post("/login", async( req: Request, res: Response ) => {
             console.log('result');
             
             console.log(result);
+            // from here
+            // just created session token when user successfully login!
             const sessionToken : string = uuidv4()
             console.log("sessionToken")
             console.log(sessionToken)
