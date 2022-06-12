@@ -2,6 +2,9 @@ import path from "path";
 import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
 import { ProtoGrpcType } from "../proto/index";
+import { LoginResponse } from "../proto/index/LoginResponse";
+const database = require("../db/db");
+
 const PROTO_PATH = "../proto/index.proto";
 const packageDefinition = protoLoader.loadSync(
   path.resolve(__dirname, PROTO_PATH)
@@ -39,7 +42,8 @@ function getServer() {
     Login: (req: any, res: any) => {
       console.log("LOGIN FUNCTION WAS CALLED!!!");
       console.log(req.request);
-      res(null, { isSuccess: true });
+      const response: LoginResponse = {};
+      res(null, response);
     },
   });
   return server;

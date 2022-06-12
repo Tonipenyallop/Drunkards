@@ -15,11 +15,6 @@ export default function SignUpLogInForm() {
   const [loginPhoneOrEmail, setLoginPhoneOrEmail] = useState<string>("");
 
   async function requestLogin() {
-    const user = {
-      name: "toni",
-      password: "passwrod",
-    };
-
     const toni = await axios.post("http://localhost:8080/login", {
       name: loginPhoneOrEmail,
       password: loginPassword,
@@ -35,6 +30,7 @@ export default function SignUpLogInForm() {
       phoneOrEmail,
       password,
     };
+
     const stringifiedInfo = JSON.stringify(userInfo);
   }
 
