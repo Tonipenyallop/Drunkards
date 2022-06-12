@@ -9,9 +9,21 @@ type SubtypeConstructor<Constructor extends new (...args: any) => any, Subtype> 
 
 export interface ProtoGrpcType {
   index: {
-    SuccessLogIn: MessageTypeDefinition
+    CancelReservationRequest: MessageTypeDefinition
+    CancelReservationResponse: MessageTypeDefinition
+    CreateReservationRequest: MessageTypeDefinition
+    CreateReservationResponse: MessageTypeDefinition
+    Exceptions: MessageTypeDefinition
+    GetLatestReservationRequest: MessageTypeDefinition
+    GetLatestReservationResponse: MessageTypeDefinition
+    GetReservationRequest: MessageTypeDefinition
+    GetReservationResponse: MessageTypeDefinition
+    LoginRequest: MessageTypeDefinition
+    LoginResponse: MessageTypeDefinition
+    RegisterRequest: MessageTypeDefinition
+    RegisterResponse: MessageTypeDefinition
+    Reservation: MessageTypeDefinition
     User: SubtypeConstructor<typeof grpc.Client, _index_UserClient> & { service: _index_UserDefinition }
-    UserInfo: MessageTypeDefinition
   }
 }
 

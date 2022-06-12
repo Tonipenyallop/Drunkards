@@ -47,7 +47,7 @@ const client = new grpcObj.index.User(
 app.post("/login", ( req: Request, res: Response ) => {
 
     client.Login(
-        { name: req.body.name, password: req.body.password },
+        { username: req.body.name, password: req.body.password },
         (err, result) => {
             if (err) {
                 console.error(err);

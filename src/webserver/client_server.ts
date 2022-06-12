@@ -35,7 +35,7 @@ onClientReady();
 
 function onClientReady() {
   client.Login(
-    { name: "MUI GRANDE", password: "fromClient_server" },
+    { username: "MUI GRANDE", password: "fromClient_server" },
     (err, result) => {
       if (err) {
         console.error(err);
