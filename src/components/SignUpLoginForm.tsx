@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { UserInfo } from "../proto/index_pb";
 
-import { main } from "../server/login_server";
-// console.log(main);
-// import { UserClient } from "../proto/IndexServiceClientPb";
 import path from "path";
 import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
@@ -25,24 +21,11 @@ export default function SignUpLogInForm() {
       name: "toni",
       password: "passwrod",
     };
-    const req = await axios.get("http://localhost:8080/");
-    console.log(req.data);
-    // new UserInfo();
-    // user.setName("toni");
-    // user.setPassword("secret");
 
-    // console.log(user);
-    // console.log(client.login);
-    // console.log(client);
-    // client.login(user, (err, response) => {
-    //   if (err) {
-    //     console.error(err);
-    //     return;
-    //   }
-    //   console.log(`Yeah I got response ${response}`);
-    // });
-    // console.log(a);
-    // console.log(user);
+    console.log("is Here working?");
+    const toni = await axios.get("http://localhost:8080/");
+    console.log(toni.data);
+    console.log("AFTER THE CODE WORKING?");
   }
 
   useEffect(() => {
@@ -58,13 +41,6 @@ export default function SignUpLogInForm() {
       password,
     };
     const stringifiedInfo = JSON.stringify(userInfo);
-
-    // const response = await axios.post(
-    //   "http://localhost:9999/signup",
-    //   stringifiedInfo
-    // );
-
-    // console.log(response.data);
   }
 
   async function login() {

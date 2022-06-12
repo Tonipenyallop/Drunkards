@@ -1,14 +1,19 @@
+import  { Application, Request, Response, NextFunction } from "express";
+
+import path from "path";
+import * as grpc from "@grpc/grpc-js";
+import * as protoLoader from "@grpc/proto-loader";
+import { ProtoGrpcType } from "../proto/index";
+import { Http2ServerRequest } from "http2";
 // import express from "express";
 const express = require("express")
 const cors = require("cors")
 
 const app = express();
 const port = 8080; // default port to listen
-import path from "path";
-import * as grpc from "@grpc/grpc-js";
-import * as protoLoader from "@grpc/proto-loader";
-import { ProtoGrpcType } from "../proto/index";
 
+
+app.use(cors());
 
 const PROTO_PATH = "../proto/index.proto";
 
@@ -29,24 +34,28 @@ const client = new grpcObj.index.User(
 );
 
 
-app.use(cors());
+
 
 // define a route handler for the default home page
-app.get("/", ( req: any, res:any ) => {
-    res.send( "HOLA TONI" );
+app.get("/", ( req: Request, res: Response ) => {
+    console.log(req.body)
     client.Login(
         { name: "MUI GRANDE", password: "fromClient_server" },
         (err, result) => {
-          if (err) {
-            console.error(err);
-            return;
-          }
-          console.log(result);
+            if (err) {
+                console.error(err);
+                return;
+            }
+            
+            console.log(result);
+            
         }
-      );
+        );
+        res.send( "HOLA TONI" );
+
 } );
 
 // start the Express server
 app.listen( port, () => {
-    console.log( `server started at http://localhost:${ port }` );
+    console.log(`server started at http://localhost:${ port }` );
 } );
