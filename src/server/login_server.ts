@@ -46,17 +46,17 @@ function getServer() {
       console.log("SIGN UP FUNCTION WAS CALLED!!!");
       console.log(req.request);
       const userName = await database
-        .select("name")
+        .select("username")
         .from("users")
         // .where("name", "Jojo");
-        .where("name", req.request.username);
+        .where("username", req.request.username);
       if (userName.length >= 1) {
         console.log("Already have an account");
         return res(null, { message: "Already have an account", code: 401 });
       }
 
       await database("users").insert({
-        name: req.request.username,
+        username: req.request.username,
         password: req.request.password,
       });
       return res(null, { message: "congrats!" });
@@ -67,7 +67,7 @@ function getServer() {
       const user = await database
         .select("*")
         .from("users")
-        .where("name", req.request.username)
+        .where("username", req.request.username)
         .andWhere("password", req.request.password);
       if (user.length === 0) {
         console.log("invalid input error here!!!");

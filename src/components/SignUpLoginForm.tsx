@@ -16,7 +16,7 @@ export default function SignUpLogInForm() {
 
   async function requestLogin() {
     const response = await axios.post("http://localhost:8080/login", {
-      name: loginPhoneOrEmail,
+      username: loginPhoneOrEmail,
       password: loginPassword,
     });
     console.log(response.data);

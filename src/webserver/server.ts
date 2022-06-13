@@ -48,7 +48,7 @@ app.post("/login", async( req: Request, res: Response ) => {
         console.log(req.body)
     await client.Login(
 
-        {username: req.body.name, password: req.body.password},
+        {username: req.body.username, password: req.body.password},
         async(err, result) => {
             if (err) {
                 return res.status(400).send({message: "Invalid Input"})
@@ -64,7 +64,7 @@ app.post("/login", async( req: Request, res: Response ) => {
             const user = await database
             .select("*")
             .from("users")
-            .where("name", req.body.name)
+            .where("username", req.body.username)
             .andWhere("password", req.body.password);
 
             await database("sessions").insert({userId: user[0].id, sessionToken })
@@ -86,7 +86,7 @@ app.post("/signUp", async (req: Request, res: Response)=> {
             console.log("inside the sign up form")
         })
 
-        
+
         res.send("SIGNUP")
     }
     catch (err) {
