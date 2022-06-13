@@ -5,11 +5,19 @@ import axios from 'axios'
 export default function Reservation() {
 
     const [reservations, setReservations] = useState<any>()
+    const [latestReservation, setLatestReservation] = useState<any>()
+    const sessionToken = window.localStorage.getItem("sessionToken");
 
     async function getReservation(){
-        const getReservationRequest = await axios.post("http://localhost:8080/get_reservation", {sessionToken: window.localStorage.getItem("sessionToken")})
+        const getReservationRequest = await axios.post("http://localhost:8080/get_reservation", {sessionToken})
         console.log(getReservationRequest.data)
         setReservations(getReservationRequest.data)
+    }
+
+    async function getLatestReservation(){
+        console.log('latest request');
+        const latestReservationRequest = await axios.post("http://localhost:8080/latest_reservation", {sessionToken})
+        console.log(latestReservationRequest.data)
     }
     
     
@@ -25,6 +33,8 @@ export default function Reservation() {
                  <br />
                 </div>
             })}
+            <button onClick={getLatestReservation}>Get Latest Reservation</button>
+
             </div>
         </div>
     )

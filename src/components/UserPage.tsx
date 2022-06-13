@@ -31,7 +31,7 @@ export default function UserPage() {
         setPickupTime(e.target.value)
 
       }} />
-      <button onClick={temp}>Search</button>
+      <button onClick={temp}>Request Car</button>
 
       <Reservation/>
       {/* <button className="" onClick={() => navigate("/detail")}>

@@ -111,7 +111,6 @@ app.post("/get_reservation", async (req:Request, res: Response) => {
 
 app.post("/reservation", async (req:Request, res: Response) => {
     try{
-            
         console.log("req.body.pickupTime")
         console.log(req.body.pickupTime)
         await client.CreateReservation( {startLocation: req.body.startLocation, destination: req.body.destination, pickupTime: req.body.pickupTime , sessionToken : req.body.request.sessionToken},   async (err , result) => {
@@ -129,7 +128,22 @@ app.post("/reservation", async (req:Request, res: Response) => {
         res.send({message : err})
     }
 })
-// start the Express server
+
+app.post("/latest_reservation", async (req:Request, res: Response) => {
+    client.GetLatestReservation({sessionToken : req.body.sessionToken}, (err, result) => {
+
+    })
+    const userIdArray = await database.select("userId").from("sessions").where("sessionToken", req.body.sessionToken);
+    const requestHistory = await database.select("*").from("requests").where("userId", userIdArray[0].userId )
+    console.log("requestHistory")
+    const latestReservation = requestHistory[requestHistory.length - 1];
+    console.log(latestReservation)
+    res.send({latestReservation})
+
+})
+
+
+
 app.listen( expressPORT, () => {
     console.log(`server started at http://localhost:${ expressPORT }` );
 } );
