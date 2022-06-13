@@ -93,7 +93,6 @@ function getServer() {
       req: grpc.ServerUnaryCall<LoginRequest, LoginResponse>,
       res: grpc.sendUnaryData<LoginResponse>
     ) => {
-      console.log(`Login Request: ${JSON.stringify(req)}`);
       if (req.request.username === "" || req.request.password === "") {
         const metadata = new grpc.Metadata();
         return res({
@@ -123,6 +122,13 @@ function getServer() {
       });
 
       const sessionToken: string = uuidv4();
+      const userId = await database
+        .select("*")
+        .from("users")
+        .where("username", req.request.username)
+        .andWhere("password", req.request.password);
+
+      await database("sessions").insert({ userId: userId[0].id, sessionToken });
 
       return res(null, { sessionToken } as LoginResponse);
     },
