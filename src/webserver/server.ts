@@ -3,7 +3,7 @@ import path from "path";
 import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
 import { ProtoGrpcType } from "../proto/index";
-import { LoginResponse } from "../proto/index_pb";
+// import { LoginResponse } from "../proto/index_pb";
 import { LoginResponse as LoginResponseType } from "../proto/index/LoginResponse";
 import { randomUUID } from "crypto";
 import {v4 as uuidv4} from 'uuid';
@@ -41,9 +41,6 @@ const client = new grpcObj.index.User(
 
 
 app.post("/login", async( req: Request, res: Response ) => {
-    let response : LoginResponse= new LoginResponse();
-        console.log("webserver")
-        console.log(req.body)
     client.Login({
         username: req.body.username, 
         password: req.body.password
@@ -78,7 +75,7 @@ app.post("/login", async( req: Request, res: Response ) => {
 app.post("/signUp", async (req: Request, res: Response)=> {
     try {
         console.log(req.body)
-        await client.SignUp({username: req.body.username, password :req.body.password}, async(err, result) => {
+        await client.Register({username: req.body.username, password :req.body.password}, async(err, result) => {
             console.log("inside the sign up form")
         })
 

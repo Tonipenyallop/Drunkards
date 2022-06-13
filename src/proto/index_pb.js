@@ -2204,7 +2204,7 @@ proto.index.GetLatestReservationResponse.deserializeBinaryFromReader = function(
     case 1:
       var value = new proto.index.Reservation;
       reader.readMessage(value,proto.index.Reservation.deserializeBinaryFromReader);
-      msg.Latestreservation(value);
+      msg.setLatestreservation(value);
       break;
     case 2:
       var value = /** @type {number} */ (reader.readInt64());

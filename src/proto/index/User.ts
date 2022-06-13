@@ -61,14 +61,14 @@ export interface UserClient extends grpc.Client {
   login(argument: _index_LoginRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_index_LoginResponse__Output>): grpc.ClientUnaryCall;
   login(argument: _index_LoginRequest, callback: grpc.requestCallback<_index_LoginResponse__Output>): grpc.ClientUnaryCall;
   
-  SignUp(argument: _index_RegisterRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_index_RegisterResponse__Output>): grpc.ClientUnaryCall;
-  SignUp(argument: _index_RegisterRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_index_RegisterResponse__Output>): grpc.ClientUnaryCall;
-  SignUp(argument: _index_RegisterRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_index_RegisterResponse__Output>): grpc.ClientUnaryCall;
-  SignUp(argument: _index_RegisterRequest, callback: grpc.requestCallback<_index_RegisterResponse__Output>): grpc.ClientUnaryCall;
-  signUp(argument: _index_RegisterRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_index_RegisterResponse__Output>): grpc.ClientUnaryCall;
-  signUp(argument: _index_RegisterRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_index_RegisterResponse__Output>): grpc.ClientUnaryCall;
-  signUp(argument: _index_RegisterRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_index_RegisterResponse__Output>): grpc.ClientUnaryCall;
-  signUp(argument: _index_RegisterRequest, callback: grpc.requestCallback<_index_RegisterResponse__Output>): grpc.ClientUnaryCall;
+  Register(argument: _index_RegisterRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_index_RegisterResponse__Output>): grpc.ClientUnaryCall;
+  Register(argument: _index_RegisterRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_index_RegisterResponse__Output>): grpc.ClientUnaryCall;
+  Register(argument: _index_RegisterRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_index_RegisterResponse__Output>): grpc.ClientUnaryCall;
+  Register(argument: _index_RegisterRequest, callback: grpc.requestCallback<_index_RegisterResponse__Output>): grpc.ClientUnaryCall;
+  register(argument: _index_RegisterRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_index_RegisterResponse__Output>): grpc.ClientUnaryCall;
+  register(argument: _index_RegisterRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_index_RegisterResponse__Output>): grpc.ClientUnaryCall;
+  register(argument: _index_RegisterRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_index_RegisterResponse__Output>): grpc.ClientUnaryCall;
+  register(argument: _index_RegisterRequest, callback: grpc.requestCallback<_index_RegisterResponse__Output>): grpc.ClientUnaryCall;
   
 }
 
@@ -83,7 +83,7 @@ export interface UserHandlers extends grpc.UntypedServiceImplementation {
   
   Login: grpc.handleUnaryCall<_index_LoginRequest__Output, _index_LoginResponse>;
   
-  SignUp: grpc.handleUnaryCall<_index_RegisterRequest__Output, _index_RegisterResponse>;
+  Register: grpc.handleUnaryCall<_index_RegisterRequest__Output, _index_RegisterResponse>;
   
 }
 
@@ -93,5 +93,5 @@ export interface UserDefinition extends grpc.ServiceDefinition {
   GetLatestReservation: MethodDefinition<_index_GetLatestReservationRequest, _index_GetLatestReservationResponse, _index_GetLatestReservationRequest__Output, _index_GetLatestReservationResponse__Output>
   GetReservation: MethodDefinition<_index_GetReservationRequest, _index_GetReservationResponse, _index_GetReservationRequest__Output, _index_GetReservationResponse__Output>
   Login: MethodDefinition<_index_LoginRequest, _index_LoginResponse, _index_LoginRequest__Output, _index_LoginResponse__Output>
-  SignUp: MethodDefinition<_index_RegisterRequest, _index_RegisterResponse, _index_RegisterRequest__Output, _index_RegisterResponse__Output>
+  Register: MethodDefinition<_index_RegisterRequest, _index_RegisterResponse, _index_RegisterRequest__Output, _index_RegisterResponse__Output>
 }

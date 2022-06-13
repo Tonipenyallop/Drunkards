@@ -78,8 +78,8 @@ export class UserClient {
     this.methodDescriptorLogin);
   }
 
-  methodDescriptorSignUp = new grpcWeb.MethodDescriptor(
-    '/index.User/SignUp',
+  methodDescriptorRegister = new grpcWeb.MethodDescriptor(
+    '/index.User/Register',
     grpcWeb.MethodType.UNARY,
     src_proto_index_pb.RegisterRequest,
     src_proto_index_pb.RegisterResponse,
@@ -89,17 +89,17 @@ export class UserClient {
     src_proto_index_pb.RegisterResponse.deserializeBinary
   );
 
-  signUp(
+  register(
     request: src_proto_index_pb.RegisterRequest,
     metadata: grpcWeb.Metadata | null): Promise<src_proto_index_pb.RegisterResponse>;
 
-  signUp(
+  register(
     request: src_proto_index_pb.RegisterRequest,
     metadata: grpcWeb.Metadata | null,
     callback: (err: grpcWeb.RpcError,
                response: src_proto_index_pb.RegisterResponse) => void): grpcWeb.ClientReadableStream<src_proto_index_pb.RegisterResponse>;
 
-  signUp(
+  register(
     request: src_proto_index_pb.RegisterRequest,
     metadata: grpcWeb.Metadata | null,
     callback?: (err: grpcWeb.RpcError,
@@ -107,18 +107,18 @@ export class UserClient {
     if (callback !== undefined) {
       return this.client_.rpcCall(
         this.hostname_ +
-          '/index.User/SignUp',
+          '/index.User/Register',
         request,
         metadata || {},
-        this.methodDescriptorSignUp,
+        this.methodDescriptorRegister,
         callback);
     }
     return this.client_.unaryCall(
     this.hostname_ +
-      '/index.User/SignUp',
+      '/index.User/Register',
     request,
     metadata || {},
-    this.methodDescriptorSignUp);
+    this.methodDescriptorRegister);
   }
 
   methodDescriptorCreateReservation = new grpcWeb.MethodDescriptor(
