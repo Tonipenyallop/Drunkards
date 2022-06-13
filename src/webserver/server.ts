@@ -80,7 +80,17 @@ app.post("/login", async( req: Request, res: Response ) => {
 } );
 
 app.post("/signUp", async (req: Request, res: Response)=> {
-    res.send("SIGNUP")
+    try {
+        console.log(req.body)
+        await client.SignUp({username: req.body.username, password :req.body.password}, async(err, result) => {
+            console.log("inside the sign up form")
+        })
+        res.send("SIGNUP")
+    }
+    catch (err) {
+        res.send({message : err})
+
+    }
 })
 
 app.post("/reservation", async (req:Request, res: Response) => {
@@ -92,6 +102,7 @@ app.post("/reservation", async (req:Request, res: Response) => {
         if(err){
             return res.status(400).send({message: err})
         }
+        // fix here later
         console.log("successfully request the car")
     })
 

@@ -40,6 +40,13 @@ function getServer() {
   console.log("getServer function was called!");
 
   server.addService(index.User.service, {
+    SignUp: async (req: any, res: any) => {
+      console.log("SIGN UP FUNCTION WAS CALLED!!!");
+      console.log(req.request);
+
+      return res(null, { message: "congrats!" });
+    },
+
     Login: async (req: any, res: any) => {
       console.log("LOGIN FUNCTION WAS CALLED!!!");
       const user = await database
