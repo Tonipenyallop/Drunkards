@@ -52,6 +52,7 @@ app.post("/login", async( req: Request, res: Response ) => {
         } else {
             // result is not printed out 
             console.log(`result: ${JSON.stringify(result)}`);
+            res.send({sessionToken : result})
         }
 
         

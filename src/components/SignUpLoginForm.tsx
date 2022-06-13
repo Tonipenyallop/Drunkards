@@ -19,10 +19,9 @@ export default function SignUpLogInForm() {
       username: loginPhoneOrEmail,
       password: loginPassword,
     });
-    console.log(response.data);
+
     window.localStorage.setItem("sessionToken", response.data.sessionToken);
-    console.log(response);
-    if (response.status === 200) navigate("/user");
+    if (response.data) navigate("/user");
   }
 
   async function signUp() {

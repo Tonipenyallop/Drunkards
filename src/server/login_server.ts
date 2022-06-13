@@ -9,6 +9,7 @@ import { LoginRequest } from "../proto/index/LoginRequest";
 import { RegisterRequest } from "../proto/index/RegisterRequest";
 import { RegisterResponse } from "../proto/index/RegisterResponse";
 import { v4 as uuidv4 } from "uuid";
+import { groupCollapsed } from "console";
 
 const database = require("../db/db");
 
@@ -77,7 +78,7 @@ function getServer() {
       //   username: req.request.username,
       //   password: req.request.password,
       // });
-      const sessionToken: string = uuidv4();
+      // const sessionToken: string = uuidv4();
       // const user = await database
       //   .select("*")
       //   .from("users")
@@ -93,29 +94,37 @@ function getServer() {
       res: grpc.sendUnaryData<LoginResponse>
     ) => {
       console.log(`Login Request: ${JSON.stringify(req)}`);
+      if (req.request.username === "" || req.request.password === "") {
+        const metadata = new grpc.Metadata();
+        return res({
+          code: grpc.status.INVALID_ARGUMENT,
+          message: "Username and Password must be filled out",
+          metadata,
+        });
+      }
       const user = await database
         .select("*")
         .from("users")
         .where("username", req.request.username)
         .andWhere("password", req.request.password);
       if (user.length === 0) {
-        console.log("invalid input error here!!!");
+        const metadata = new grpc.Metadata();
+        metadata.add("type", Exceptions.INVALID_INPUT_EXCEPTION.toString());
         return res({
-          code: grpc.status.INVALID_ARGUMENT,
-          message: "Something Broken!",
+          code: grpc.status.NOT_FOUND,
+          message: "Username or password is wrong ",
+          metadata,
         });
-        // return res({
-        //   code: 400,
-        //   message: "invalid input",
-        //   // status: grpc.status.INTERNAL,
-        // });
       }
-      // from here i wanna send the user to node server. then store id and token together in database!
 
-      const response: LoginResponse = {
-        sessionToken: "test",
-      };
-      return res(null, response);
+      await database("users").insert({
+        username: req.request.username,
+        password: req.request.password,
+      });
+
+      const sessionToken: string = uuidv4();
+
+      return res(null, { sessionToken } as LoginResponse);
     },
     CreateReservation: async (req: any, res: any) => {
       if (!req.request.sessionToken)
