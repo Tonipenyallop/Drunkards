@@ -97,7 +97,9 @@ app.post("/signUp", async (req: Request, res: Response)=> {
 
 app.post("/reservation", async (req:Request, res: Response) => {
     try{
-
+    
+        console.log("req.body.pickupTime")
+    console.log(req.body.pickupTime)
     await client.CreateReservation( {startLocation: req.body.startLocation, destination: req.body.destination, pickupTime: req.body.pickupTime , sessionToken : req.body.request.sessionToken},   async (err , result) => {
         // console.log(err)
         // console.log(result)

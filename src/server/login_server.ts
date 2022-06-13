@@ -3,6 +3,7 @@ import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
 import { ProtoGrpcType } from "../proto/index";
 import { Exceptions } from "../proto/index/Exceptions";
+import { GetReservationRequest } from "../proto/index/GetReservationRequest";
 
 const database = require("../db/db");
 
@@ -89,12 +90,16 @@ function getServer() {
         .where("sessionToken", req.request.sessionToken);
 
       if (requestedUser.length === 0) {
-        // const toni : Exceptions = {}
-        // toni.unauthorizedUser = "Unauthorized User"
         return res(null, { message: "Unauthorized User", code: 401 });
       }
-      console.log("temp");
-      // console.log(temp);
+
+      await database("requests").insert({
+        userId: requestedUser[0].userId,
+        start_location: req.request.startLocation,
+        destination: req.request.destination,
+        pickupTime: "12:30:55.12345-05:00",
+      });
+
       res(null, {});
     },
   });
