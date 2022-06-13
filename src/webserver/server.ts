@@ -99,28 +99,29 @@ app.post("/get_reservation", async (req:Request, res: Response) => {
     console.log("req")
     console.log(req.body)
     await client.GetReservation({ sessionToken :req.body.sessionToken}, (err, result)=> {
-        
+
 
     })
-    const allReservations = await database.select("*").from("requests")
+    const userIdArray = await database.select("userId").from("sessions").where("sessionToken", req.body.sessionToken);
+
+    const allReservations = await database.select("*").from("requests").where("userId",userIdArray[0].userId )
     console.log(allReservations)
     res.status(200).send({allReservations})
 } )
 
 app.post("/reservation", async (req:Request, res: Response) => {
     try{
-    
+            
         console.log("req.body.pickupTime")
-    console.log(req.body.pickupTime)
-    await client.CreateReservation( {startLocation: req.body.startLocation, destination: req.body.destination, pickupTime: req.body.pickupTime , sessionToken : req.body.request.sessionToken},   async (err , result) => {
-        // console.log(err)
-        // console.log(result)
-        if(err){
-            return res.status(400).send({message: err})
-        }
-        // fix here later
-        console.log("successfully request the car")
-    })
+        console.log(req.body.pickupTime)
+        await client.CreateReservation( {startLocation: req.body.startLocation, destination: req.body.destination, pickupTime: req.body.pickupTime , sessionToken : req.body.request.sessionToken},   async (err , result) => {
+
+            if(err){
+                return res.status(400).send({message: err})
+            }
+            // fix here later
+            console.log("successfully request the car")
+        })
 
     res.send("OKIDOKI")
     }
