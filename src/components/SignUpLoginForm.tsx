@@ -33,11 +33,10 @@ export default function SignUpLogInForm() {
       phoneOrEmail,
       password,
     };
-    await axios.post("http://localhost:8080/signUp", {
+    const signUpRequest = await axios.post("http://localhost:8080/signUp", {
       username: phoneOrEmail,
       password,
     });
-    // const stringifiedInfo = JSON.stringify(userInfo);
   }
 
   return (

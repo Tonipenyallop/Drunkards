@@ -41,9 +41,24 @@ function getServer() {
 
   server.addService(index.User.service, {
     SignUp: async (req: any, res: any) => {
+      if (req.request.username === "" || req.request.password === "")
+        return res(null, { message: "Invalid input", code: 400 });
       console.log("SIGN UP FUNCTION WAS CALLED!!!");
       console.log(req.request);
+      const userName = await database
+        .select("name")
+        .from("users")
+        // .where("name", "Jojo");
+        .where("name", req.request.username);
+      if (userName.length >= 1) {
+        console.log("Already have an account");
+        return res(null, { message: "Already have an account", code: 401 });
+      }
 
+      await database("users").insert({
+        name: req.request.username,
+        password: req.request.password,
+      });
       return res(null, { message: "congrats!" });
     },
 

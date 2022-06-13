@@ -85,6 +85,8 @@ app.post("/signUp", async (req: Request, res: Response)=> {
         await client.SignUp({username: req.body.username, password :req.body.password}, async(err, result) => {
             console.log("inside the sign up form")
         })
+
+        
         res.send("SIGNUP")
     }
     catch (err) {
