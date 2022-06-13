@@ -64,11 +64,12 @@ function getServer() {
         // .where("name", "Jojo");
         .where("username", req.request.username);
       if (userName.length >= 1) {
-        // console.log("Already have an account");
-        // return res(null, { message: "Already have an account", code: 401 });
+        const metadata = new grpc.Metadata();
+        metadata.add("type", Exceptions.INVALID_INPUT_EXCEPTION.toString());
         return res({
           code: grpc.status.ALREADY_EXISTS,
-          message: "Already have an account",
+          message: "Username already registered",
+          metadata: metadata,
         });
       }
 

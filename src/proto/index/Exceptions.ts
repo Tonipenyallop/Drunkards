@@ -1,12 +1,6 @@
 // Original file: src/proto/index.proto
 
-
-export interface Exceptions {
-  'invalidInput'?: (string);
-  'unauthorizedUser'?: (string);
-}
-
-export interface Exceptions__Output {
-  'invalidInput': (string);
-  'unauthorizedUser': (string);
+export enum Exceptions {
+  INVALID_INPUT_EXCEPTION = 0,
+  UNAUTHORIZED_USER_EXCEPTION = 1,
 }

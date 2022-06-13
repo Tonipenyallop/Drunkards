@@ -1,5 +1,5 @@
 import type * as grpc from '@grpc/grpc-js';
-import type { MessageTypeDefinition } from '@grpc/proto-loader';
+import type { EnumTypeDefinition, MessageTypeDefinition } from '@grpc/proto-loader';
 
 import type { UserClient as _index_UserClient, UserDefinition as _index_UserDefinition } from './index/User';
 
@@ -13,7 +13,7 @@ export interface ProtoGrpcType {
     CancelReservationResponse: MessageTypeDefinition
     CreateReservationRequest: MessageTypeDefinition
     CreateReservationResponse: MessageTypeDefinition
-    Exceptions: MessageTypeDefinition
+    Exceptions: EnumTypeDefinition
     GetLatestReservationRequest: MessageTypeDefinition
     GetLatestReservationResponse: MessageTypeDefinition
     GetReservationRequest: MessageTypeDefinition

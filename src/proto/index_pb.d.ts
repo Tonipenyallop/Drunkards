@@ -272,25 +272,7 @@ export namespace GetLatestReservationResponse {
   }
 }
 
-export class Exceptions extends jspb.Message {
-  getInvalidinput(): string;
-  setInvalidinput(value: string): Exceptions;
-
-  getUnauthorizeduser(): string;
-  setUnauthorizeduser(value: string): Exceptions;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): Exceptions.AsObject;
-  static toObject(includeInstance: boolean, msg: Exceptions): Exceptions.AsObject;
-  static serializeBinaryToWriter(message: Exceptions, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): Exceptions;
-  static deserializeBinaryFromReader(message: Exceptions, reader: jspb.BinaryReader): Exceptions;
+export enum Exceptions { 
+  INVALID_INPUT_EXCEPTION = 0,
+  UNAUTHORIZED_USER_EXCEPTION = 1,
 }
-
-export namespace Exceptions {
-  export type AsObject = {
-    invalidinput: string,
-    unauthorizeduser: string,
-  }
-}
-

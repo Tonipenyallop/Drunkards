@@ -8,6 +8,7 @@ import { LoginResponse as LoginResponseType } from "../proto/index/LoginResponse
 import { randomUUID } from "crypto";
 import {v4 as uuidv4} from 'uuid';
 import { convertCompilerOptionsFromJson } from "typescript";
+import { Exceptions } from "../proto/index/Exceptions";
 
 const database = require("../db/db")
 const express = require("express")
@@ -79,6 +80,16 @@ app.post("/signUp", async (req: Request, res: Response)=> {
             console.log("inside the sign up form")
         })
 
+        // let myVar: Exceptions = {
+        //     invalidInput : "input is wrong"
+        // }
+        let myExceptionType = Exceptions.INVALID_INPUT_EXCEPTION;
+
+        // ...
+
+        if (myExceptionType === Exceptions.INVALID_INPUT_EXCEPTION) {
+            // handle invalid input
+        }
 
         res.send("SIGNUP")
     }

@@ -81,7 +81,12 @@ message GetLatestReservationResponse {
     int64 estimatedTimeOnArrival = 2;
 }
 
-message Exceptions {
-    string invalidInput = 1;
-    string unauthorizedUser = 2;
+// message Exceptions {
+//     string invalidInput = 1;
+//     string unauthorizedUser = 2;
+// }
+
+enum Exceptions {
+    INVALID_INPUT_EXCEPTION = 0;
+    UNAUTHORIZED_USER_EXCEPTION = 1;
 }
