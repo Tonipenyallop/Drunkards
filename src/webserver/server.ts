@@ -85,19 +85,14 @@ app.post("/signUp", async (req: Request, res: Response)=> {
 
 app.post("/reservation", async (req:Request, res: Response) => {
     try{
-    console.log('reservation was called')
-    console.log(req.body.request.sessionToken)
-    const temp = await database.select("*").from("sessions").where("sessionToken",req.body.request.sessionToken )
-    console.log("temp")
-    console.log(temp)
-    if(temp.length === 0 ) {
-        res.send("Unauthorized user").status(401)
-    }
 
-    await client.CreateReservation( {startLocation: req.body.startLocation, destination: req.body.destination, pickupTime: req.body.pickupTime , sessionToken : req.body.request.sessionToken},  async (err , result) => {
-        console.log(err)
-        console.log(result)
-
+    await client.CreateReservation( {startLocation: req.body.startLocation, destination: req.body.destination, pickupTime: req.body.pickupTime , sessionToken : req.body.request.sessionToken},   async (err , result) => {
+        // console.log(err)
+        // console.log(result)
+        if(err){
+            return res.status(400).send({message: err})
+        }
+        console.log("successfully request the car")
     })
 
     res.send("OKIDOKI")

@@ -58,11 +58,22 @@ function getServer() {
       // from here i wanna send the user to node server. then store id and token together in database!
       return res(null, { user, message: "c'mon man please read this message" });
     },
-    CreateReservation: (req: any, res: any) => {
-      console.log("IM GLAD TO BE CALLED");
-      console.log(req.request);
+    CreateReservation: async (req: any, res: any) => {
+      if (!req.request.sessionToken)
+        return res(null, { message: "Unauthorized User", code: 401 });
+      const requestedUser = await database
+        .select("*")
+        .from("sessions")
+        .where("sessionToken", req.request.sessionToken);
 
-      res(null, "ddataojc");
+      if (requestedUser.length === 0) {
+        // const toni : Exceptions = {}
+        // toni.unauthorizedUser = "Unauthorized User"
+        return res(null, { message: "Unauthorized User", code: 401 });
+      }
+      console.log("temp");
+      // console.log(temp);
+      res(null, {});
     },
   });
   return server;
