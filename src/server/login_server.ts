@@ -2,7 +2,6 @@ import path from "path";
 import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
 import { ProtoGrpcType } from "../proto/index";
-import { LoginResponse } from "../proto/index/LoginResponse";
 import { Exceptions } from "../proto/index/Exceptions";
 
 const database = require("../db/db");
@@ -49,25 +48,15 @@ function getServer() {
         .where("name", req.request.username)
         .andWhere("password", req.request.password);
       if (user.length === 0) {
-        console.log("invalid user here!!!");
-
+        console.log("invalid input error here!!!");
         return res({
           code: 400,
           message: "invalid input",
           status: grpc.status.INTERNAL,
         });
       }
-      console.log("come here?");
-      console.log("user is below");
-      console.log(user);
-      console.log("req.request");
-      console.log(req.request);
-      console.log(res);
-
-      // console.log(req.request);
-      const response: LoginResponse = {};
-      // return res("success");
-      return res(null, "success");
+      // from here i wanna send the user to node server. then store id and token together in database!
+      return res(null, { user, message: "c'mon man please read this message" });
     },
     CreateReservation: (req: any, res: any) => {
       console.log("IM GLAD TO BE CALLED");

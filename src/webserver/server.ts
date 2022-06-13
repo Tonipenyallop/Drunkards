@@ -42,45 +42,34 @@ const client = new grpcObj.index.User(
 app.post("/login", async( req: Request, res: Response ) => {
 
     try {
-    // const user = await database.select("*").from("users").where("name", req.body.name).andWhere("password", req.body.password)
-    // if(user.length === 0) {
-    //     res.sendStatus(400) 
-    //     return 
-    // }
 
     let response : LoginResponse= new LoginResponse();
         console.log("webserver")
         console.log(req.body)
     await client.Login(
-        // { username: user[0].name, password: user[0].password },
+
         {username: req.body.name, password: req.body.password},
         async(err, result) => {
             if (err) {
-                console.log("Error is true")
-                console.error(err);
-                // return res.send({message : err, status: 400}).status(400)
                 return res.status(400).send({message: "Invalid Input"})
-                // return;
             }
 
+            // result is not printed out 
             console.log('result is printed here?');
             console.log(result);
-            // from here
+           
+           
             // just created session token when user successfully login!
-            // const sessionToken : string = uuidv4()
-            // console.log("sessionToken")
-            // console.log(sessionToken)
-            // console.log("user")
-            // console.log(user[0].id)
-            // const temp = response.setSessiontoken(sessionToken)
-            // // const a = temp.getSessiontoken();
-            // console.log("temp")
-            // console.log(temp)
-            // await database("sessions").insert({userId: user[0].id, sessionToken })
+            const sessionToken : string = uuidv4()
+            const user = await database
+            .select("*")
+            .from("users")
+            .where("name", req.body.name)
+            .andWhere("password", req.body.password);
 
-            // res.send({sessionToken}).status(200)
-            res.send("temp")
-            // response.sessionToken = sessionToken;
+            await database("sessions").insert({userId: user[0].id, sessionToken })
+
+            res.status(200).send({sessionToken, user: result})
              
         }
         );
