@@ -103,7 +103,18 @@ function getServer() {
       res(null, {});
     },
     GetReservation: async (req: any, res: any) => {
+      if (!req.request.sessionToken)
+        return res(null, { message: "Unauthorized User", code: 401 });
       console.log("get reservation was called");
+      console.log(req.request);
+      const validUser = await database
+        .select("*")
+        .from("sessions")
+        .where("sessionToken", req.request.sessionToken);
+      console.log(validUser);
+      if (validUser.length === 0) {
+        return res(null, { message: "Unauthorized User", code: 401 });
+      }
     },
   });
   return server;

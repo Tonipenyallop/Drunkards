@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, ReactElement} from 'react'
 import axios from 'axios'
 
 
@@ -7,7 +7,7 @@ export default function Reservation() {
     const [reservations, setReservations] = useState<any>()
 
     async function getReservation(){
-        const getReservationRequest = await axios.get("http://localhost:8080/reservation")
+        const getReservationRequest = await axios.post("http://localhost:8080/get_reservation", {sessionToken: window.localStorage.getItem("sessionToken")})
         console.log(getReservationRequest.data)
         setReservations(getReservationRequest.data)
     }

@@ -95,10 +95,11 @@ app.post("/signUp", async (req: Request, res: Response)=> {
     }
 })
 
-app.get("/reservation", async (req:Request, res: Response) => {
+app.post("/get_reservation", async (req:Request, res: Response) => {
     console.log("req")
     console.log(req.body)
-    await client.GetReservation({}, (err, result)=> {
+    await client.GetReservation({ sessionToken :req.body.sessionToken}, (err, result)=> {
+        
 
     })
     const allReservations = await database.select("*").from("requests")
