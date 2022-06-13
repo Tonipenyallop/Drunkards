@@ -102,6 +102,9 @@ function getServer() {
 
       res(null, {});
     },
+    GetReservation: async (req: any, res: any) => {
+      console.log("get reservation was called");
+    },
   });
   return server;
 }

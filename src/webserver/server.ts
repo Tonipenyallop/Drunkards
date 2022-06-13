@@ -95,6 +95,17 @@ app.post("/signUp", async (req: Request, res: Response)=> {
     }
 })
 
+app.get("/reservation", async (req:Request, res: Response) => {
+    console.log("req")
+    console.log(req.body)
+    await client.GetReservation({}, (err, result)=> {
+
+    })
+    const allReservations = await database.select("*").from("requests")
+    console.log(allReservations)
+    res.status(200).send({allReservations})
+} )
+
 app.post("/reservation", async (req:Request, res: Response) => {
     try{
     
