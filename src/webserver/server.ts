@@ -7,6 +7,7 @@ import { LoginResponse } from "../proto/index_pb";
 import { LoginResponse as LoginResponseType } from "../proto/index/LoginResponse";
 import { randomUUID } from "crypto";
 import {v4 as uuidv4} from 'uuid';
+import { convertCompilerOptionsFromJson } from "typescript";
 
 const database = require("../db/db")
 const express = require("express")
@@ -40,43 +41,38 @@ const client = new grpcObj.index.User(
 
 
 app.post("/login", async( req: Request, res: Response ) => {
-
-    try {
-
     let response : LoginResponse= new LoginResponse();
         console.log("webserver")
         console.log(req.body)
-    await client.Login(
-
-        {username: req.body.username, password: req.body.password},
-        async(err, result) => {
-            if (err) {
-                return res.status(400).send({message: "Invalid Input"})
-            }
-
+    client.Login({
+        username: req.body.username, 
+        password: req.body.password
+    }, (err, result) => {
+        if (err) {
+            console.log(`ERROR: ${JSON.stringify(err)}`);
+            // return res.status(400).send({message: `Invalid Input: ${err}`})
+        } else {
             // result is not printed out 
-            console.log('result is printed here?');
-            console.log(result);
+            console.log(`result: ${JSON.stringify(result)}`);
+        }
+
+        
            
            
             // just created session token when user successfully login!
-            const sessionToken : string = uuidv4()
-            const user = await database
-            .select("*")
-            .from("users")
-            .where("username", req.body.username)
-            .andWhere("password", req.body.password);
+            // const sessionToken : string = uuidv4()
+            // const user = await database
+            // .select("*")
+            // .from("users")
+            // .where("username", req.body.username)
+            // .andWhere("password", req.body.password);
 
-            await database("sessions").insert({userId: user[0].id, sessionToken })
+            // await database("sessions").insert({userId: user[0].id, sessionToken })
 
-            res.status(200).send({sessionToken, user: result})
+            // res.status(200).send({sessionToken, user: result})
              
-        }
-        );
-    }
-    catch (err){
-        res.send({message : err})
-    }
+        });
+
 } );
 
 app.post("/signUp", async (req: Request, res: Response)=> {
@@ -142,6 +138,11 @@ app.post("/latest_reservation", async (req:Request, res: Response) => {
 
 })
 
+app.post("/cancel",async (req:Request, res: Response) => {
+    await client.CancelReservation({sessionToken : req.body.sessionToken}, (err, result) => {
+
+    })
+})
 
 
 app.listen( expressPORT, () => {

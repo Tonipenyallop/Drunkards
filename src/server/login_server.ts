@@ -4,6 +4,11 @@ import * as protoLoader from "@grpc/proto-loader";
 import { ProtoGrpcType } from "../proto/index";
 import { Exceptions } from "../proto/index/Exceptions";
 import { GetReservationRequest } from "../proto/index/GetReservationRequest";
+import { LoginResponse } from "../proto/index/LoginResponse";
+import { LoginRequest } from "../proto/index/LoginRequest";
+import { RegisterRequest } from "../proto/index/RegisterRequest";
+import { RegisterResponse } from "../proto/index/RegisterResponse";
+import { v4 as uuidv4 } from "uuid";
 
 const database = require("../db/db");
 
@@ -41,9 +46,16 @@ function getServer() {
   console.log("getServer function was called!");
 
   server.addService(index.User.service, {
-    SignUp: async (req: any, res: any) => {
+    Register: async (
+      req: grpc.ServerUnaryCall<RegisterRequest, RegisterResponse>,
+      res: grpc.sendUnaryData<RegisterResponse>
+    ) => {
       if (req.request.username === "" || req.request.password === "")
-        return res(null, { message: "Invalid input", code: 400 });
+        // return res(null, { message: "Invalid input", code: 400 });
+        return res({
+          code: grpc.status.INVALID_ARGUMENT,
+          message: "Username or password is empty",
+        });
       console.log("SIGN UP FUNCTION WAS CALLED!!!");
       console.log(req.request);
       const userName = await database
@@ -52,19 +64,34 @@ function getServer() {
         // .where("name", "Jojo");
         .where("username", req.request.username);
       if (userName.length >= 1) {
-        console.log("Already have an account");
-        return res(null, { message: "Already have an account", code: 401 });
+        // console.log("Already have an account");
+        // return res(null, { message: "Already have an account", code: 401 });
+        return res({
+          code: grpc.status.ALREADY_EXISTS,
+          message: "Already have an account",
+        });
       }
 
-      await database("users").insert({
-        username: req.request.username,
-        password: req.request.password,
-      });
-      return res(null, { message: "congrats!" });
+      // await database("users").insert({
+      //   username: req.request.username,
+      //   password: req.request.password,
+      // });
+      const sessionToken: string = uuidv4();
+      // const user = await database
+      //   .select("*")
+      //   .from("users")
+      //   .where("username", req.body.username)
+      //   .andWhere("password", req.body.password);
+      // await database("sessions").insert({ userId: user[0].id, sessionToken });
+
+      return res(null, { sessionToken: "congrats!" });
     },
 
-    Login: async (req: any, res: any) => {
-      console.log("LOGIN FUNCTION WAS CALLED!!!");
+    Login: async (
+      req: grpc.ServerUnaryCall<LoginRequest, LoginResponse>,
+      res: grpc.sendUnaryData<LoginResponse>
+    ) => {
+      console.log(`Login Request: ${JSON.stringify(req)}`);
       const user = await database
         .select("*")
         .from("users")
@@ -73,13 +100,21 @@ function getServer() {
       if (user.length === 0) {
         console.log("invalid input error here!!!");
         return res({
-          code: 400,
-          message: "invalid input",
-          status: grpc.status.INTERNAL,
+          code: grpc.status.INVALID_ARGUMENT,
+          message: "Something Broken!",
         });
+        // return res({
+        //   code: 400,
+        //   message: "invalid input",
+        //   // status: grpc.status.INTERNAL,
+        // });
       }
       // from here i wanna send the user to node server. then store id and token together in database!
-      return res(null, { user, message: "c'mon man please read this message" });
+
+      const response: LoginResponse = {
+        sessionToken: "test",
+      };
+      return res(null, response);
     },
     CreateReservation: async (req: any, res: any) => {
       if (!req.request.sessionToken)
@@ -98,6 +133,7 @@ function getServer() {
         start_location: req.request.startLocation,
         destination: req.request.destination,
         pickupTime: "12:30:55.12345-05:00",
+        is_deleted: false,
       });
 
       res(null, {});
@@ -120,6 +156,19 @@ function getServer() {
     GetLatestReservation: async (req: any, res: any) => {
       if (!req.request.sessionToken)
         return res(null, { message: "Unauthorized User", code: 401 });
+      const validUser = await database
+        .select("*")
+        .from("sessions")
+        .where("sessionToken", req.request.sessionToken);
+
+      if (validUser.length === 0) {
+        return res(null, { message: "Unauthorized User", code: 401 });
+      }
+    },
+    CancelReservation: async (req: any, res: any) => {
+      if (!req.request.sessionToken)
+        return res(null, { message: "Unauthorized User", code: 401 });
+
       const validUser = await database
         .select("*")
         .from("sessions")

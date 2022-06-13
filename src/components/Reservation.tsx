@@ -20,6 +20,12 @@ export default function Reservation() {
         console.log(latestReservationRequest.data)
     }
     
+    async function cancelReservation(){
+        const cancelReservationRequest = await axios.post("http://localhost:8080/cancel", {sessionToken})
+        console.log(cancelReservationRequest)
+    }
+
+    
     
     return (
         <div>
@@ -34,7 +40,7 @@ export default function Reservation() {
                 </div>
             })}
             <button onClick={getLatestReservation}>Get Latest Reservation</button>
-
+            <button onClick={cancelReservation}>Cancel Reservation</button>
             </div>
         </div>
     )

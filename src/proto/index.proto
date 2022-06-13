@@ -10,7 +10,7 @@ option go_package = "./proto" ;
 service User {
 
     rpc Login(LoginRequest) returns (LoginResponse);
-    rpc SignUp(RegisterRequest) returns (RegisterResponse);
+    rpc Register(RegisterRequest) returns (RegisterResponse);
     rpc CreateReservation(CreateReservationRequest) returns (CreateReservationResponse);
     rpc GetReservation(GetReservationRequest) returns  (GetReservationResponse);
     rpc CancelReservation(CancelReservationRequest) returns (CancelReservationResponse);
