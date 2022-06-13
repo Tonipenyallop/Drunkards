@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {CreateReservationRequest} from "../proto/index/CreateReservationRequest"
 import axios from "axios"
+import Reservation from "./Reservation";
 export default function UserPage() {
   const navigate = useNavigate();
   const [startLocation, setStartLocation] = useState<string>("");
@@ -31,6 +32,8 @@ export default function UserPage() {
 
       }} />
       <button onClick={temp}>Search</button>
+
+      <Reservation/>
       {/* <button className="" onClick={() => navigate("/detail")}>
         Fake companyA
       </button> */}
