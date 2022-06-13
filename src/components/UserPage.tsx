@@ -13,7 +13,7 @@ export default function UserPage() {
       console.log(startLocation)
       console.log(destination)
       console.log(pickupTime)
-      axios.post("http://localhost:8080/reservation", {startLocation, destination, pickupTime} )
+      axios.post("http://localhost:8080/reservation", {startLocation, destination, pickupTime, request} )
   }
   return (
     <div>

@@ -3,6 +3,8 @@ import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
 import { ProtoGrpcType } from "../proto/index";
 import { LoginResponse } from "../proto/index/LoginResponse";
+import { Exceptions } from "../proto/index/Exceptions";
+
 const database = require("../db/db");
 
 const PROTO_PATH = "../proto/index.proto";
@@ -39,11 +41,39 @@ function getServer() {
   console.log("getServer function was called!");
 
   server.addService(index.User.service, {
-    Login: (req: any, res: any) => {
+    Login: async (req: any, res: any) => {
       console.log("LOGIN FUNCTION WAS CALLED!!!");
+      const user = await database
+        .select("*")
+        .from("users")
+        .where("name", req.request.username)
+        .andWhere("password", req.request.password);
+      if (user.length === 0) {
+        console.log("invalid user here!!!");
+
+        return res({
+          code: 400,
+          message: "invalid input",
+          status: grpc.status.INTERNAL,
+        });
+      }
+      console.log("come here?");
+      console.log("user is below");
+      console.log(user);
+      console.log("req.request");
       console.log(req.request);
+      console.log(res);
+
+      // console.log(req.request);
       const response: LoginResponse = {};
-      res(null, response);
+      // return res("success");
+      return res(null, "success");
+    },
+    CreateReservation: (req: any, res: any) => {
+      console.log("IM GLAD TO BE CALLED");
+      console.log(req.request);
+
+      res(null, "ddataojc");
     },
   });
   return server;

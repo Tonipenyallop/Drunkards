@@ -42,47 +42,48 @@ const client = new grpcObj.index.User(
 app.post("/login", async( req: Request, res: Response ) => {
 
     try {
-    const user = await database.select("*").from("users").where("name", req.body.name).andWhere("password", req.body.password)
-    if(user.length === 0) {
-        res.sendStatus(400) 
-        return 
-    }
+    // const user = await database.select("*").from("users").where("name", req.body.name).andWhere("password", req.body.password)
+    // if(user.length === 0) {
+    //     res.sendStatus(400) 
+    //     return 
+    // }
 
     let response : LoginResponse= new LoginResponse();
-
+        console.log("webserver")
+        console.log(req.body)
     await client.Login(
-        { username: user[0].name, password: user[0].password },
+        // { username: user[0].name, password: user[0].password },
+        {username: req.body.name, password: req.body.password},
         async(err, result) => {
             if (err) {
+                console.log("Error is true")
                 console.error(err);
-                return;
+                // return res.send({message : err, status: 400}).status(400)
+                return res.status(400).send({message: "Invalid Input"})
+                // return;
             }
-            console.log('result');
-            
+
+            console.log('result is printed here?');
             console.log(result);
             // from here
             // just created session token when user successfully login!
-            const sessionToken : string = uuidv4()
-            console.log("sessionToken")
-            console.log(sessionToken)
-            console.log("user")
-            console.log(user[0].id)
-            const temp = response.setSessiontoken(sessionToken)
-            // const a = temp.getSessiontoken();
-            console.log("temp")
-            console.log(temp)
-            await database("sessions").insert({userId: user[0].id, sessionToken })
+            // const sessionToken : string = uuidv4()
+            // console.log("sessionToken")
+            // console.log(sessionToken)
+            // console.log("user")
+            // console.log(user[0].id)
+            // const temp = response.setSessiontoken(sessionToken)
+            // // const a = temp.getSessiontoken();
+            // console.log("temp")
+            // console.log(temp)
+            // await database("sessions").insert({userId: user[0].id, sessionToken })
 
-            res.send({sessionToken}).status(200)
+            // res.send({sessionToken}).status(200)
+            res.send("temp")
             // response.sessionToken = sessionToken;
              
         }
         );
-        // console.log("response")
-        // console.log(response)
-        
-        // console.log(response.toObject())
-        // res.send("successfully login ");
     }
     catch (err){
         res.send({message : err})
@@ -94,8 +95,27 @@ app.post("/signUp", async (req: Request, res: Response)=> {
 })
 
 app.post("/reservation", async (req:Request, res: Response) => {
-    console.log(req.body)
+    try{
+    console.log('reservation was called')
+    console.log(req.body.request.sessionToken)
+    const temp = await database.select("*").from("sessions").where("sessionToken",req.body.request.sessionToken )
+    console.log("temp")
+    console.log(temp)
+    if(temp.length === 0 ) {
+        res.send("Unauthorized user").status(401)
+    }
+
+    await client.CreateReservation( {startLocation: req.body.startLocation, destination: req.body.destination, pickupTime: req.body.pickupTime , sessionToken : req.body.request.sessionToken},  async (err , result) => {
+        console.log(err)
+        console.log(result)
+
+    })
+
     res.send("OKIDOKI")
+    }
+    catch (err) {
+        res.send({message : err})
+    }
 })
 // start the Express server
 app.listen( expressPORT, () => {
