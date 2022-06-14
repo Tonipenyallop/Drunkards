@@ -60,6 +60,7 @@ app.post("/register", async (req: Request, res: Response)=> {
     client.Register({username: req.body.username, password :req.body.password}, (err,result) => {
         if(err){
             console.log(`ERROR : ${err}`)
+            res.send({err})
         } else {
             console.log(`result: ${JSON.stringify(result)}`)
             res.send({sessionToken : result})
