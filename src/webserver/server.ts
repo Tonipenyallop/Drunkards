@@ -56,31 +56,21 @@ app.post("/login", async( req: Request, res: Response ) => {
 
 } );
 
-app.post("/signUp", async (req: Request, res: Response)=> {
-    try {
-        console.log(req.body)
-        await client.Register({username: req.body.username, password :req.body.password}, async(err, result) => {
-            console.log("inside the sign up form")
-        })
-
-        // let myVar: Exceptions = {
-        //     invalidInput : "input is wrong"
-        // }
-        let myExceptionType = Exceptions.INVALID_INPUT_EXCEPTION;
-
-        // ...
-
-        if (myExceptionType === Exceptions.INVALID_INPUT_EXCEPTION) {
-            // handle invalid input
+app.post("/register", async (req: Request, res: Response)=> {
+    client.Register({username: req.body.username, password :req.body.password}, (err,result) => {
+        if(err){
+            console.log(`ERROR : ${err}`)
+        } else {
+            console.log(`result: ${JSON.stringify(result)}`)
+            res.send({sessionToken : result})
         }
 
-        res.send("SIGNUP")
-    }
-    catch (err) {
-        res.send({message : err})
+    })
+    
+                
+    
 
-    }
-})
+});
 
 app.post("/get_reservation", async (req:Request, res: Response) => {
     console.log("req")

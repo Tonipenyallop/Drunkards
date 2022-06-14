@@ -51,19 +51,24 @@ function getServer() {
       req: grpc.ServerUnaryCall<RegisterRequest, RegisterResponse>,
       res: grpc.sendUnaryData<RegisterResponse>
     ) => {
-      if (req.request.username === "" || req.request.password === "")
-        // return res(null, { message: "Invalid input", code: 400 });
+      // check username and password is filled
+      if (req.request.username === "" || req.request.password === "") {
+        const metadata = new grpc.Metadata();
+        metadata.add("type", Exceptions.INVALID_INPUT_EXCEPTION.toString());
+
         return res({
           code: grpc.status.INVALID_ARGUMENT,
           message: "Username or password is empty",
+          metadata,
         });
-      console.log("SIGN UP FUNCTION WAS CALLED!!!");
-      console.log(req.request);
+      }
+
       const userName = await database
         .select("username")
         .from("users")
-        // .where("name", "Jojo");
         .where("username", req.request.username);
+
+      // check user doesn't have an account
       if (userName.length >= 1) {
         const metadata = new grpc.Metadata();
         metadata.add("type", Exceptions.INVALID_INPUT_EXCEPTION.toString());
@@ -74,17 +79,10 @@ function getServer() {
         });
       }
 
-      // await database("users").insert({
-      //   username: req.request.username,
-      //   password: req.request.password,
-      // });
-      // const sessionToken: string = uuidv4();
-      // const user = await database
-      //   .select("*")
-      //   .from("users")
-      //   .where("username", req.body.username)
-      //   .andWhere("password", req.body.password);
-      // await database("sessions").insert({ userId: user[0].id, sessionToken });
+      await database("users").insert({
+        username: req.request.username,
+        password: req.request.password,
+      });
 
       return res(null, { sessionToken: "congrats!" });
     },

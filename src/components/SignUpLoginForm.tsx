@@ -13,6 +13,7 @@ export default function SignUpLogInForm() {
   const [phoneOrEmail, setPhoneOrEmail] = useState<string>("");
   const [loginPassword, setLoginPassword] = useState<string>("");
   const [loginPhoneOrEmail, setLoginPhoneOrEmail] = useState<string>("");
+  const [isSuccessRegister, setIsSuccessRegister] = useState<boolean>(false);
 
   async function requestLogin() {
     const response = await axios.post("http://localhost:8080/login", {
@@ -27,18 +28,15 @@ export default function SignUpLogInForm() {
     if (response.data) navigate("/user");
   }
 
-  async function signUp() {
-    console.log("clicked");
-    console.log(phoneOrEmail);
-    console.log(password);
-    const userInfo = {
-      phoneOrEmail,
-      password,
-    };
-    const signUpRequest = await axios.post("http://localhost:8080/signUp", {
+  async function register() {
+    const registerRequest = await axios.post("http://localhost:8080/register", {
       username: phoneOrEmail,
       password,
     });
+    console.log(registerRequest.data);
+    if (registerRequest.status === 200) {
+      setIsSuccessRegister(true);
+    }
   }
 
   return (
@@ -72,7 +70,8 @@ export default function SignUpLogInForm() {
           placeholder="Password"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button onClick={() => signUp()}>SIGN UP</button>
+        <button onClick={() => register()}>SIGN UP</button>
+        {isSuccessRegister ? <div>Successfully Register</div> : <></>}
       </div>
     </div>
   );
