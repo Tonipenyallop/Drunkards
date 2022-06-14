@@ -48,28 +48,10 @@ app.post("/login", async( req: Request, res: Response ) => {
     }, (err, result) => {
         if (err) {
             console.log(`ERROR: ${JSON.stringify(err)}`);
-            // return res.status(400).send({message: `Invalid Input: ${err}`})
         } else {
-            // result is not printed out 
             console.log(`result: ${JSON.stringify(result)}`);
             res.send({sessionToken : result})
         }
-
-        
-           
-           
-            // just created session token when user successfully login!
-            // const sessionToken : string = uuidv4()
-            // const user = await database
-            // .select("*")
-            // .from("users")
-            // .where("username", req.body.username)
-            // .andWhere("password", req.body.password);
-
-            // await database("sessions").insert({userId: user[0].id, sessionToken })
-
-            // res.status(200).send({sessionToken, user: result})
-             
         });
 
 } );

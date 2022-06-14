@@ -20,7 +20,10 @@ export default function SignUpLogInForm() {
       password: loginPassword,
     });
 
-    window.localStorage.setItem("sessionToken", response.data.sessionToken);
+    window.localStorage.setItem(
+      "sessionToken",
+      JSON.stringify(response.data.sessionToken)
+    );
     if (response.data) navigate("/user");
   }
 
