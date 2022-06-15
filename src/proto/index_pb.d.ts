@@ -1,5 +1,6 @@
 import * as jspb from 'google-protobuf'
 
+import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
 
 
 export class LoginRequest extends jspb.Message {
@@ -89,8 +90,10 @@ export class CreateReservationRequest extends jspb.Message {
   getDestination(): string;
   setDestination(value: string): CreateReservationRequest;
 
-  getPickuptime(): number;
-  setPickuptime(value: number): CreateReservationRequest;
+  getPickuptime(): google_protobuf_timestamp_pb.Timestamp | undefined;
+  setPickuptime(value?: google_protobuf_timestamp_pb.Timestamp): CreateReservationRequest;
+  hasPickuptime(): boolean;
+  clearPickuptime(): CreateReservationRequest;
 
   getSessiontoken(): string;
   setSessiontoken(value: string): CreateReservationRequest;
@@ -107,7 +110,7 @@ export namespace CreateReservationRequest {
   export type AsObject = {
     startlocation: string,
     destination: string,
-    pickuptime: number,
+    pickuptime?: google_protobuf_timestamp_pb.Timestamp.AsObject,
     sessiontoken: string,
   }
 }
@@ -171,8 +174,10 @@ export class Reservation extends jspb.Message {
   getDestination(): string;
   setDestination(value: string): Reservation;
 
-  getPickuptime(): number;
-  setPickuptime(value: number): Reservation;
+  getPickuptime(): google_protobuf_timestamp_pb.Timestamp | undefined;
+  setPickuptime(value?: google_protobuf_timestamp_pb.Timestamp): Reservation;
+  hasPickuptime(): boolean;
+  clearPickuptime(): Reservation;
 
   getReservationid(): number;
   setReservationid(value: number): Reservation;
@@ -189,7 +194,7 @@ export namespace Reservation {
   export type AsObject = {
     startlocation: string,
     destination: string,
-    pickuptime: number,
+    pickuptime?: google_protobuf_timestamp_pb.Timestamp.AsObject,
     reservationid: number,
   }
 }

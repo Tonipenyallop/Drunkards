@@ -4,6 +4,10 @@ package index;
 
 option go_package = "./proto" ;
 
+import "google/protobuf/timestamp.proto";
+
+
+
 
 
 
@@ -39,7 +43,7 @@ message RegisterResponse {
 message CreateReservationRequest {
     string startLocation = 1;
     string destination = 2;
-    int64 pickupTime = 3;
+    google.protobuf.Timestamp pickupTime = 3;
     string sessionToken = 4;
 }
 
@@ -58,7 +62,7 @@ message GetReservationResponse {
 message Reservation {
     string startLocation = 1;
     string destination = 2;
-    int64 pickupTime = 3;
+    google.protobuf.Timestamp pickupTime = 3;
     int64 reservationID = 4;
 }
 

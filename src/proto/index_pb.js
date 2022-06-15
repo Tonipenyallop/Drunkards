@@ -21,6 +21,8 @@ var global = (function() {
   return Function('return this')();
 }.call(null));
 
+var google_protobuf_timestamp_pb = require('google-protobuf/google/protobuf/timestamp_pb.js');
+goog.object.extend(proto, google_protobuf_timestamp_pb);
 goog.exportSymbol('proto.index.CancelReservationRequest', null, global);
 goog.exportSymbol('proto.index.CancelReservationResponse', null, global);
 goog.exportSymbol('proto.index.CreateReservationRequest', null, global);
@@ -922,7 +924,7 @@ proto.index.CreateReservationRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     startlocation: jspb.Message.getFieldWithDefault(msg, 1, ""),
     destination: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    pickuptime: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    pickuptime: (f = msg.getPickuptime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
     sessiontoken: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
@@ -969,7 +971,8 @@ proto.index.CreateReservationRequest.deserializeBinaryFromReader = function(msg,
       msg.setDestination(value);
       break;
     case 3:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = new google_protobuf_timestamp_pb.Timestamp;
+      reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
       msg.setPickuptime(value);
       break;
     case 4:
@@ -1020,10 +1023,11 @@ proto.index.CreateReservationRequest.serializeBinaryToWriter = function(message,
     );
   }
   f = message.getPickuptime();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (f != null) {
+    writer.writeMessage(
       3,
-      f
+      f,
+      google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
     );
   }
   f = message.getSessiontoken();
@@ -1073,20 +1077,39 @@ proto.index.CreateReservationRequest.prototype.setDestination = function(value) 
 
 
 /**
- * optional int64 pickupTime = 3;
- * @return {number}
+ * optional google.protobuf.Timestamp pickupTime = 3;
+ * @return {?proto.google.protobuf.Timestamp}
  */
 proto.index.CreateReservationRequest.prototype.getPickuptime = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+  return /** @type{?proto.google.protobuf.Timestamp} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 3));
 };
 
 
 /**
- * @param {number} value
+ * @param {?proto.google.protobuf.Timestamp|undefined} value
+ * @return {!proto.index.CreateReservationRequest} returns this
+*/
+proto.index.CreateReservationRequest.prototype.setPickuptime = function(value) {
+  return jspb.Message.setWrapperField(this, 3, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
  * @return {!proto.index.CreateReservationRequest} returns this
  */
-proto.index.CreateReservationRequest.prototype.setPickuptime = function(value) {
-  return jspb.Message.setProto3IntField(this, 3, value);
+proto.index.CreateReservationRequest.prototype.clearPickuptime = function() {
+  return this.setPickuptime(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.index.CreateReservationRequest.prototype.hasPickuptime = function() {
+  return jspb.Message.getField(this, 3) != null;
 };
 
 
@@ -1533,7 +1556,7 @@ proto.index.Reservation.toObject = function(includeInstance, msg) {
   var f, obj = {
     startlocation: jspb.Message.getFieldWithDefault(msg, 1, ""),
     destination: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    pickuptime: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    pickuptime: (f = msg.getPickuptime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
     reservationid: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
@@ -1580,7 +1603,8 @@ proto.index.Reservation.deserializeBinaryFromReader = function(msg, reader) {
       msg.setDestination(value);
       break;
     case 3:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = new google_protobuf_timestamp_pb.Timestamp;
+      reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
       msg.setPickuptime(value);
       break;
     case 4:
@@ -1631,10 +1655,11 @@ proto.index.Reservation.serializeBinaryToWriter = function(message, writer) {
     );
   }
   f = message.getPickuptime();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (f != null) {
+    writer.writeMessage(
       3,
-      f
+      f,
+      google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
     );
   }
   f = message.getReservationid();
@@ -1684,20 +1709,39 @@ proto.index.Reservation.prototype.setDestination = function(value) {
 
 
 /**
- * optional int64 pickupTime = 3;
- * @return {number}
+ * optional google.protobuf.Timestamp pickupTime = 3;
+ * @return {?proto.google.protobuf.Timestamp}
  */
 proto.index.Reservation.prototype.getPickuptime = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+  return /** @type{?proto.google.protobuf.Timestamp} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 3));
 };
 
 
 /**
- * @param {number} value
+ * @param {?proto.google.protobuf.Timestamp|undefined} value
+ * @return {!proto.index.Reservation} returns this
+*/
+proto.index.Reservation.prototype.setPickuptime = function(value) {
+  return jspb.Message.setWrapperField(this, 3, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
  * @return {!proto.index.Reservation} returns this
  */
-proto.index.Reservation.prototype.setPickuptime = function(value) {
-  return jspb.Message.setProto3IntField(this, 3, value);
+proto.index.Reservation.prototype.clearPickuptime = function() {
+  return this.setPickuptime(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.index.Reservation.prototype.hasPickuptime = function() {
+  return jspb.Message.getField(this, 3) != null;
 };
 
 

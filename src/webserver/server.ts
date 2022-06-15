@@ -9,6 +9,9 @@ import { randomUUID } from "crypto";
 import {v4 as uuidv4} from 'uuid';
 import { convertCompilerOptionsFromJson } from "typescript";
 import { Exceptions } from "../proto/index/Exceptions";
+import { timeStamp } from "console";
+import { CreateReservationRequest } from "../proto/index/CreateReservationRequest";
+import { Timestamp } from '../proto/google/protobuf/Timestamp';
 
 const database = require("../db/db")
 const express = require("express")
@@ -88,23 +91,52 @@ app.post("/get_reservation", async (req:Request, res: Response) => {
 } )
 
 app.post("/reservation", async (req:Request, res: Response) => {
+    console.log(req.body)
+    if (req.body.sessionToken === null) return res.send({Error : Exceptions.INVALID_INPUT_EXCEPTION})
+        let sessionToken;
     try{
-        console.log("req.body.pickupTime")
-        console.log(req.body.pickupTime)
-        await client.CreateReservation( {startLocation: req.body.startLocation, destination: req.body.destination, pickupTime: req.body.pickupTime , sessionToken : req.body.request.sessionToken},   async (err , result) => {
+        sessionToken = JSON.parse(req.body.sessionToken).sessionToken
+    } catch (err) {
+        return res.send({err})
+    }
+        console.log(`pickupTime ${req.body.pickupTime}`)
+        console.log(`startLocation ${req.body.startLocation}`)
+        console.log(`destination ${req.body.destination}`)
+        console.log(`sessionToken ${sessionToken}`)
+        // const date = new Date(req.body.pickupTime)
+        const creationDate = new Date(req.body.pickupTime);
+        console.log(`creationDate : ${creationDate.getSeconds()}`)
+        
 
+        const request : CreateReservationRequest = {
+            startLocation : req.body.startLocation,
+            destination : req.body.destination,
+            pickupTime :  {seconds : creationDate.getTime() / 1000} as Timestamp,
+            sessionToken : req.body.sessionToken
+        }
+
+        console.log("request.pickupTime")
+        console.log(request.pickupTime)
+        
+        await client.CreateReservation( request,   async (err , result) => {
+            // somehow it is throwing the error
             if(err){
-                return res.status(400).send({message: err})
+                res.send({err})
+
             }
+            else{
+                console.log(result)
+                  res.send("OKIDOKI")
+                }
+
             // fix here later
-            console.log("successfully request the car")
+            // console.log("successfully request the car")
         })
 
-    res.send("OKIDOKI")
-    }
-    catch (err) {
-        res.send({message : err})
-    }
+
+
+
+    
 })
 
 app.post("/latest_reservation", async (req:Request, res: Response) => {
@@ -130,3 +162,9 @@ app.post("/cancel",async (req:Request, res: Response) => {
 app.listen( expressPORT, () => {
     console.log(`server started at http://localhost:${ expressPORT }` );
 } );
+
+
+
+// function toDate(timestamp: Timestamp): Date {
+//     return new Date(timestamp.getSeconds()*1000 + timestamp.getNanos()/1e6);
+// }

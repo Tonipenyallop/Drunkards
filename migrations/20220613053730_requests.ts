@@ -7,7 +7,7 @@ export async function up(knex: Knex): Promise<void> {
       table.integer("userId").notNullable()
       table.string("start_location").notNullable();
       table.string("destination").notNullable();
-      table.string("pickupTime").notNullable();
+      table.dateTime("pickupTime").notNullable();
       table.boolean("is_deleted").notNullable();
     });
   } 

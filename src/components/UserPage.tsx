@@ -8,13 +8,12 @@ export default function UserPage() {
   const [startLocation, setStartLocation] = useState<string>("");
   const [destination, setDestination] = useState<string>("");
   const [pickupTime, setPickupTime] = useState<string>();
-  const temp = () => {
+  const getReservationRequest = async() => {
       const token  = window.localStorage.getItem("sessionToken")
-      const request : CreateReservationRequest = {sessionToken : token?.toString() }
-      console.log(startLocation)
-      console.log(destination)
-      console.log(pickupTime)
-      axios.post("http://localhost:8080/reservation", {startLocation, destination, pickupTime, request} )
+      console.log(`token: ${(token)}`)
+
+      const reservationRequest = await axios.post("http://localhost:8080/reservation", {startLocation, destination, pickupTime, sessionToken: token} )
+      console.log(reservationRequest.data)
   }
   return (
     <div>
@@ -25,13 +24,13 @@ export default function UserPage() {
       <input type="text" placeholder="To" onChange={(e)=>{
         setDestination(e.target.value)
       }} />
-      <input type="time" placeholder="When" onChange={(e)=>{
+      <input type="datetime-local" placeholder="When" onChange={(e)=>{
 
-
+        console.log(e.target.value)
         setPickupTime(e.target.value)
 
       }} />
-      <button onClick={temp}>Request Car</button>
+      <button onClick={getReservationRequest}>Request Car</button>
 
       <Reservation/>
       {/* <button className="" onClick={() => navigate("/detail")}>

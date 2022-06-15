@@ -8,6 +8,11 @@ type SubtypeConstructor<Constructor extends new (...args: any) => any, Subtype> 
 };
 
 export interface ProtoGrpcType {
+  google: {
+    protobuf: {
+      Timestamp: MessageTypeDefinition
+    }
+  }
   index: {
     CancelReservationRequest: MessageTypeDefinition
     CancelReservationResponse: MessageTypeDefinition

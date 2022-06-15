@@ -10,6 +10,8 @@ import { RegisterRequest } from "../proto/index/RegisterRequest";
 import { RegisterResponse } from "../proto/index/RegisterResponse";
 import { v4 as uuidv4 } from "uuid";
 import { groupCollapsed } from "console";
+import { CreateReservationRequest } from "../proto/index/CreateReservationRequest";
+import { CreateReservationResponse } from "../proto/index/CreateReservationResponse";
 
 const database = require("../db/db");
 
@@ -130,27 +132,59 @@ function getServer() {
 
       return res(null, { sessionToken } as LoginResponse);
     },
-    CreateReservation: async (req: any, res: any) => {
-      if (!req.request.sessionToken)
-        return res(null, { message: "Unauthorized User", code: 401 });
+    CreateReservation: async (
+      req: grpc.ServerUnaryCall<
+        CreateReservationRequest,
+        CreateReservationResponse
+      >,
+      res: grpc.sendUnaryData<CreateReservationResponse>
+    ) => {
+      console.log(`Request: ${JSON.stringify(req.request)}`);
+      // check authorized user
+      if (!req.request.sessionToken) {
+        const metadata = new grpc.Metadata();
+        metadata.add("type", Exceptions.UNAUTHORIZED_USER_EXCEPTION.toString());
+        return res({
+          code: grpc.status.PERMISSION_DENIED,
+          message: "sessionToken is missing from request",
+          metadata,
+        });
+      }
+      const parsedSessionToken = JSON.parse(
+        req.request.sessionToken
+      ).sessionToken;
       const requestedUser = await database
         .select("*")
         .from("sessions")
-        .where("sessionToken", req.request.sessionToken);
+        .where("sessionToken", parsedSessionToken);
 
+      // sessionToken is correct from database and requested token
       if (requestedUser.length === 0) {
-        return res(null, { message: "Unauthorized User", code: 401 });
+        const metadata = new grpc.Metadata();
+        metadata.add("type", Exceptions.UNAUTHORIZED_USER_EXCEPTION.toString());
+        return res({
+          code: grpc.status.UNAUTHENTICATED,
+          message: "sessionToken doesn't match from database",
+          metadata,
+        });
       }
+      // from here
+      // pickup time to date
+      const pickupTime = new Date(
+        (req.request.pickupTime?.seconds as number) * 1000
+      );
 
       await database("requests").insert({
         userId: requestedUser[0].userId,
         start_location: req.request.startLocation,
         destination: req.request.destination,
-        pickupTime: "12:30:55.12345-05:00",
+        pickupTime: pickupTime,
         is_deleted: false,
       });
 
-      res(null, {});
+      console.log("");
+
+      return res(null, {} as CreateReservationResponse);
     },
     GetReservation: async (req: any, res: any) => {
       if (!req.request.sessionToken)
