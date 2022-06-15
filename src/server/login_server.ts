@@ -153,9 +153,8 @@ function getServer() {
         .from("sessions")
         .where("sessionToken", parsedSessionToken);
 
-      // convert into milliseconds because Javascript expects milliseconds
-      const pickupTime = new Date(
-        (req.request.pickupTime?.seconds as number) * 1000
+      const pickupTime = convertToJSDate(
+        req.request.pickupTime?.seconds as number
       );
 
       await database("requests").insert({
@@ -244,6 +243,11 @@ async function checkValidSessionToken(sessionToken: string | undefined) {
     message: "sessionToken valid",
     metadata,
   };
+}
+
+function convertToJSDate(JSDate: number): Date {
+  // convert into milliseconds because Javascript expects milliseconds
+  return new Date(JSDate * 1000);
 }
 
 main();
