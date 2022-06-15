@@ -63,11 +63,11 @@ message Reservation {
     string startLocation = 1;
     string destination = 2;
     google.protobuf.Timestamp pickupTime = 3;
-    int64 reservationID = 4;
+    string reservationID = 4;
 }
 
 message CancelReservationRequest {
-    int64 reservationID = 1;
+    string reservationID = 1;
     string sessionToken = 2;
 }
 
@@ -82,7 +82,7 @@ message GetLatestReservationRequest {
 
 message GetLatestReservationResponse {
     Reservation latestReservation = 1;
-    int64 estimatedTimeOnArrival = 2;
+    google.protobuf.Timestamp estimatedTimeOnArrival = 2;
 }
 
 enum Exceptions {

@@ -179,8 +179,8 @@ export class Reservation extends jspb.Message {
   hasPickuptime(): boolean;
   clearPickuptime(): Reservation;
 
-  getReservationid(): number;
-  setReservationid(value: number): Reservation;
+  getReservationid(): string;
+  setReservationid(value: string): Reservation;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Reservation.AsObject;
@@ -195,13 +195,13 @@ export namespace Reservation {
     startlocation: string,
     destination: string,
     pickuptime?: google_protobuf_timestamp_pb.Timestamp.AsObject,
-    reservationid: number,
+    reservationid: string,
   }
 }
 
 export class CancelReservationRequest extends jspb.Message {
-  getReservationid(): number;
-  setReservationid(value: number): CancelReservationRequest;
+  getReservationid(): string;
+  setReservationid(value: string): CancelReservationRequest;
 
   getSessiontoken(): string;
   setSessiontoken(value: string): CancelReservationRequest;
@@ -216,7 +216,7 @@ export class CancelReservationRequest extends jspb.Message {
 
 export namespace CancelReservationRequest {
   export type AsObject = {
-    reservationid: number,
+    reservationid: string,
     sessiontoken: string,
   }
 }
@@ -259,8 +259,10 @@ export class GetLatestReservationResponse extends jspb.Message {
   hasLatestreservation(): boolean;
   clearLatestreservation(): GetLatestReservationResponse;
 
-  getEstimatedtimeonarrival(): number;
-  setEstimatedtimeonarrival(value: number): GetLatestReservationResponse;
+  getEstimatedtimeonarrival(): google_protobuf_timestamp_pb.Timestamp | undefined;
+  setEstimatedtimeonarrival(value?: google_protobuf_timestamp_pb.Timestamp): GetLatestReservationResponse;
+  hasEstimatedtimeonarrival(): boolean;
+  clearEstimatedtimeonarrival(): GetLatestReservationResponse;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetLatestReservationResponse.AsObject;
@@ -273,7 +275,7 @@ export class GetLatestReservationResponse extends jspb.Message {
 export namespace GetLatestReservationResponse {
   export type AsObject = {
     latestreservation?: Reservation.AsObject,
-    estimatedtimeonarrival: number,
+    estimatedtimeonarrival?: google_protobuf_timestamp_pb.Timestamp.AsObject,
   }
 }
 

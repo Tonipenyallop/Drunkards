@@ -1557,7 +1557,7 @@ proto.index.Reservation.toObject = function(includeInstance, msg) {
     startlocation: jspb.Message.getFieldWithDefault(msg, 1, ""),
     destination: jspb.Message.getFieldWithDefault(msg, 2, ""),
     pickuptime: (f = msg.getPickuptime()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
-    reservationid: jspb.Message.getFieldWithDefault(msg, 4, 0)
+    reservationid: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -1608,7 +1608,7 @@ proto.index.Reservation.deserializeBinaryFromReader = function(msg, reader) {
       msg.setPickuptime(value);
       break;
     case 4:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {string} */ (reader.readString());
       msg.setReservationid(value);
       break;
     default:
@@ -1663,8 +1663,8 @@ proto.index.Reservation.serializeBinaryToWriter = function(message, writer) {
     );
   }
   f = message.getReservationid();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (f.length > 0) {
+    writer.writeString(
       4,
       f
     );
@@ -1746,20 +1746,20 @@ proto.index.Reservation.prototype.hasPickuptime = function() {
 
 
 /**
- * optional int64 reservationID = 4;
- * @return {number}
+ * optional string reservationID = 4;
+ * @return {string}
  */
 proto.index.Reservation.prototype.getReservationid = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.index.Reservation} returns this
  */
 proto.index.Reservation.prototype.setReservationid = function(value) {
-  return jspb.Message.setProto3IntField(this, 4, value);
+  return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 
@@ -1795,7 +1795,7 @@ proto.index.CancelReservationRequest.prototype.toObject = function(opt_includeIn
  */
 proto.index.CancelReservationRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    reservationid: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    reservationid: jspb.Message.getFieldWithDefault(msg, 1, ""),
     sessiontoken: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
@@ -1834,7 +1834,7 @@ proto.index.CancelReservationRequest.deserializeBinaryFromReader = function(msg,
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {string} */ (reader.readString());
       msg.setReservationid(value);
       break;
     case 2:
@@ -1871,8 +1871,8 @@ proto.index.CancelReservationRequest.prototype.serializeBinary = function() {
 proto.index.CancelReservationRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getReservationid();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (f.length > 0) {
+    writer.writeString(
       1,
       f
     );
@@ -1888,20 +1888,20 @@ proto.index.CancelReservationRequest.serializeBinaryToWriter = function(message,
 
 
 /**
- * optional int64 reservationID = 1;
- * @return {number}
+ * optional string reservationID = 1;
+ * @return {string}
  */
 proto.index.CancelReservationRequest.prototype.getReservationid = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.index.CancelReservationRequest} returns this
  */
 proto.index.CancelReservationRequest.prototype.setReservationid = function(value) {
-  return jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -2187,7 +2187,7 @@ proto.index.GetLatestReservationResponse.prototype.toObject = function(opt_inclu
 proto.index.GetLatestReservationResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
     latestreservation: (f = msg.getLatestreservation()) && proto.index.Reservation.toObject(includeInstance, f),
-    estimatedtimeonarrival: jspb.Message.getFieldWithDefault(msg, 2, 0)
+    estimatedtimeonarrival: (f = msg.getEstimatedtimeonarrival()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -2230,7 +2230,8 @@ proto.index.GetLatestReservationResponse.deserializeBinaryFromReader = function(
       msg.setLatestreservation(value);
       break;
     case 2:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = new google_protobuf_timestamp_pb.Timestamp;
+      reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
       msg.setEstimatedtimeonarrival(value);
       break;
     default:
@@ -2271,10 +2272,11 @@ proto.index.GetLatestReservationResponse.serializeBinaryToWriter = function(mess
     );
   }
   f = message.getEstimatedtimeonarrival();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (f != null) {
+    writer.writeMessage(
       2,
-      f
+      f,
+      google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
     );
   }
 };
@@ -2318,20 +2320,39 @@ proto.index.GetLatestReservationResponse.prototype.hasLatestreservation = functi
 
 
 /**
- * optional int64 estimatedTimeOnArrival = 2;
- * @return {number}
+ * optional google.protobuf.Timestamp estimatedTimeOnArrival = 2;
+ * @return {?proto.google.protobuf.Timestamp}
  */
 proto.index.GetLatestReservationResponse.prototype.getEstimatedtimeonarrival = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+  return /** @type{?proto.google.protobuf.Timestamp} */ (
+    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 2));
 };
 
 
 /**
- * @param {number} value
+ * @param {?proto.google.protobuf.Timestamp|undefined} value
+ * @return {!proto.index.GetLatestReservationResponse} returns this
+*/
+proto.index.GetLatestReservationResponse.prototype.setEstimatedtimeonarrival = function(value) {
+  return jspb.Message.setWrapperField(this, 2, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
  * @return {!proto.index.GetLatestReservationResponse} returns this
  */
-proto.index.GetLatestReservationResponse.prototype.setEstimatedtimeonarrival = function(value) {
-  return jspb.Message.setProto3IntField(this, 2, value);
+proto.index.GetLatestReservationResponse.prototype.clearEstimatedtimeonarrival = function() {
+  return this.setEstimatedtimeonarrival(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.index.GetLatestReservationResponse.prototype.hasEstimatedtimeonarrival = function() {
+  return jspb.Message.getField(this, 2) != null;
 };
 
 

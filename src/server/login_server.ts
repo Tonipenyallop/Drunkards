@@ -9,10 +9,12 @@ import { LoginRequest } from "../proto/index/LoginRequest";
 import { RegisterRequest } from "../proto/index/RegisterRequest";
 import { RegisterResponse } from "../proto/index/RegisterResponse";
 import { v4 as uuidv4 } from "uuid";
-import { groupCollapsed } from "console";
+
 import { CreateReservationRequest } from "../proto/index/CreateReservationRequest";
 import { CreateReservationResponse } from "../proto/index/CreateReservationResponse";
-import { ok } from "assert";
+import { GetReservationResponse } from "../proto/index/GetReservationResponse";
+import { Reservation } from "../proto/index/Reservation";
+import { Timestamp } from "../proto/google/protobuf/Timestamp";
 
 const database = require("../db/db");
 
@@ -117,11 +119,6 @@ function getServer() {
         });
       }
 
-      await database("users").insert({
-        username: req.request.username,
-        password: req.request.password,
-      });
-
       const sessionToken: string = uuidv4();
       const userId = await database
         .select("*")
@@ -143,7 +140,7 @@ function getServer() {
       // check authorized user
       const validRequest = checkValidSessionToken(req.request.sessionToken);
       if ((await validRequest).code !== grpc.status.OK)
-        return res(validRequest as CreateReservationResponse);
+        return res((await validRequest) as CreateReservationResponse);
 
       const parsedSessionToken = JSON.parse(
         req.request.sessionToken as string
@@ -157,29 +154,38 @@ function getServer() {
         req.request.pickupTime?.seconds as number
       );
 
+      const userId = await getUserId(req.request.sessionToken as string);
+      const reservationID: string = uuidv4();
       await database("requests").insert({
-        userId: requestedUser[0].userId,
-        start_location: req.request.startLocation,
+        userId,
+        startLocation: req.request.startLocation,
         destination: req.request.destination,
         pickupTime: pickupTime,
         is_deleted: false,
+        reservationID,
       });
 
       return res(null, {} as CreateReservationResponse);
     },
-    GetReservation: async (req: any, res: any) => {
-      if (!req.request.sessionToken)
-        return res(null, { message: "Unauthorized User", code: 401 });
-      console.log("get reservation was called");
-      console.log(req.request);
-      const validUser = await database
-        .select("*")
-        .from("sessions")
-        .where("sessionToken", req.request.sessionToken);
-      console.log(validUser);
-      if (validUser.length === 0) {
-        return res(null, { message: "Unauthorized User", code: 401 });
-      }
+    GetReservation: async (
+      req: grpc.ServerUnaryCall<GetReservationRequest, GetReservationResponse>,
+      res: grpc.sendUnaryData<GetReservationResponse>
+    ) => {
+      const validRequest = checkValidSessionToken(req.request.sessionToken);
+      if ((await validRequest).code !== grpc.status.OK)
+        return res(await validRequest);
+      const userId = await getUserId(req.request.sessionToken as string);
+
+      const allRequests = await database
+        .select("startLocation", "destination", " pickupTime", "reservationID")
+        .from("requests")
+        .where("userId", userId);
+
+      const reservations: GetReservationResponse = {
+        reservations: allRequests,
+      };
+
+      res(null, reservations);
     },
 
     GetLatestReservation: async (req: any, res: any) => {
@@ -245,9 +251,24 @@ async function checkValidSessionToken(sessionToken: string | undefined) {
   };
 }
 
-function convertToJSDate(JSDate: number): Date {
+function convertToJSDate(jsDate: number): Date {
   // convert into milliseconds because Javascript expects milliseconds
-  return new Date(JSDate * 1000);
+  return new Date(jsDate * 1000);
+}
+
+function fromDate(date: Date): Timestamp {
+  return {
+    seconds: date.getTime() / 1000,
+  } as Timestamp;
+}
+
+async function getUserId(sessionToken: string): Promise<number> {
+  const parsedSessionToken = JSON.parse(sessionToken as string).sessionToken;
+  const requestedUser = await database
+    .select("*")
+    .from("sessions")
+    .where("sessionToken", parsedSessionToken);
+  return requestedUser[0].userId;
 }
 
 main();

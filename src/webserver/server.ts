@@ -80,14 +80,21 @@ app.post("/get_reservation", async (req:Request, res: Response) => {
     console.log("req")
     console.log(req.body)
     await client.GetReservation({ sessionToken :req.body.sessionToken}, (err, result)=> {
-
-
+        console.log(result)
+        console.log(err)
+        if (err) {
+            console.log(`Error thrown: ${JSON.stringify(err)}`);
+            console.log(`Result: ${JSON.stringify(result)}`)
+            return;
+        }
+        console.log(`result :${JSON.stringify(result)}`)
+        res.send(result);
     })
-    const userIdArray = await database.select("userId").from("sessions").where("sessionToken", req.body.sessionToken);
+    // const userIdArray = await database.select("userId").from("sessions").where("sessionToken", req.body.sessionToken);
 
-    const allReservations = await database.select("*").from("requests").where("userId",userIdArray[0].userId )
-    console.log(allReservations)
-    res.status(200).send({allReservations})
+    // const allReservations = await database.select("*").from("requests").where("userId",userIdArray[0].userId )
+    // console.log(allReservations)
+    // res.status(200).send({allReservations})
 } )
 
 app.post("/reservation", async (req:Request, res: Response) => {
