@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from "uuid";
 import { groupCollapsed } from "console";
 import { CreateReservationRequest } from "../proto/index/CreateReservationRequest";
 import { CreateReservationResponse } from "../proto/index/CreateReservationResponse";
+import { ok } from "assert";
 
 const database = require("../db/db");
 
@@ -139,37 +140,20 @@ function getServer() {
       >,
       res: grpc.sendUnaryData<CreateReservationResponse>
     ) => {
-      console.log(`Request: ${JSON.stringify(req.request)}`);
       // check authorized user
-      if (!req.request.sessionToken) {
-        const metadata = new grpc.Metadata();
-        metadata.add("type", Exceptions.UNAUTHORIZED_USER_EXCEPTION.toString());
-        return res({
-          code: grpc.status.PERMISSION_DENIED,
-          message: "sessionToken is missing from request",
-          metadata,
-        });
-      }
+      const validRequest = checkValidSessionToken(req.request.sessionToken);
+      if ((await validRequest).code !== grpc.status.OK)
+        return res(validRequest as CreateReservationResponse);
+
       const parsedSessionToken = JSON.parse(
-        req.request.sessionToken
+        req.request.sessionToken as string
       ).sessionToken;
       const requestedUser = await database
         .select("*")
         .from("sessions")
         .where("sessionToken", parsedSessionToken);
 
-      // sessionToken is correct from database and requested token
-      if (requestedUser.length === 0) {
-        const metadata = new grpc.Metadata();
-        metadata.add("type", Exceptions.UNAUTHORIZED_USER_EXCEPTION.toString());
-        return res({
-          code: grpc.status.UNAUTHENTICATED,
-          message: "sessionToken doesn't match from database",
-          metadata,
-        });
-      }
-      // from here
-      // pickup time to date
+      // convert into milliseconds because Javascript expects milliseconds
       const pickupTime = new Date(
         (req.request.pickupTime?.seconds as number) * 1000
       );
@@ -181,8 +165,6 @@ function getServer() {
         pickupTime: pickupTime,
         is_deleted: false,
       });
-
-      console.log("");
 
       return res(null, {} as CreateReservationResponse);
     },
@@ -228,6 +210,40 @@ function getServer() {
     },
   });
   return server;
+}
+
+async function checkValidSessionToken(sessionToken: string | undefined) {
+  // check authorized user
+  const metadata = new grpc.Metadata();
+  if (!sessionToken) {
+    metadata.add("type", Exceptions.UNAUTHORIZED_USER_EXCEPTION.toString());
+    return {
+      code: grpc.status.PERMISSION_DENIED,
+      message: "sessionToken is missing from request",
+      metadata,
+    };
+  }
+  const parsedSessionToken = JSON.parse(sessionToken).sessionToken;
+  const requestedUser = await database
+    .select("*")
+    .from("sessions")
+    .where("sessionToken", parsedSessionToken);
+
+  // sessionToken is correct from database and requested token
+  if (requestedUser.length === 0) {
+    metadata.add("type", Exceptions.UNAUTHORIZED_USER_EXCEPTION.toString());
+    return {
+      code: grpc.status.UNAUTHENTICATED,
+      message: "sessionToken doesn't match from database",
+      metadata,
+    };
+  }
+
+  return {
+    code: grpc.status.OK,
+    message: "sessionToken valid",
+    metadata,
+  };
 }
 
 main();

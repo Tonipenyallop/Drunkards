@@ -111,6 +111,7 @@ app.post("/reservation", async (req:Request, res: Response) => {
         const request : CreateReservationRequest = {
             startLocation : req.body.startLocation,
             destination : req.body.destination,
+            // grpc expects seconds and getTime method returns to milliseconds
             pickupTime :  {seconds : creationDate.getTime() / 1000} as Timestamp,
             sessionToken : req.body.sessionToken
         }
