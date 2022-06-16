@@ -18,6 +18,11 @@ export default function UserPage() {
       }
 
   }
+
+  function getCarArrivingTime(){
+    console.log("hola")
+  }
+
   return (
     <div>
       WELCOME YOO <br />
@@ -33,6 +38,7 @@ export default function UserPage() {
       <button onClick={getReservationRequest}>Request Car</button>
 
       <Reservation isRequestCar={isRequestCar} setIsRequestCar={setIsRequestCar}/>
+      <button onClick={getCarArrivingTime}>Refresh</button>
     </div>
   );
 }

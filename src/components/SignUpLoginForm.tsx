@@ -2,11 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import path from "path";
-import * as grpc from "@grpc/grpc-js";
-import * as protoLoader from "@grpc/proto-loader";
-import { ProtoGrpcType } from "../proto/index";
-
 export default function SignUpLogInForm() {
   const navigate = useNavigate();
   const [password, setPassword] = useState<string>("");
@@ -21,11 +16,13 @@ export default function SignUpLogInForm() {
       password: loginPassword,
     });
 
-    window.localStorage.setItem(
-      "sessionToken",
-      JSON.stringify(response.data.sessionToken)
-    );
-    if (response.data) navigate("/user");
+    if (response.status === 200) {
+      window.localStorage.setItem(
+        "sessionToken",
+        JSON.stringify(response.data.sessionToken)
+      );
+      navigate("/user");
+    }
   }
 
   async function register() {

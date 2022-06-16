@@ -51,6 +51,7 @@ app.post("/login", async( req: Request, res: Response ) => {
     }, (err, result) => {
         if (err) {
             console.log(`ERROR: ${JSON.stringify(err)}`);
+            res.status(400).send({err})
         } else {
             console.log(`result: ${JSON.stringify(result)}`);
             res.send({sessionToken : result})
