@@ -177,15 +177,29 @@ function getServer() {
       const userId = await getUserId(req.request.sessionToken as string);
 
       const allRequests = await database
-        .select("startLocation", "destination", " pickupTime", "reservationID")
+        .select("startLocation", "destination", "pickupTime", "reservationID")
         .from("requests")
         .where("userId", userId);
+      console.log(`allRequests: ${JSON.stringify(allRequests)}`);
 
-      const reservations: GetReservationResponse = {
-        reservations: allRequests,
+      function toReservation(singleRow: any): Reservation {
+        return {
+          startLocation: singleRow.startLocation,
+          destination: singleRow.destination,
+          pickupTime: { seconds: singleRow.pickupTime.getTime() / 1000 },
+          reservationID: singleRow.reservationID,
+        } as Reservation;
+      }
+
+      const reservations: Reservation[] = allRequests.map(toReservation);
+
+      console.log(`reservations: ${JSON.stringify(reservations)}`);
+
+      const response: GetReservationResponse = {
+        reservations: reservations,
       };
 
-      res(null, reservations);
+      res(null, response);
     },
 
     GetLatestReservation: async (req: any, res: any) => {
