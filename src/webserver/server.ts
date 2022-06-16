@@ -160,10 +160,7 @@ app.post("/cancel",async (req:Request, res: Response) => {
 })
 
 app.get("/arriving_time", (req:Request, res: Response) => {
-    const max = 10;
-    const min = 5;
-    const estimatedArrivalTime =  Math.floor(Math.random() * (max - min + 1) + min)
-
+    const estimatedArrivalTime : number = estimatedArrivalTimeGenerator();
     res.send({estimatedArrivalTime});
 })
 
@@ -171,7 +168,14 @@ app.listen( expressPORT, () => {
     console.log(`server started at http://localhost:${ expressPORT }` );
 } );
 
+function estimatedArrivalTimeGenerator(max: number = 10, min: number = 5) : number{
+    const randomNumber =  Math.floor(Math.random() * (max - min + 1) + min);
+    console.log(`randomNumber: ${randomNumber * 60000}`)
+    // times 1000 since convert from milliseconds to minute
+    const estimatedArrivalTime = new Date().getTime() + randomNumber * 60000;
+    return estimatedArrivalTime
 
+}
 
 // function toDate(timestamp: Timestamp): Date {
 //     return new Date(timestamp.getSeconds()*1000 + timestamp.getNanos()/1e6);
