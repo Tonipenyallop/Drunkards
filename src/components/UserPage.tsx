@@ -10,10 +10,9 @@ export default function UserPage() {
   const [pickupTime, setPickupTime] = useState<string>();
   const getReservationRequest = async() => {
       const token  = window.localStorage.getItem("sessionToken")
-      console.log(`token: ${(token)}`)
 
-      const reservationRequest = await axios.post("http://localhost:8080/reservation", {startLocation, destination, pickupTime, sessionToken: token} )
-      console.log(reservationRequest.data)
+      await axios.post("http://localhost:8080/reservation", {startLocation, destination, pickupTime, sessionToken: token} )
+
   }
   return (
     <div>
@@ -25,10 +24,7 @@ export default function UserPage() {
         setDestination(e.target.value)
       }} />
       <input type="datetime-local" placeholder="When" onChange={(e)=>{
-
-        console.log(e.target.value)
         setPickupTime(e.target.value)
-
       }} />
       <button onClick={getReservationRequest}>Request Car</button>
 

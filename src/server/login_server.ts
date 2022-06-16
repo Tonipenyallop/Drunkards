@@ -145,6 +145,19 @@ function getServer() {
       if ((await validRequest).code !== grpc.status.OK)
         return res((await validRequest) as CreateReservationResponse);
 
+      const startLocation = req.request.startLocation;
+      const destination = req.request.destination;
+
+      // check all the input is fill out
+      if (startLocation === "" || destination === "") {
+        const metadata = new grpc.Metadata();
+        return res({
+          code: grpc.status.INVALID_ARGUMENT,
+          message: "startLocation and destination must be filled",
+          metadata,
+        });
+      }
+
       const parsedSessionToken = JSON.parse(
         req.request.sessionToken as string
       ).sessionToken;
@@ -161,8 +174,8 @@ function getServer() {
       const reservationID: string = uuidv4();
       await database("requests").insert({
         userId,
-        startLocation: req.request.startLocation,
-        destination: req.request.destination,
+        startLocation,
+        destination,
         pickupTime: pickupTime,
         is_deleted: false,
         reservationID,
