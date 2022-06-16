@@ -64,17 +64,13 @@ app.post("/register", async (req: Request, res: Response)=> {
     client.Register({username: req.body.username, password :req.body.password}, (err,result) => {
         if(err){
             console.log(`ERROR : ${err}`)
-            res.send({err})
+            res.status(400).send({err})
         } else {
             console.log(`result: ${JSON.stringify(result)}`)
             res.send({sessionToken : result})
         }
 
     })
-    
-                
-    
-
 });
 
 app.post("/get_reservation", async (req:Request, res: Response) => {
@@ -163,6 +159,13 @@ app.post("/cancel",async (req:Request, res: Response) => {
     })
 })
 
+app.get("/arriving_time", (req:Request, res: Response) => {
+    const max = 10;
+    const min = 5;
+    const estimatedArrivalTime =  Math.floor(Math.random() * (max - min + 1) + min)
+
+    res.send({estimatedArrivalTime});
+})
 
 app.listen( expressPORT, () => {
     console.log(`server started at http://localhost:${ expressPORT }` );

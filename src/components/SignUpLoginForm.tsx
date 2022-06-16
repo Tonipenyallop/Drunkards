@@ -3,12 +3,20 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function SignUpLogInForm() {
+  enum RegisterResponse {
+    success = "success",
+    fail = "fail",
+    yetToChanged = "yetToChanged",
+  }
+
   const navigate = useNavigate();
   const [password, setPassword] = useState<string>("");
   const [phoneOrEmail, setPhoneOrEmail] = useState<string>("");
   const [loginPassword, setLoginPassword] = useState<string>("");
   const [loginPhoneOrEmail, setLoginPhoneOrEmail] = useState<string>("");
-  const [isSuccessRegister, setIsSuccessRegister] = useState<boolean>(false);
+  const [isSuccessRegister, setIsSuccessRegister] = useState<RegisterResponse>(
+    RegisterResponse.yetToChanged
+  );
 
   async function requestLogin() {
     const response = await axios.post("http://localhost:8080/login", {
@@ -30,10 +38,10 @@ export default function SignUpLogInForm() {
       username: phoneOrEmail,
       password,
     });
-    console.log(registerRequest.data);
+    // console.log(registerRequest.data);
     if (registerRequest.status === 200) {
-      setIsSuccessRegister(true);
-    }
+      setIsSuccessRegister(RegisterResponse.success);
+    } else setIsSuccessRegister(RegisterResponse.fail);
   }
 
   return (
@@ -68,7 +76,13 @@ export default function SignUpLogInForm() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <button onClick={() => register()}>SIGN UP</button>
-        {isSuccessRegister ? <div>Successfully Register</div> : <></>}
+        {isSuccessRegister === RegisterResponse.success ? (
+          <div>Successfully Register</div>
+        ) : isSuccessRegister === RegisterResponse.fail ? (
+          <div>Fail to Register</div>
+        ) : (
+          <div></div>
+        )}
       </div>
     </div>
   );

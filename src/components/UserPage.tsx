@@ -9,18 +9,26 @@ export default function UserPage() {
   const [destination, setDestination] = useState<string>("");
   const [pickupTime, setPickupTime] = useState<string>();
   const [isRequestCar,setIsRequestCar] = useState<boolean>(false)
+  const [estimatedArrivalTime, setEstimatedArrivalTime ] = useState<number>(0);
   
   const getReservationRequest = async() => {
       const token  = window.localStorage.getItem("sessionToken")
       const reservationRequest = await axios.post("http://localhost:8080/reservation", {startLocation, destination, pickupTime, sessionToken: token} )
       if(reservationRequest.status === 200) {
         setIsRequestCar(true)
+        getCarArrivingTime();
       }
 
   }
 
-  function getCarArrivingTime(){
+  async function getCarArrivingTime(){
     console.log("hola")
+    const carArrivingTimeRequest = await axios.get("http://localhost:8080/arriving_time")
+    console.log(carArrivingTimeRequest.data)
+    const estimatedArrivalTime = carArrivingTimeRequest.data.estimatedArrivalTime
+    setEstimatedArrivalTime(estimatedArrivalTime);
+
+
   }
 
   return (
@@ -39,6 +47,7 @@ export default function UserPage() {
 
       <Reservation isRequestCar={isRequestCar} setIsRequestCar={setIsRequestCar}/>
       <button onClick={getCarArrivingTime}>Refresh</button>
+      <div className="">Car will arrive in {estimatedArrivalTime} mins</div>
     </div>
   );
 }
