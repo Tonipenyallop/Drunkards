@@ -8,10 +8,14 @@ export default function UserPage() {
   const [startLocation, setStartLocation] = useState<string>("");
   const [destination, setDestination] = useState<string>("");
   const [pickupTime, setPickupTime] = useState<string>();
+  const [isRequestCar,setIsRequestCar] = useState<boolean>(false)
+  
   const getReservationRequest = async() => {
       const token  = window.localStorage.getItem("sessionToken")
-
-      await axios.post("http://localhost:8080/reservation", {startLocation, destination, pickupTime, sessionToken: token} )
+      const reservationRequest = await axios.post("http://localhost:8080/reservation", {startLocation, destination, pickupTime, sessionToken: token} )
+      if(reservationRequest.status === 200) {
+        setIsRequestCar(true)
+      }
 
   }
   return (
@@ -28,10 +32,7 @@ export default function UserPage() {
       }} />
       <button onClick={getReservationRequest}>Request Car</button>
 
-      <Reservation/>
-      {/* <button className="" onClick={() => navigate("/detail")}>
-        Fake companyA
-      </button> */}
+      <Reservation isRequestCar={isRequestCar} setIsRequestCar={setIsRequestCar}/>
     </div>
   );
 }

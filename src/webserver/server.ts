@@ -98,7 +98,7 @@ app.post("/reservation", async (req:Request, res: Response) => {
     try{
         sessionToken = JSON.parse(req.body.sessionToken).sessionToken
     } catch (err) {
-        return res.send({err})
+        return res.status(400).send({err})
     }
         console.log(`pickupTime ${req.body.pickupTime}`)
         console.log(`startLocation ${req.body.startLocation}`)
@@ -121,18 +121,13 @@ app.post("/reservation", async (req:Request, res: Response) => {
         console.log(request.pickupTime)
         
         await client.CreateReservation( request,   async (err , result) => {
-            // somehow it is throwing the error
             if(err){
-                res.send({err})
-
+                res.status(400).send({err})
             }
             else{
                 console.log(result)
-                  res.send("OKIDOKI")
+                  res.sendStatus(200)
                 }
-
-            // fix here later
-            // console.log("successfully request the car")
         })
 
 
@@ -157,7 +152,7 @@ app.post("/latest_reservation", async (req:Request, res: Response) => {
 app.post("/cancel",async (req:Request, res: Response) => {
     await client.CancelReservation({sessionToken : req.body.sessionToken}, (err, result) => {
         if(err){
-            res.send({err})
+            res.status(400).send({err})
         }
         else {
             

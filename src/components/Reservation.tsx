@@ -2,7 +2,7 @@ import React, {useState, useEffect, ReactElement} from 'react'
 import axios from 'axios'
 
 
-export default function Reservation() {
+export default function Reservation({isRequestCar} : any) {
 
     enum CancelRequestState {
         success = "success",
@@ -12,6 +12,7 @@ export default function Reservation() {
     const [reservations, setReservations] = useState<any>()
     const [latestReservation, setLatestReservation] = useState<any>()
     const [isSuccessCancel, setIsSuccessCancel] = useState<CancelRequestState>(CancelRequestState.notChangedYet)
+    // const [isRequestCar, setIsRequestCar] = useState<boolean>(false)
     const sessionToken = window.localStorage.getItem("sessionToken");
 
 
@@ -67,7 +68,7 @@ export default function Reservation() {
             {/* <button onClick={getLatestReservation}>Get Latest Reservation</button> */}
             <button onClick={cancelReservation}>Cancel Reservation</button>
             {isSuccessCancel === CancelRequestState.success ? <div>Successfully cancel</div> : isSuccessCancel === CancelRequestState.failed ? <div>Failed to cancel</div> : <div></div>}
-
+            {isRequestCar === true ? <div>car on the way</div> : <div></div>}
         </div>
     )
 }
