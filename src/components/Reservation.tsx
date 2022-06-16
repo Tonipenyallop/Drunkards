@@ -4,9 +4,16 @@ import axios from 'axios'
 
 export default function Reservation() {
 
+    enum CancelRequestState {
+        success = "success",
+        failed = "failed", 
+        notChangedYet = "notChangedYet"
+    }
     const [reservations, setReservations] = useState<any>()
     const [latestReservation, setLatestReservation] = useState<any>()
+    const [isSuccessCancel, setIsSuccessCancel] = useState<CancelRequestState>(CancelRequestState.notChangedYet)
     const sessionToken = window.localStorage.getItem("sessionToken");
+
 
     async function getReservation(){
         const getReservationRequest = await axios.post("http://localhost:8080/get_reservation", {sessionToken})
@@ -15,23 +22,30 @@ export default function Reservation() {
     }
 
 
-    async function getLatestReservation(){
-        console.log('latest request');
-        const latestReservationRequest = await axios.post("http://localhost:8080/latest_reservation", {sessionToken})
-        console.log(latestReservationRequest.data)
-    }
+    // async function getLatestReservation(){
+    //     console.log('latest request');
+    //     const latestReservationRequest = await axios.post("http://localhost:8080/latest_reservation", {sessionToken})
+    //     console.log(latestReservationRequest.data)
+    //     // if(latestReservation.data) {
+    //     //     setIsSuccessCancel(false)
+    //     // }
+    //     // else setIsSuccessCancel(true)
+
+    // }
     
     async function cancelReservation(){
         const cancelReservationRequest = await axios.post("http://localhost:8080/cancel", {sessionToken})
-        console.log(cancelReservationRequest)
+        console.log(cancelReservationRequest.data)
+        if(cancelReservationRequest?.data === "success") {
+            setIsSuccessCancel(CancelRequestState.success)
+        }
+        else setIsSuccessCancel(CancelRequestState.failed)
+
     }
 
     function convertTime(timeStamp : number): Date{
         return new Date(timeStamp * 1000);
     }
-
-
-    // console.log(reservations?.reservations.map((e:any) => console.log(`e: ${e}`)))
    
     return (
         <div>
@@ -50,8 +64,9 @@ export default function Reservation() {
             })}
             </div>
            
-            <button onClick={getLatestReservation}>Get Latest Reservation</button>
+            {/* <button onClick={getLatestReservation}>Get Latest Reservation</button> */}
             <button onClick={cancelReservation}>Cancel Reservation</button>
+            {isSuccessCancel === CancelRequestState.success ? <div>Successfully cancel</div> : isSuccessCancel === CancelRequestState.failed ? <div>Failed to cancel</div> : <div></div>}
 
         </div>
     )

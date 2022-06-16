@@ -15,6 +15,9 @@ import { CreateReservationResponse } from "../proto/index/CreateReservationRespo
 import { GetReservationResponse } from "../proto/index/GetReservationResponse";
 import { Reservation } from "../proto/index/Reservation";
 import { Timestamp } from "../proto/google/protobuf/Timestamp";
+import { GetLatestReservationRequest } from "../proto/index_pb";
+import { CancelReservationRequest } from "../proto/index/CancelReservationRequest";
+import { CancelReservationResponse } from "../proto/index/CancelReservationResponse";
 
 const database = require("../db/db");
 
@@ -198,7 +201,6 @@ function getServer() {
       const response: GetReservationResponse = {
         reservations: reservations,
       };
-
       res(null, response);
     },
 
@@ -214,18 +216,40 @@ function getServer() {
         return res(null, { message: "Unauthorized User", code: 401 });
       }
     },
-    CancelReservation: async (req: any, res: any) => {
-      if (!req.request.sessionToken)
-        return res(null, { message: "Unauthorized User", code: 401 });
+    CancelReservation: async (
+      req: grpc.ServerUnaryCall<
+        CancelReservationRequest,
+        CancelReservationRequest
+      >,
+      res: grpc.sendUnaryData<CancelReservationResponse>
+    ) => {
+      console.log(`cancel reservation`);
+      const validRequest = checkValidSessionToken(req.request.sessionToken);
+      if ((await validRequest).code !== grpc.status.OK)
+        return validRequest as CancelReservationResponse;
 
-      const validUser = await database
-        .select("*")
-        .from("sessions")
-        .where("sessionToken", req.request.sessionToken);
+      const latestRequest = await getLatestReservation();
+      console.log(`latestRequest: ${JSON.stringify(latestRequest)}`);
 
-      if (validUser.length === 0) {
-        return res(null, { message: "Unauthorized User", code: 401 });
+      if (!latestRequest) {
+        console.log("passing here?");
+        const metadata = new grpc.Metadata();
+        return res({
+          code: grpc.status.OUT_OF_RANGE,
+          message:
+            "Latest request doesn't exit since all the requests are deleted",
+          metadata,
+        });
       }
+
+      latestRequest.is_deleted = true;
+      console.log(`latestRequest: ${JSON.stringify(latestRequest)}`);
+
+      await database("requests")
+        .update("is_deleted", true)
+        .where("reservationID", latestRequest.reservationID);
+
+      res(null, {} as CancelReservationResponse);
     },
   });
   return server;
@@ -283,6 +307,16 @@ async function getUserId(sessionToken: string): Promise<number> {
     .from("sessions")
     .where("sessionToken", parsedSessionToken);
   return requestedUser[0].userId;
+}
+
+async function getLatestReservation(): Promise<any> {
+  const notDeletedRequests = await database
+    .select("*")
+    .from("requests")
+    .where("is_deleted", false);
+  console.log(`notDeletedRequests: ${JSON.stringify(notDeletedRequests)}`);
+  console.log(notDeletedRequests[notDeletedRequests.length - 1]);
+  return notDeletedRequests[notDeletedRequests.length - 1];
 }
 
 main();
