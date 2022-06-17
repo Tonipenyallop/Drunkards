@@ -9,7 +9,6 @@ import { LoginRequest } from "../proto/index/LoginRequest";
 import { RegisterRequest } from "../proto/index/RegisterRequest";
 import { RegisterResponse } from "../proto/index/RegisterResponse";
 import { v4 as uuidv4 } from "uuid";
-// import bcrypt from "bcrypt";
 import argon2 from "argon2";
 
 import { CreateReservationRequest } from "../proto/index/CreateReservationRequest";

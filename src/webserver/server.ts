@@ -3,13 +3,7 @@ import path from "path";
 import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
 import { ProtoGrpcType } from "../proto/index";
-// import { LoginResponse } from "../proto/index_pb";
-import { LoginResponse as LoginResponseType } from "../proto/index/LoginResponse";
-import { randomUUID } from "crypto";
-import {v4 as uuidv4} from 'uuid';
-import { convertCompilerOptionsFromJson } from "typescript";
 import { Exceptions } from "../proto/index/Exceptions";
-import { timeStamp } from "console";
 import { CreateReservationRequest } from "../proto/index/CreateReservationRequest";
 import { Timestamp } from '../proto/google/protobuf/Timestamp';
 
@@ -180,6 +174,4 @@ function estimatedArrivalTimeGenerator(max: number = 10, min: number = 5) : numb
 
 }
 
-// function toDate(timestamp: Timestamp): Date {
-//     return new Date(timestamp.getSeconds()*1000 + timestamp.getNanos()/1e6);
-// }
+
