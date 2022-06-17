@@ -37,15 +37,11 @@ export default function SignUpLogInForm() {
       username: phoneOrEmail,
       password,
     });
-    console.log(registerRequest.statusText);
 
     // console.log(registerRequest.data);
     if (registerRequest.status === 200) {
       setIsSuccessRegister(RegisterResponse.success);
     } else {
-      console.log("come ther");
-      // setIsSuccessRegister(RegisterResponse.fail);
-
       setIsSuccessRegister(RegisterResponse.fail);
     }
   }

@@ -49,7 +49,7 @@
     "start": "react-scripts start",
     "webserver": "ts-node src/webserver/server.ts",
     "build": "sh build.sh && react-scripts build",
-    "server": "ts-node src/server/login_server.ts",
+    "server": "ts-node src/server/grpcServer.ts",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
