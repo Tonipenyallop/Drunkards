@@ -18,8 +18,8 @@ export default function UserPage() {
             getCancelRequest();
             clearInterval(interval)
             }
-
-      },1000)
+            // update every minutes
+      },60000)
 
       return () => {
           clearInterval(interval)
@@ -30,8 +30,13 @@ export default function UserPage() {
 
   async function getCancelRequest() {
     const sessionToken = window.localStorage.getItem("sessionToken");
-    const cancelReservationRequest = await axios.post("http://localhost:8080/cancel", {sessionToken});
-    console.log(`response: ${cancelReservationRequest.data}`)
+    const cancelRequest = await axios.post("http://localhost:8080/cancel", {sessionToken});
+    console.log(cancelRequest.status)
+    // if(cancelRequest.status === 200) {
+    //   console.log("hola")
+    //   setIsAfterRequest(false)
+    // }
+
   } 
   
 
@@ -46,10 +51,7 @@ export default function UserPage() {
   }
 
   function refreshArrivalTime(){
-    console.log(`isAfterRequest: ${isAfterRequest}`)
-    console.log(`estimatedArrivalTime: ${estimatedArrivalTime}`)
     if(isAfterRequest && estimatedArrivalTime > 0){
-      console.log('refresh arrival time method')
       const max = 1
       const min = -1
       const randomDelay = Math.floor(Math.random() *(max - min + 1) + min);
@@ -63,12 +65,12 @@ export default function UserPage() {
     const carArrivingTimeRequest = await axios.get("http://localhost:8080/arriving_time")
     const estimatedArrivalTime = carArrivingTimeRequest.data.estimatedArrivalTime
 
-    // estimated mins
+
     const responseMinutes = new Date(estimatedArrivalTime).getMinutes();
     const currentMinutes = new Date(new Date().getTime()).getMinutes();
-    console.log(new Date(estimatedArrivalTime).getMinutes())
-    const estimatedMinutes = responseMinutes- currentMinutes 
-    console.log(estimatedMinutes)
+
+    const estimatedMinutes = responseMinutes - currentMinutes 
+
 
     setEstimatedArrivalTime(estimatedMinutes)
   }
@@ -76,7 +78,7 @@ export default function UserPage() {
 
   return (
     <div>
-      WELCOME YOO <br />
+      WELCOME USER <br />
       <input type="text" placeholder="From" onChange={(e)=>{
         setStartLocation(e.target.value)
       }} />
@@ -88,8 +90,8 @@ export default function UserPage() {
       }} />
       <button onClick={getReservationRequest}>Request Car</button>
 
-      <Reservation isRequestCar={isRequestCar} setIsRequestCar={setIsRequestCar}/>
-      <button onClick={refreshArrivalTime}>Refresh</button>
+      <Reservation isRequestCar={isRequestCar} setIsAfterRequest={setIsAfterRequest}/>
+
       {isAfterRequest ? <div className="">Car will arrive in {estimatedArrivalTime} mins</div> : <div></div> }
     </div>
   );

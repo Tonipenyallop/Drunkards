@@ -99,7 +99,7 @@ app.post("/reservation", async (req:Request, res: Response) => {
     }
 
 
-    
+
         console.log(`pickupTime ${req.body.pickupTime}`)
         console.log(`startLocation ${req.body.startLocation}`)
         console.log(`destination ${req.body.destination}`)
@@ -162,7 +162,7 @@ app.post("/cancel",async (req:Request, res: Response) => {
     })
 })
 
-app.get("/arriving_time", (req:Request, res: Response) => {
+app.get("/arriving_time", (_:Request, res: Response) => {
     const estimatedArrivalTime : number = estimatedArrivalTimeGenerator();
     res.send({estimatedArrivalTime});
 })

@@ -2,7 +2,7 @@ import React, {useState, useEffect, ReactElement} from 'react'
 import axios from 'axios'
 
 
-export default function Reservation({isRequestCar} : any) {
+export default function Reservation({isRequestCar, setIsAfterRequest} : any) {
 
     enum CancelRequestState {
         success = "success",
@@ -36,10 +36,11 @@ export default function Reservation({isRequestCar} : any) {
     
      async function cancelReservation(){
         const cancelReservationRequest = await axios.post("http://localhost:8080/cancel", {sessionToken})
-        console.log(cancelReservationRequest.data)
-        // fix here
-        if(cancelReservationRequest?.data === "success") {
+
+        if(cancelReservationRequest.status === 200) {
+            setIsAfterRequest(false)
             setIsSuccessCancel(CancelRequestState.success)
+            
         }
         else setIsSuccessCancel(CancelRequestState.failed)
 
@@ -59,8 +60,8 @@ export default function Reservation({isRequestCar} : any) {
                 return <div className="" key={`${idx}`}>
                         <div className="">StartLocation:{e.startLocation}</div>
                         <div className="">Destination:{e.destination}</div>
-                        <div className="">reservationID: {e.reservationID}</div>
-                        <div className="">{`pickup time:${convertTime(e.pickupTime.seconds.low).getFullYear()}-${convertTime(e.pickupTime.seconds.low).getMonth()}-${convertTime(e.pickupTime.seconds.low).getDate()}
+                        <div className="">ReservationID: {e.reservationID}</div>
+                        <div className="">{`Pickup time:${convertTime(e.pickupTime.seconds.low).getFullYear()}-${convertTime(e.pickupTime.seconds.low).getMonth()}-${convertTime(e.pickupTime.seconds.low).getDate()}
                         ${convertTime(e.pickupTime.seconds.low).getHours()}:${convertTime(e.pickupTime.seconds.low).getMinutes()}`
                         }</div>
                         <br />
@@ -71,7 +72,7 @@ export default function Reservation({isRequestCar} : any) {
             {/* <button onClick={getLatestReservation}>Get Latest Reservation</button> */}
             <button onClick={cancelReservation}>Cancel Reservation</button>
             {isSuccessCancel === CancelRequestState.success ? <div>Successfully cancel</div> : isSuccessCancel === CancelRequestState.failed ? <div>Failed to cancel</div> : <div></div>}
-            {isRequestCar === true ? <div>car on the way</div> : <div></div>}
+            {isRequestCar === true ? <div>Car on the way</div> : <div></div>}
         </div>
     )
 }
