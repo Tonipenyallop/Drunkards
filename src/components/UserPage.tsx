@@ -1,26 +1,41 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {CreateReservationRequest} from "../proto/index/CreateReservationRequest"
+import React, { useState, useEffect } from "react";
 import axios from "axios"
 import Reservation from "./Reservation";
 export default function UserPage() {
-  const navigate = useNavigate();
-
-  // enum requestCarResponse {
-  //   success =  "success",
-  //   fail = "fail",
-  //   notRequestedYet = "notRequestedYet"
-  // }
 
   const [startLocation, setStartLocation] = useState<string>("");
   const [destination, setDestination] = useState<string>("");
   const [pickupTime, setPickupTime] = useState<string>();
   const [isRequestCar,setIsRequestCar] = useState<boolean>(false)
   const [estimatedArrivalTime, setEstimatedArrivalTime ] = useState<number>(0);
-  const [delayTime, setDelayTime] = useState<number>(0);
   const [isAfterRequest, setIsAfterRequest] = useState<boolean>(false);
+
   
-  const getReservationRequest = async() => {
+  useEffect(()=> {
+      const interval = setInterval(()=> {
+          refreshArrivalTime();
+          if(estimatedArrivalTime <= 0){
+            getCancelRequest();
+            clearInterval(interval)
+            }
+
+      },1000)
+
+      return () => {
+          clearInterval(interval)
+      }
+
+  }, [isAfterRequest,estimatedArrivalTime])
+
+
+  async function getCancelRequest() {
+    const sessionToken = window.localStorage.getItem("sessionToken");
+    const cancelReservationRequest = await axios.post("http://localhost:8080/cancel", {sessionToken});
+    console.log(`response: ${cancelReservationRequest.data}`)
+  } 
+  
+
+  async function getReservationRequest(){
       const token  = window.localStorage.getItem("sessionToken")
       const reservationRequest = await axios.post("http://localhost:8080/reservation", {startLocation, destination, pickupTime, sessionToken: token} )
       if(reservationRequest.status === 200) {
@@ -28,8 +43,21 @@ export default function UserPage() {
         getCarArrivingTime();
         setIsAfterRequest(true);
       }
-
   }
+
+  function refreshArrivalTime(){
+    console.log(`isAfterRequest: ${isAfterRequest}`)
+    console.log(`estimatedArrivalTime: ${estimatedArrivalTime}`)
+    if(isAfterRequest && estimatedArrivalTime > 0){
+      console.log('refresh arrival time method')
+      const max = 1
+      const min = -1
+      const randomDelay = Math.floor(Math.random() *(max - min + 1) + min);
+      // preventing ETA to be negative value
+      if(estimatedArrivalTime + randomDelay - 1 < 0) setEstimatedArrivalTime(0)
+      else setEstimatedArrivalTime(estimatedArrivalTime + randomDelay - 1)
+    }
+}
 
   async function getCarArrivingTime(): Promise<void>{
     const carArrivingTimeRequest = await axios.get("http://localhost:8080/arriving_time")
@@ -43,36 +71,8 @@ export default function UserPage() {
     console.log(estimatedMinutes)
 
     setEstimatedArrivalTime(estimatedMinutes)
-
-    // const estimated =  new Date(estimatedArrivalTime).getHours()
-    // const estimatedMinutes =  new Date(estimatedArrivalTime).getMinutes()
-    // console.log(estimated, estimatedMinutes)
-    // setEstimatedArrivalTime(new Date(estimatedArrivalTime))
-
-
-
-
-    // const currentMinutes = new Date(Date.now()).getMinutes();
-    // console.log(estimatedArrivalTime)
-    // const randomMinutes = new Date(estimatedArrivalTime)
-    // console.log(randomMinutes.getMinutes())
-    // setEstimatedArrivalTime(randomMinutes);
-
-
   }
 
-  function refreshArrivalTime(){
-      const max = 2
-      const min = -1
-      const randomDelay = Math.floor(Math.random() *(max - min + 1) + min);
-      setEstimatedArrivalTime(estimatedArrivalTime + randomDelay - 1)
-  }
-
-  if(isAfterRequest && estimatedArrivalTime > 0){
-  setTimeout(()=> {
-    refreshArrivalTime()
-    // every 1mins 60000
-  }, 60000 )}
 
   return (
     <div>

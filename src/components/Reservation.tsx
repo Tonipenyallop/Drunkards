@@ -34,15 +34,18 @@ export default function Reservation({isRequestCar} : any) {
 
     // }
     
-    async function cancelReservation(){
+     async function cancelReservation(){
         const cancelReservationRequest = await axios.post("http://localhost:8080/cancel", {sessionToken})
         console.log(cancelReservationRequest.data)
+        // fix here
         if(cancelReservationRequest?.data === "success") {
             setIsSuccessCancel(CancelRequestState.success)
         }
         else setIsSuccessCancel(CancelRequestState.failed)
 
     }
+
+
 
     function convertTime(timeStamp : number): Date{
         return new Date(timeStamp * 1000);
@@ -72,3 +75,4 @@ export default function Reservation({isRequestCar} : any) {
         </div>
     )
 }
+

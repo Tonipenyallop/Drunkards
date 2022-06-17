@@ -145,6 +145,21 @@ function getServer() {
       if ((await validRequest).code !== grpc.status.OK)
         return res((await validRequest) as CreateReservationResponse);
 
+      const isCarArrived = await isAllCarArrived(
+        req.request.sessionToken as string
+      );
+
+      if (!isCarArrived) {
+        const metadata = new grpc.Metadata();
+        return res({
+          code: grpc.status.CANCELLED,
+          message:
+            "Not all the cars are arrived yet. You cannot use this method yet",
+          metadata,
+        });
+      }
+
+      console.log(`isCarArrived: ${isCarArrived}`);
       const startLocation = req.request.startLocation;
       const destination = req.request.destination;
 
@@ -330,6 +345,20 @@ async function getLatestReservation(): Promise<any> {
   console.log(`notDeletedRequests: ${JSON.stringify(notDeletedRequests)}`);
   console.log(notDeletedRequests[notDeletedRequests.length - 1]);
   return notDeletedRequests[notDeletedRequests.length - 1];
+}
+
+// 1. if there is no data, request the car
+// 2. if all the car is arrived, request the car
+async function isAllCarArrived(sessionToken: string) {
+  const userId = await getUserId(sessionToken);
+  const isAllArrived = await database
+    .select("*")
+    .from("requests")
+    .where("userId", userId)
+    .andWhere("is_deleted", false);
+  console.log(`isAllArrived: ${JSON.stringify(isAllArrived)}`);
+  if (isAllArrived.length !== 0) return false;
+  return true;
 }
 
 main();

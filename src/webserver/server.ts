@@ -97,6 +97,9 @@ app.post("/reservation", async (req:Request, res: Response) => {
     } catch (err) {
         return res.status(400).send({err})
     }
+
+
+    
         console.log(`pickupTime ${req.body.pickupTime}`)
         console.log(`startLocation ${req.body.startLocation}`)
         console.log(`destination ${req.body.destination}`)

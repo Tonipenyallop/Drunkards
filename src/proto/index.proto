@@ -85,6 +85,8 @@ message GetLatestReservationResponse {
     google.protobuf.Timestamp estimatedTimeOnArrival = 2;
 }
 
+
+
 enum Exceptions {
     INVALID_INPUT_EXCEPTION = 0;
     UNAUTHORIZED_USER_EXCEPTION = 1;
