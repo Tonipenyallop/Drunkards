@@ -56,7 +56,7 @@ export default function Reservation({isRequestCar, setIsAfterRequest} : any) {
         <div>
             <button onClick={getReservation}>Check All Reservations </button>
             <div className="">
-            {reservations?.reservations.map((e:any, idx: number)=> {
+            {reservations?.reservations?.map((e:any, idx: number)=> {
                 return <div className="" key={`${idx}`}>
                         <div className="">StartLocation:{e.startLocation}</div>
                         <div className="">Destination:{e.destination}</div>
