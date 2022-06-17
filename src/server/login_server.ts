@@ -9,6 +9,8 @@ import { LoginRequest } from "../proto/index/LoginRequest";
 import { RegisterRequest } from "../proto/index/RegisterRequest";
 import { RegisterResponse } from "../proto/index/RegisterResponse";
 import { v4 as uuidv4 } from "uuid";
+// import bcrypt from "bcrypt";
+import argon2 from "argon2";
 
 import { CreateReservationRequest } from "../proto/index/CreateReservationRequest";
 import { CreateReservationResponse } from "../proto/index/CreateReservationResponse";
@@ -52,8 +54,6 @@ export function main() {
 function getServer() {
   const server = new grpc.Server();
 
-  console.log("getServer function was called!");
-
   server.addService(index.User.service, {
     Register: async (
       req: grpc.ServerUnaryCall<RegisterRequest, RegisterResponse>,
@@ -87,9 +87,19 @@ function getServer() {
         });
       }
 
+      const encryptedPassword = await argon2.hash(
+        req.request.password as string
+      );
+      // const salt = await bcrypt.genSalt();
+      // const encryptedPassword = await bcrypt.hash(
+      // req.request.password as string,
+      // salt
+      // );
+
       await database("users").insert({
         username: req.request.username,
-        password: req.request.password,
+        // password: req.request.password,
+        password: encryptedPassword,
       });
 
       return res(null, { sessionToken: "congrats!" });
@@ -107,27 +117,42 @@ function getServer() {
           metadata,
         });
       }
+
       const user = await database
         .select("*")
         .from("users")
-        .where("username", req.request.username)
-        .andWhere("password", req.request.password);
+        .where("username", req.request.username);
+
       if (user.length === 0) {
         const metadata = new grpc.Metadata();
         metadata.add("type", Exceptions.INVALID_INPUT_EXCEPTION.toString());
         return res({
           code: grpc.status.NOT_FOUND,
-          message: "Username or password is wrong ",
+          message: "Username doesn't exit in database",
+          metadata,
+        });
+      }
+
+      const isValidPassword = await argon2.verify(
+        user[0].password,
+        req.request.password as string
+      );
+
+      if (!isValidPassword) {
+        const metadata = new grpc.Metadata();
+        return res({
+          code: grpc.status.CANCELLED,
+          message: "password is not much with verified agron password",
           metadata,
         });
       }
 
       const sessionToken: string = uuidv4();
+
       const userId = await database
         .select("*")
         .from("users")
-        .where("username", req.request.username)
-        .andWhere("password", req.request.password);
+        .where("username", req.request.username);
 
       await database("sessions").insert({ userId: userId[0].id, sessionToken });
 
@@ -159,7 +184,6 @@ function getServer() {
         });
       }
 
-      console.log(`isCarArrived: ${isCarArrived}`);
       const startLocation = req.request.startLocation;
       const destination = req.request.destination;
 
@@ -211,7 +235,6 @@ function getServer() {
         .select("startLocation", "destination", "pickupTime", "reservationID")
         .from("requests")
         .where("userId", userId);
-      console.log(`allRequests: ${JSON.stringify(allRequests)}`);
 
       function toReservation(singleRow: any): Reservation {
         return {
@@ -223,8 +246,6 @@ function getServer() {
       }
 
       const reservations: Reservation[] = allRequests.map(toReservation);
-
-      console.log(`reservations: ${JSON.stringify(reservations)}`);
 
       const response: GetReservationResponse = {
         reservations: reservations,
@@ -251,16 +272,13 @@ function getServer() {
       >,
       res: grpc.sendUnaryData<CancelReservationResponse>
     ) => {
-      console.log(`cancel reservation`);
       const validRequest = checkValidSessionToken(req.request.sessionToken);
       if ((await validRequest).code !== grpc.status.OK)
         return validRequest as CancelReservationResponse;
 
       const latestRequest = await getLatestReservation();
-      console.log(`latestRequest: ${JSON.stringify(latestRequest)}`);
 
       if (!latestRequest) {
-        console.log("passing here?");
         const metadata = new grpc.Metadata();
         return res({
           code: grpc.status.OUT_OF_RANGE,
@@ -271,7 +289,6 @@ function getServer() {
       }
 
       latestRequest.is_deleted = true;
-      console.log(`latestRequest: ${JSON.stringify(latestRequest)}`);
 
       await database("requests")
         .update("is_deleted", true)
@@ -342,8 +359,7 @@ async function getLatestReservation(): Promise<any> {
     .select("*")
     .from("requests")
     .where("is_deleted", false);
-  console.log(`notDeletedRequests: ${JSON.stringify(notDeletedRequests)}`);
-  console.log(notDeletedRequests[notDeletedRequests.length - 1]);
+
   return notDeletedRequests[notDeletedRequests.length - 1];
 }
 
@@ -356,7 +372,7 @@ async function isAllCarArrived(sessionToken: string) {
     .from("requests")
     .where("userId", userId)
     .andWhere("is_deleted", false);
-  console.log(`isAllArrived: ${JSON.stringify(isAllArrived)}`);
+
   if (isAllArrived.length !== 0) return false;
   return true;
 }

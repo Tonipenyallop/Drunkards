@@ -23,7 +23,6 @@ export default function SignUpLogInForm() {
       username: loginPhoneOrEmail,
       password: loginPassword,
     });
-
     if (response.status === 200) {
       window.localStorage.setItem(
         "sessionToken",
@@ -38,16 +37,24 @@ export default function SignUpLogInForm() {
       username: phoneOrEmail,
       password,
     });
+    console.log(registerRequest.statusText);
+
     // console.log(registerRequest.data);
     if (registerRequest.status === 200) {
       setIsSuccessRegister(RegisterResponse.success);
-    } else setIsSuccessRegister(RegisterResponse.fail);
+    } else {
+      console.log("come ther");
+      // setIsSuccessRegister(RegisterResponse.fail);
+
+      setIsSuccessRegister(RegisterResponse.fail);
+    }
   }
 
   return (
     <div>
       <div className="">
-        LOGIN MATE
+        LOGIN
+        <br />
         <input
           type="text"
           placeholder="Phone Or Email"
@@ -60,9 +67,10 @@ export default function SignUpLogInForm() {
         />
         <button onClick={() => requestLogin()}>LOGIN</button>
       </div>
-
+      <br />
       <div className="">
-        SIGN UP MATE
+        REGISTER ACCOUNT
+        <br />
         <input
           id="phone_email"
           type="text"
