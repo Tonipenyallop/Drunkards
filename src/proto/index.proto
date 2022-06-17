@@ -19,6 +19,7 @@ service User {
     rpc GetReservation(GetReservationRequest) returns  (GetReservationResponse);
     rpc CancelReservation(CancelReservationRequest) returns (CancelReservationResponse);
     rpc GetLatestReservation(GetLatestReservationRequest) returns (GetLatestReservationResponse);
+    rpc GetArrivalTime(GetArrivalTimeRequest) returns (GetArrivalTimeResponse);
 }
 
 message LoginRequest {
@@ -85,7 +86,13 @@ message GetLatestReservationResponse {
     google.protobuf.Timestamp estimatedTimeOnArrival = 2;
 }
 
+message GetArrivalTimeRequest {
+    string sessionToken = 1;
+}
 
+message GetArrivalTimeResponse {
+    google.protobuf.Timestamp arrivalTime = 1;
+}
 
 enum Exceptions {
     INVALID_INPUT_EXCEPTION = 0;

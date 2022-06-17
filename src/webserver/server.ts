@@ -161,6 +161,14 @@ app.get("/arriving_time", (_:Request, res: Response) => {
     res.send({estimatedArrivalTime});
 })
 
+// await client.GetArrivalTime()
+app.post("/get_arrival_time",  (req:Request, res: Response) => {
+    // check without working await 
+    client.GetArrivalTime({}, (err, result) => {
+        console.log("result line")
+    })
+})
+
 app.listen( expressPORT, () => {
     console.log(`server started at http://localhost:${ expressPORT }` );
 } );

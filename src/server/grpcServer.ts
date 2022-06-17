@@ -19,6 +19,8 @@ import { Timestamp } from "../proto/google/protobuf/Timestamp";
 import { GetLatestReservationRequest } from "../proto/index_pb";
 import { CancelReservationRequest } from "../proto/index/CancelReservationRequest";
 import { CancelReservationResponse } from "../proto/index/CancelReservationResponse";
+import { GetArrivalTimeRequest } from "../proto/index/GetArrivalTimeRequest";
+import { GetArrivalTimeResponse } from "../proto/index/GetArrivalTimeResponse";
 
 const database = require("../db/db");
 
@@ -295,6 +297,9 @@ function getServer() {
 
       res(null, {} as CancelReservationResponse);
     },
+    GetArrivalTime : async (req: grpc.ServerUnaryCall<GetArrivalTimeRequest, GetArrivalTimeResponse>, res: grpc.sendUnaryData<GetArrivalTimeResponse>) => {
+      console.log("it was called yeah!")
+    }
   });
   return server;
 }

@@ -279,6 +279,44 @@ export namespace GetLatestReservationResponse {
   }
 }
 
+export class GetArrivalTimeRequest extends jspb.Message {
+  getSessiontoken(): string;
+  setSessiontoken(value: string): GetArrivalTimeRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetArrivalTimeRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetArrivalTimeRequest): GetArrivalTimeRequest.AsObject;
+  static serializeBinaryToWriter(message: GetArrivalTimeRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetArrivalTimeRequest;
+  static deserializeBinaryFromReader(message: GetArrivalTimeRequest, reader: jspb.BinaryReader): GetArrivalTimeRequest;
+}
+
+export namespace GetArrivalTimeRequest {
+  export type AsObject = {
+    sessiontoken: string,
+  }
+}
+
+export class GetArrivalTimeResponse extends jspb.Message {
+  getArrivaltime(): google_protobuf_timestamp_pb.Timestamp | undefined;
+  setArrivaltime(value?: google_protobuf_timestamp_pb.Timestamp): GetArrivalTimeResponse;
+  hasArrivaltime(): boolean;
+  clearArrivaltime(): GetArrivalTimeResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetArrivalTimeResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetArrivalTimeResponse): GetArrivalTimeResponse.AsObject;
+  static serializeBinaryToWriter(message: GetArrivalTimeResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetArrivalTimeResponse;
+  static deserializeBinaryFromReader(message: GetArrivalTimeResponse, reader: jspb.BinaryReader): GetArrivalTimeResponse;
+}
+
+export namespace GetArrivalTimeResponse {
+  export type AsObject = {
+    arrivaltime?: google_protobuf_timestamp_pb.Timestamp.AsObject,
+  }
+}
+
 export enum Exceptions { 
   INVALID_INPUT_EXCEPTION = 0,
   UNAUTHORIZED_USER_EXCEPTION = 1,

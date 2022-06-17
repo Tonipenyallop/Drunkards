@@ -6,6 +6,8 @@ import type { CancelReservationRequest as _index_CancelReservationRequest, Cance
 import type { CancelReservationResponse as _index_CancelReservationResponse, CancelReservationResponse__Output as _index_CancelReservationResponse__Output } from '../index/CancelReservationResponse';
 import type { CreateReservationRequest as _index_CreateReservationRequest, CreateReservationRequest__Output as _index_CreateReservationRequest__Output } from '../index/CreateReservationRequest';
 import type { CreateReservationResponse as _index_CreateReservationResponse, CreateReservationResponse__Output as _index_CreateReservationResponse__Output } from '../index/CreateReservationResponse';
+import type { GetArrivalTimeRequest as _index_GetArrivalTimeRequest, GetArrivalTimeRequest__Output as _index_GetArrivalTimeRequest__Output } from '../index/GetArrivalTimeRequest';
+import type { GetArrivalTimeResponse as _index_GetArrivalTimeResponse, GetArrivalTimeResponse__Output as _index_GetArrivalTimeResponse__Output } from '../index/GetArrivalTimeResponse';
 import type { GetLatestReservationRequest as _index_GetLatestReservationRequest, GetLatestReservationRequest__Output as _index_GetLatestReservationRequest__Output } from '../index/GetLatestReservationRequest';
 import type { GetLatestReservationResponse as _index_GetLatestReservationResponse, GetLatestReservationResponse__Output as _index_GetLatestReservationResponse__Output } from '../index/GetLatestReservationResponse';
 import type { GetReservationRequest as _index_GetReservationRequest, GetReservationRequest__Output as _index_GetReservationRequest__Output } from '../index/GetReservationRequest';
@@ -33,6 +35,15 @@ export interface UserClient extends grpc.Client {
   createReservation(argument: _index_CreateReservationRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_index_CreateReservationResponse__Output>): grpc.ClientUnaryCall;
   createReservation(argument: _index_CreateReservationRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_index_CreateReservationResponse__Output>): grpc.ClientUnaryCall;
   createReservation(argument: _index_CreateReservationRequest, callback: grpc.requestCallback<_index_CreateReservationResponse__Output>): grpc.ClientUnaryCall;
+  
+  GetArrivalTime(argument: _index_GetArrivalTimeRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_index_GetArrivalTimeResponse__Output>): grpc.ClientUnaryCall;
+  GetArrivalTime(argument: _index_GetArrivalTimeRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_index_GetArrivalTimeResponse__Output>): grpc.ClientUnaryCall;
+  GetArrivalTime(argument: _index_GetArrivalTimeRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_index_GetArrivalTimeResponse__Output>): grpc.ClientUnaryCall;
+  GetArrivalTime(argument: _index_GetArrivalTimeRequest, callback: grpc.requestCallback<_index_GetArrivalTimeResponse__Output>): grpc.ClientUnaryCall;
+  getArrivalTime(argument: _index_GetArrivalTimeRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_index_GetArrivalTimeResponse__Output>): grpc.ClientUnaryCall;
+  getArrivalTime(argument: _index_GetArrivalTimeRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_index_GetArrivalTimeResponse__Output>): grpc.ClientUnaryCall;
+  getArrivalTime(argument: _index_GetArrivalTimeRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_index_GetArrivalTimeResponse__Output>): grpc.ClientUnaryCall;
+  getArrivalTime(argument: _index_GetArrivalTimeRequest, callback: grpc.requestCallback<_index_GetArrivalTimeResponse__Output>): grpc.ClientUnaryCall;
   
   GetLatestReservation(argument: _index_GetLatestReservationRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_index_GetLatestReservationResponse__Output>): grpc.ClientUnaryCall;
   GetLatestReservation(argument: _index_GetLatestReservationRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_index_GetLatestReservationResponse__Output>): grpc.ClientUnaryCall;
@@ -77,6 +88,8 @@ export interface UserHandlers extends grpc.UntypedServiceImplementation {
   
   CreateReservation: grpc.handleUnaryCall<_index_CreateReservationRequest__Output, _index_CreateReservationResponse>;
   
+  GetArrivalTime: grpc.handleUnaryCall<_index_GetArrivalTimeRequest__Output, _index_GetArrivalTimeResponse>;
+  
   GetLatestReservation: grpc.handleUnaryCall<_index_GetLatestReservationRequest__Output, _index_GetLatestReservationResponse>;
   
   GetReservation: grpc.handleUnaryCall<_index_GetReservationRequest__Output, _index_GetReservationResponse>;
@@ -90,6 +103,7 @@ export interface UserHandlers extends grpc.UntypedServiceImplementation {
 export interface UserDefinition extends grpc.ServiceDefinition {
   CancelReservation: MethodDefinition<_index_CancelReservationRequest, _index_CancelReservationResponse, _index_CancelReservationRequest__Output, _index_CancelReservationResponse__Output>
   CreateReservation: MethodDefinition<_index_CreateReservationRequest, _index_CreateReservationResponse, _index_CreateReservationRequest__Output, _index_CreateReservationResponse__Output>
+  GetArrivalTime: MethodDefinition<_index_GetArrivalTimeRequest, _index_GetArrivalTimeResponse, _index_GetArrivalTimeRequest__Output, _index_GetArrivalTimeResponse__Output>
   GetLatestReservation: MethodDefinition<_index_GetLatestReservationRequest, _index_GetLatestReservationResponse, _index_GetLatestReservationRequest__Output, _index_GetLatestReservationResponse__Output>
   GetReservation: MethodDefinition<_index_GetReservationRequest, _index_GetReservationResponse, _index_GetReservationRequest__Output, _index_GetReservationResponse__Output>
   Login: MethodDefinition<_index_LoginRequest, _index_LoginResponse, _index_LoginRequest__Output, _index_LoginResponse__Output>

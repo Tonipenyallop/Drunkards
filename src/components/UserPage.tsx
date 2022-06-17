@@ -13,7 +13,8 @@ export default function UserPage() {
   
   useEffect(()=> {
       const interval = setInterval(()=> {
-          refreshArrivalTime();
+        getArrivalTime()  
+        refreshArrivalTime();
           if(estimatedArrivalTime <= 0){
             getCancelRequest();
             clearInterval(interval)
@@ -27,16 +28,17 @@ export default function UserPage() {
 
   }, [isAfterRequest,estimatedArrivalTime])
 
+  async function getArrivalTime(){
+      // 1. send the request to get the time 
+      const sessionToken = window.localStorage.getItem("sessionToken")
+      await axios.post("http://localhost:8080/get_arrival_time", {sessionToken})
+      // 2. return to time with minutes
+  }
+
 
   async function getCancelRequest() {
     const sessionToken = window.localStorage.getItem("sessionToken");
-    const cancelRequest = await axios.post("http://localhost:8080/cancel", {sessionToken});
-    console.log(cancelRequest.status)
-    // if(cancelRequest.status === 200) {
-    //   console.log("hola")
-    //   setIsAfterRequest(false)
-    // }
-
+    await axios.post("http://localhost:8080/cancel", {sessionToken});
   } 
   
 

@@ -19,6 +19,8 @@ export interface ProtoGrpcType {
     CreateReservationRequest: MessageTypeDefinition
     CreateReservationResponse: MessageTypeDefinition
     Exceptions: EnumTypeDefinition
+    GetArrivalTimeRequest: MessageTypeDefinition
+    GetArrivalTimeResponse: MessageTypeDefinition
     GetLatestReservationRequest: MessageTypeDefinition
     GetLatestReservationResponse: MessageTypeDefinition
     GetReservationRequest: MessageTypeDefinition
