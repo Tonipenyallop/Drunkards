@@ -12,9 +12,22 @@ import "google/protobuf/timestamp.proto";
 
 
 service User {
-
+    /*
+     * Authenticate the user and creates a session. 
+     * If user is not found, 404 user not found error is thrown.
+    */
     rpc Login(LoginRequest) returns (LoginResponse);
+
+    /*
+     * Creates a user account. 
+     * If user already exists, an exception is thrown.  
+    */
     rpc Register(RegisterRequest) returns (RegisterResponse);
+
+    /*
+     * Creates a reservation for request a car. 
+     * If session is invalid, an exception is thrown.
+    */
     rpc CreateReservation(CreateReservationRequest) returns (CreateReservationResponse);
     rpc GetReservation(GetReservationRequest) returns  (GetReservationResponse);
     rpc CancelReservation(CancelReservationRequest) returns (CancelReservationResponse);
@@ -22,8 +35,12 @@ service User {
     rpc GetArrivalTime(GetArrivalTimeRequest) returns (GetArrivalTimeResponse);
 }
 
+/*
+
+*/
+
 message LoginRequest {
-    string username = 1;
+    string username = 1; // 
     string password = 2;
 }
 

@@ -112,6 +112,7 @@ function getServer() {
     ) => {
       if (req.request.username === "" || req.request.password === "") {
         const metadata = new grpc.Metadata();
+        metadata.add("type", Exceptions.INVALID_INPUT_EXCEPTION.toString());
         return res({
           code: grpc.status.INVALID_ARGUMENT,
           message: "Username and Password must be filled out",
@@ -141,6 +142,7 @@ function getServer() {
 
       if (!isValidPassword) {
         const metadata = new grpc.Metadata();
+        metadata.add("type", Exceptions.INVALID_INPUT_EXCEPTION.toString());
         return res({
           code: grpc.status.CANCELLED,
           message: "password is not much with verified agron password",
@@ -177,6 +179,7 @@ function getServer() {
 
       if (!isCarArrived) {
         const metadata = new grpc.Metadata();
+        metadata.add("type", Exceptions.INVALID_INPUT_EXCEPTION.toString())
         return res({
           code: grpc.status.CANCELLED,
           message:
@@ -191,6 +194,7 @@ function getServer() {
       // check all the input is fill out
       if (startLocation === "" || destination === "") {
         const metadata = new grpc.Metadata();
+        metadata.add("type", Exceptions.INVALID_INPUT_EXCEPTION.toString());
         return res({
           code: grpc.status.INVALID_ARGUMENT,
           message: "startLocation and destination must be filled",
@@ -281,6 +285,7 @@ function getServer() {
 
       if (!latestRequest) {
         const metadata = new grpc.Metadata();
+        metadata.add("type", Exceptions.INVALID_INPUT_EXCEPTION.toString());
         return res({
           code: grpc.status.OUT_OF_RANGE,
           message:
