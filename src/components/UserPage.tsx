@@ -12,22 +12,21 @@ export default function UserPage() {
   const [isAfterRequest, setIsAfterRequest] = useState<boolean>(false);
   const [minimumConstraints, setMinimumConstraints ] = useState<string>("");
   
-  // useEffect(()=> {
-  //     const interval = setInterval(()=> {
-  //       getArrivalTime()  
-  //       refreshArrivalTime();
-  //         if(estimatedArrivalTime <= 0){
-  //           getCancelRequest();
-  //           clearInterval(interval)
-  //           }
-  //           // update every minutes 60000
-  //     }, 1000)
+  useEffect(()=> {
+      const interval = setInterval(()=> {   
+        refreshArrivalTime();
+          if(estimatedArrivalTime <= 0){
+            // is_deleted to be true when a car arrive 
+            getCancelRequest();
+            clearInterval(interval)
+            }
+            // update every minutes
+      }, 60000)
 
-  //     return () => {
-  //         clearInterval(interval)
-  //     }
-
-  // }, [isAfterRequest,estimatedArrivalTime])
+      return () => {
+          clearInterval(interval)
+      }
+  }, [isAfterRequest,estimatedArrivalTime])
 
   async function getArrivalTime(){
       // 1. send the request to get the time 
@@ -35,7 +34,7 @@ export default function UserPage() {
       const sessionToken = window.localStorage.getItem("sessionToken")
       const arrivalTimeRequest = await axios.post("http://localhost:8080/get_arrival_time", {sessionToken})
       console.log(arrivalTimeRequest.data)
-      
+
       setEstimatedArrivalTime(arrivalTimeRequest.data.arrivalMinutes)
       
       // 2. return to time with minutes
@@ -50,18 +49,10 @@ export default function UserPage() {
 
   async function getReservationRequest(){
     try {
-
-    
       const token  = window.localStorage.getItem("sessionToken")
-      console.log("hola was called?")
-      const reservationRequest = await axios.post("http://localhost:8080/reservation", {startLocation, destination, pickupTime, sessionToken: token})
-      console.log(reservationRequest.data)
-      console.log(reservationRequest.status)
-      // navigate("/")
 
-      // console.log(reservationRequest)
-      // console.log(reservationRequest.data)
-      // console.log(reservationRequest.status)
+      const reservationRequest = await axios.post("http://localhost:8080/reservation", {startLocation, destination, pickupTime, sessionToken: token})
+
       if(reservationRequest.status === 200) {
         setIsRequestCar(true)
         // getCarArrivingTime();
@@ -92,6 +83,8 @@ export default function UserPage() {
       else setEstimatedArrivalTime(estimatedArrivalTime + randomDelay - 1)
     }
 }
+
+
 
   // async function getCarArrivingTime(): Promise<void>{
   //   const carArrivingTimeRequest = await axios.get("http://localhost:8080/arriving_time")
@@ -127,6 +120,7 @@ export default function UserPage() {
       <Reservation isRequestCar={isRequestCar} setIsAfterRequest={setIsAfterRequest}/>
 
       {isAfterRequest ? <div className="">Car will arrive in {estimatedArrivalTime} mins</div> : <div></div> }
+
     </div>
   );
 }
