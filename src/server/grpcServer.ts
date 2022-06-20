@@ -283,7 +283,7 @@ function getServer() {
       if ((await validRequest).code !== grpc.status.OK)
         return validRequest as CancelReservationResponse;
 
-      const latestRequest = await getLatestReservation();
+      const latestRequest = await getLatestReservation(req.request.sessionToken as string);
 
       if (!latestRequest) {
         const metadata = new grpc.Metadata();
@@ -385,11 +385,14 @@ async function getUserId(sessionToken: string): Promise<number> {
   return requestedUser[0].userId;
 }
 
-async function getLatestReservation(): Promise<any> {
+async function getLatestReservation(sessionToken: string): Promise<any> {
+  const userId = await getUserId(sessionToken);
   const notDeletedRequests = await database
     .select("*")
-    .from("requests")
+    .from("requests").where("userId", userId)
     .where("is_deleted", false);
+
+    console.log(`notDeletedRequest: ${JSON.stringify(notDeletedRequests)}`)
 
   return notDeletedRequests[notDeletedRequests.length - 1];
 }
