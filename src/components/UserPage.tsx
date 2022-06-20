@@ -36,6 +36,8 @@ export default function UserPage() {
       const arrivalTimeRequest = await axios.post("http://localhost:8080/get_arrival_time", {sessionToken})
       console.log(arrivalTimeRequest.data)
       
+      setEstimatedArrivalTime(arrivalTimeRequest.data.arrivalMinutes)
+      
       // 2. return to time with minutes
   }
 
@@ -62,7 +64,7 @@ export default function UserPage() {
       // console.log(reservationRequest.status)
       if(reservationRequest.status === 200) {
         setIsRequestCar(true)
-        getCarArrivingTime();
+        // getCarArrivingTime();
         setIsAfterRequest(true);
         await getArrivalTime()
         
@@ -91,19 +93,19 @@ export default function UserPage() {
     }
 }
 
-  async function getCarArrivingTime(): Promise<void>{
-    const carArrivingTimeRequest = await axios.get("http://localhost:8080/arriving_time")
-    const estimatedArrivalTime = carArrivingTimeRequest.data.estimatedArrivalTime
+  // async function getCarArrivingTime(): Promise<void>{
+  //   const carArrivingTimeRequest = await axios.get("http://localhost:8080/arriving_time")
+  //   const estimatedArrivalTime = carArrivingTimeRequest.data.estimatedArrivalTime
 
 
-    const responseMinutes = new Date(estimatedArrivalTime).getMinutes();
-    const currentMinutes = new Date(new Date().getTime()).getMinutes();
+  //   const responseMinutes = new Date(estimatedArrivalTime).getMinutes();
+  //   const currentMinutes = new Date(new Date().getTime()).getMinutes();
 
-    const estimatedMinutes = responseMinutes - currentMinutes 
+  //   const estimatedMinutes = responseMinutes - currentMinutes 
 
 
-    setEstimatedArrivalTime(estimatedMinutes)
-  }
+  //   setEstimatedArrivalTime(estimatedMinutes)
+  // }
 
 
   return (
