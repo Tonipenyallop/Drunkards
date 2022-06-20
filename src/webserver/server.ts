@@ -171,6 +171,12 @@ app.post("/get_arrival_time",  (req:Request, res: Response) => {
     })
 })
 
+app.post("/update_arrival_time", (req: Request, res: Response) => {
+    // client.GetRefreshArrivalTime({}, (err, result) => {
+
+    // })
+})
+
 app.listen( expressPORT, () => {
     console.log(`server started at http://localhost:${ expressPORT }` );
 } );

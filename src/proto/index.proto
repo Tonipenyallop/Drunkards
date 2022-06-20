@@ -33,6 +33,7 @@ service User {
     rpc CancelReservation(CancelReservationRequest) returns (CancelReservationResponse);
     rpc GetLatestReservation(GetLatestReservationRequest) returns (GetLatestReservationResponse);
     rpc GetArrivalTime(GetArrivalTimeRequest) returns (GetArrivalTimeResponse);
+    rpc GetRefreshArrivalTime(GetRefreshArrivalTimeRequest) returns (GetRefreshArrivalTimeResponse);
 }
 
 /*
@@ -109,6 +110,14 @@ message GetArrivalTimeRequest {
 
 message GetArrivalTimeResponse {
     google.protobuf.Timestamp arrivalTime = 1;
+}
+
+message GetRefreshArrivalTimeRequest {
+    string sessionToken = 1;
+}
+
+message GetRefreshArrivalTimeResponse {
+    google.protobuf.Timestamp delayedTime = 1;
 }
 
 enum Exceptions {

@@ -23,6 +23,8 @@ export interface ProtoGrpcType {
     GetArrivalTimeResponse: MessageTypeDefinition
     GetLatestReservationRequest: MessageTypeDefinition
     GetLatestReservationResponse: MessageTypeDefinition
+    GetRefreshArrivalTimeRequest: MessageTypeDefinition
+    GetRefreshArrivalTimeResponse: MessageTypeDefinition
     GetReservationRequest: MessageTypeDefinition
     GetReservationResponse: MessageTypeDefinition
     LoginRequest: MessageTypeDefinition

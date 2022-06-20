@@ -336,5 +336,48 @@ export class UserClient {
     this.methodDescriptorGetArrivalTime);
   }
 
+  methodDescriptorGetRefreshArrivalTime = new grpcWeb.MethodDescriptor(
+    '/index.User/GetRefreshArrivalTime',
+    grpcWeb.MethodType.UNARY,
+    src_proto_index_pb.GetRefreshArrivalTimeRequest,
+    src_proto_index_pb.GetRefreshArrivalTimeResponse,
+    (request: src_proto_index_pb.GetRefreshArrivalTimeRequest) => {
+      return request.serializeBinary();
+    },
+    src_proto_index_pb.GetRefreshArrivalTimeResponse.deserializeBinary
+  );
+
+  getRefreshArrivalTime(
+    request: src_proto_index_pb.GetRefreshArrivalTimeRequest,
+    metadata: grpcWeb.Metadata | null): Promise<src_proto_index_pb.GetRefreshArrivalTimeResponse>;
+
+  getRefreshArrivalTime(
+    request: src_proto_index_pb.GetRefreshArrivalTimeRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: src_proto_index_pb.GetRefreshArrivalTimeResponse) => void): grpcWeb.ClientReadableStream<src_proto_index_pb.GetRefreshArrivalTimeResponse>;
+
+  getRefreshArrivalTime(
+    request: src_proto_index_pb.GetRefreshArrivalTimeRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: src_proto_index_pb.GetRefreshArrivalTimeResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/index.User/GetRefreshArrivalTime',
+        request,
+        metadata || {},
+        this.methodDescriptorGetRefreshArrivalTime,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/index.User/GetRefreshArrivalTime',
+    request,
+    metadata || {},
+    this.methodDescriptorGetRefreshArrivalTime);
+  }
+
 }
 

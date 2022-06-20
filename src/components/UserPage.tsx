@@ -20,8 +20,8 @@ export default function UserPage() {
             getCancelRequest();
             clearInterval(interval)
             }
-            // update every minutes
-      }, 60000)
+            // update every minutes 60000
+      }, 1000)
 
       return () => {
           clearInterval(interval)
@@ -73,15 +73,18 @@ export default function UserPage() {
 
   }
 
-  function refreshArrivalTime(){
-    if(isAfterRequest && estimatedArrivalTime > 0){
-      const max = 1
-      const min = -1
-      const randomDelay = Math.floor(Math.random() *(max - min + 1) + min);
-      // preventing ETA to be negative value
-      if(estimatedArrivalTime + randomDelay - 1 < 0) setEstimatedArrivalTime(0)
-      else setEstimatedArrivalTime(estimatedArrivalTime + randomDelay - 1)
-    }
+  async function refreshArrivalTime(){
+    const sessionToken = window.localStorage.getItem("sessionToken");
+    const refreshArrivalTimeRequest = await axios.post("/update_arrival_time", {sessionToken})
+    console.log(refreshArrivalTimeRequest.data)
+    // if(isAfterRequest && estimatedArrivalTime > 0){
+    //   const max = 1
+    //   const min = -1
+    //   const randomDelay = Math.floor(Math.random() *(max - min + 1) + min);
+    //   // preventing ETA to be negative value
+    //   if(estimatedArrivalTime + randomDelay - 1 < 0) setEstimatedArrivalTime(0)
+    //   else setEstimatedArrivalTime(estimatedArrivalTime + randomDelay - 1)
+    // }
 }
 
 
