@@ -157,6 +157,7 @@ app.post("/get_arrival_time",  (req:Request, res: Response) => {
         }
         // console.log(`result: ${JSON.stringify(result)}`)
         // console.log(Number(result?.arrivalTime?.seconds))
+        // can I comment this out?
         const milliseconds = Number(result?.arrivalTime?.seconds);
         let min = new Date(milliseconds).getMinutes()
         const now = new Date(new Date().getTime()).getMinutes()
@@ -172,9 +173,23 @@ app.post("/get_arrival_time",  (req:Request, res: Response) => {
 })
 
 app.post("/update_arrival_time", (req: Request, res: Response) => {
-    // client.GetRefreshArrivalTime({}, (err, result) => {
-
-    // })
+    client.GetRefreshArrivalTime({sessionToken : req.body.sessionToken}, (err, result) => {
+        if (err) {
+            res.status(401).send({err})
+            return 
+        }else {
+            console.log(`result: ${JSON.stringify(result)}`)
+            console.log(result?.delayedTime?.seconds)
+            // convert seconds to minutes
+            let minute = Number(result?.delayedTime?.seconds) / 60000;
+            console.log(`minute: ${minute}`)
+            // when only minute is 1, delay the time
+            if (minute === 0) minute = - 1;
+            console.log(`minute: ${minute}`)
+            res.send({minute})
+            // from here time is printed!!!
+        }
+    })
 })
 
 app.listen( expressPORT, () => {

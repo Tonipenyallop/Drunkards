@@ -14,6 +14,7 @@ export default function UserPage() {
   
   useEffect(()=> {
       const interval = setInterval(()=> {   
+        console.log("time is updated")
         refreshArrivalTime();
           if(estimatedArrivalTime <= 0){
             // is_deleted to be true when a car arrive 
@@ -74,17 +75,14 @@ export default function UserPage() {
   }
 
   async function refreshArrivalTime(){
-    const sessionToken = window.localStorage.getItem("sessionToken");
-    const refreshArrivalTimeRequest = await axios.post("/update_arrival_time", {sessionToken})
-    console.log(refreshArrivalTimeRequest.data)
-    // if(isAfterRequest && estimatedArrivalTime > 0){
-    //   const max = 1
-    //   const min = -1
-    //   const randomDelay = Math.floor(Math.random() *(max - min + 1) + min);
-    //   // preventing ETA to be negative value
-    //   if(estimatedArrivalTime + randomDelay - 1 < 0) setEstimatedArrivalTime(0)
-    //   else setEstimatedArrivalTime(estimatedArrivalTime + randomDelay - 1)
-    // }
+    if(isAfterRequest && estimatedArrivalTime > 0){
+      const sessionToken = window.localStorage.getItem("sessionToken");
+      const refreshArrivalTimeRequest = await axios.post("/update_arrival_time", {sessionToken})
+      console.log(refreshArrivalTimeRequest.data)
+      const { minute } = refreshArrivalTimeRequest.data
+      console.log(estimatedArrivalTime, minute)
+      setEstimatedArrivalTime(estimatedArrivalTime + minute)
+    }
 }
 
 

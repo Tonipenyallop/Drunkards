@@ -16,11 +16,13 @@ import { CreateReservationResponse } from "../proto/index/CreateReservationRespo
 import { GetReservationResponse } from "../proto/index/GetReservationResponse";
 import { Reservation } from "../proto/index/Reservation";
 import { Timestamp } from "../proto/google/protobuf/Timestamp";
-import { GetLatestReservationRequest } from "../proto/index_pb";
+
 import { CancelReservationRequest } from "../proto/index/CancelReservationRequest";
 import { CancelReservationResponse } from "../proto/index/CancelReservationResponse";
 import { GetArrivalTimeRequest } from "../proto/index/GetArrivalTimeRequest";
 import { GetArrivalTimeResponse } from "../proto/index/GetArrivalTimeResponse";
+import { GetRefreshArrivalTimeRequest } from "../proto/index/GetRefreshArrivalTimeRequest";
+import { GetRefreshArrivalTimeResponse} from "../proto/index/GetRefreshArrivalTimeResponse"
 
 const database = require("../db/db");
 
@@ -305,13 +307,13 @@ function getServer() {
       res(null, {} as CancelReservationResponse);
     },
     GetArrivalTime : async (req: grpc.ServerUnaryCall<GetArrivalTimeRequest, GetArrivalTimeResponse>, res: grpc.sendUnaryData<GetArrivalTimeResponse>) => {
-      console.log(`GetArrivalTime: ${JSON.stringify(req.request)}`)
-      const validRequest = checkValidSessionToken(req.request.sessionToken);
-      if ((await validRequest).code !== grpc.status.OK)
+      // console.log(`GetArrivalTime: ${JSON.stringify(req.request)}`)
+      const validRequest = await checkValidSessionToken(req.request.sessionToken);
+      if ((validRequest).code !== grpc.status.OK)
         return validRequest as GetArrivalTimeResponse; 
         const estimatedArrivalTime = estimatedArrivalTimeGenerator()
-        console.log(`estimatedArrivalTime: ${estimatedArrivalTime}`)
-        console.log(`new Date(estimatedArrivalTime): ${new Date(estimatedArrivalTime)}`)
+        // console.log(`estimatedArrivalTime: ${estimatedArrivalTime}`)
+        // console.log(`new Date(estimatedArrivalTime): ${new Date(estimatedArrivalTime)}`)
         const timeStampObj: Timestamp = {
         seconds : estimatedArrivalTime 
         }
@@ -319,6 +321,26 @@ function getServer() {
           arrivalTime : timeStampObj
         }
         return res(null, arrivalTimeResponse)
+    },
+
+    GetRefreshArrivalTime: async (req: grpc.ServerUnaryCall<GetRefreshArrivalTimeRequest,GetRefreshArrivalTimeResponse>, res: grpc.sendUnaryData<GetRefreshArrivalTimeResponse>) => {
+      console.log(`GetRefreshArrivalTime: ${JSON.stringify(req.request)}`)
+      const validRequest = await checkValidSessionToken(req.request.sessionToken);
+      if ((validRequest).code !== grpc.status.OK)
+        return validRequest as GetArrivalTimeResponse; 
+      // console.log(`validRequest: ${JSON.stringify(validRequest)}`)
+      const max = 1
+      const min = -1
+      const randomDelay = Math.floor(Math.random() *(max - min + 1) + min);
+      console.log(`randomDelay: ${randomDelay}`)
+      const timestampObj : Timestamp = {
+        seconds : randomDelay * 60000
+      }
+
+      const refreshArrivalTimeResponse : GetRefreshArrivalTimeResponse  = {
+        delayedTime : timestampObj
+      }
+      return res(null, refreshArrivalTimeResponse);
     }
   });
   return server;
