@@ -10,29 +10,31 @@ export default function UserPage() {
   const [isRequestCar,setIsRequestCar] = useState<boolean>(false)
   const [estimatedArrivalTime, setEstimatedArrivalTime ] = useState<number>(0);
   const [isAfterRequest, setIsAfterRequest] = useState<boolean>(false);
-
+  const [minimumConstraints, setMinimumConstraints ] = useState<string>("");
   
-  useEffect(()=> {
-      const interval = setInterval(()=> {
-        getArrivalTime()  
-        refreshArrivalTime();
-          if(estimatedArrivalTime <= 0){
-            getCancelRequest();
-            clearInterval(interval)
-            }
-            // update every minutes
-      },60000)
+  // useEffect(()=> {
+  //     const interval = setInterval(()=> {
+  //       getArrivalTime()  
+  //       refreshArrivalTime();
+  //         if(estimatedArrivalTime <= 0){
+  //           getCancelRequest();
+  //           clearInterval(interval)
+  //           }
+  //           // update every minutes 60000
+  //     }, 1000)
 
-      return () => {
-          clearInterval(interval)
-      }
+  //     return () => {
+  //         clearInterval(interval)
+  //     }
 
-  }, [isAfterRequest,estimatedArrivalTime])
+  // }, [isAfterRequest,estimatedArrivalTime])
 
   async function getArrivalTime(){
       // 1. send the request to get the time 
+      console.log(`get arrival time is called`)
       const sessionToken = window.localStorage.getItem("sessionToken")
-      await axios.post("http://localhost:8080/get_arrival_time", {sessionToken})
+      const arrivalTimeRequest = await axios.post("http://localhost:8080/get_arrival_time", {sessionToken})
+      console.log(arrivalTimeRequest.data)
       
       // 2. return to time with minutes
   }
@@ -62,12 +64,14 @@ export default function UserPage() {
         setIsRequestCar(true)
         getCarArrivingTime();
         setIsAfterRequest(true);
+        await getArrivalTime()
+        
       } 
     }
     catch (err){
       console.log(err, null, 2)
       // if user is unauthorized, send back to user page
-      navigate("/")
+      // navigate("/")
       
     }
       // else if(reservationRequest.status === 401) {
@@ -111,7 +115,9 @@ export default function UserPage() {
       <input type="text" placeholder="To" onChange={(e)=>{
         setDestination(e.target.value)
       }} />
-      <input type="datetime-local" placeholder="When" onChange={(e)=>{
+
+      {/* disable past date:=> min={new Date().toISOString().split(".")[0]} */}
+      <input type="datetime-local" placeholder="When"  onChange={(e)=>{
         setPickupTime(e.target.value)
       }} />
       <button onClick={getReservationRequest}>Request Car</button>

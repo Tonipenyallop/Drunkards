@@ -305,7 +305,20 @@ function getServer() {
       res(null, {} as CancelReservationResponse);
     },
     GetArrivalTime : async (req: grpc.ServerUnaryCall<GetArrivalTimeRequest, GetArrivalTimeResponse>, res: grpc.sendUnaryData<GetArrivalTimeResponse>) => {
-      console.log("it was called yeah!")
+      console.log(`GetArrivalTime: ${JSON.stringify(req.request)}`)
+      const validRequest = checkValidSessionToken(req.request.sessionToken);
+      if ((await validRequest).code !== grpc.status.OK)
+        return validRequest as GetArrivalTimeResponse; 
+        const estimatedArrivalTime = estimatedArrivalTimeGenerator()
+        console.log(`estimatedArrivalTime: ${estimatedArrivalTime}`)
+        console.log(`new Date(estimatedArrivalTime): ${new Date(estimatedArrivalTime)}`)
+        const timeStampObj: Timestamp = {
+        seconds : estimatedArrivalTime 
+        }
+        const arrivalTimeResponse : GetArrivalTimeResponse = {
+          arrivalTime : timeStampObj
+        }
+        return res(null, arrivalTimeResponse)
     }
   });
   return server;
@@ -393,6 +406,15 @@ async function isAllCarArrived(sessionToken: string) {
 
   if (isAllArrived.length !== 0) return false;
   return true;
+}
+
+function estimatedArrivalTimeGenerator(max: number = 10, min: number = 5) : number{
+  const randomNumber =  Math.floor(Math.random() * (max - min + 1) + min);
+  console.log(`randomNumber: ${randomNumber * 60000}`)
+  // times 1000 since convert from milliseconds to minute
+  const estimatedArrivalTime = new Date().getTime() + randomNumber * 60000;
+  return estimatedArrivalTime
+
 }
 
 main();

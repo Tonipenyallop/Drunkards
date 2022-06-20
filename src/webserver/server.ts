@@ -145,10 +145,32 @@ app.get("/arriving_time", (_:Request, res: Response) => {
 })
 
 // await client.GetArrivalTime()
+
+// it is called only once
 app.post("/get_arrival_time",  (req:Request, res: Response) => {
     // check without working await 
-    client.GetArrivalTime({}, (err, result) => {
+    
+    client.GetArrivalTime({sessionToken:req.body.sessionToken}, (err, result) => {
         console.log("result line")
+        if(err){
+            res.status(401).send({err})
+        }
+        console.log(`result: ${JSON.stringify(result)}`)
+        console.log(Number(result?.arrivalTime?.seconds))
+        const milliseconds = Number(result?.arrivalTime?.seconds);
+        // const temp =  result?.arrivalTime?.seconds.toString()
+        // console.log(`temp: ${temp}`)
+        // console.log(`typeof: ${typeof temp}`)
+        // // const time = temp as string
+        // console.log(`time: ${temp as string}`)
+        const min = new Date(milliseconds).getMinutes()
+        const now = new Date(new Date().getTime()).getMinutes()
+        console.log(`now : ${now}`)
+        console.log(`min : ${min}`)
+        console.log(`return Value: ${min - now}`)
+        const arrivalMinutes = min - now
+        res.send({arrivalMinutes})
+
     })
 })
 
