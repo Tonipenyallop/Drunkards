@@ -13,20 +13,21 @@ export default function UserPage() {
   const [minimumConstraints, setMinimumConstraints ] = useState<string>("");
   
   useEffect(()=> {
+    if(isAfterRequest){
       const interval = setInterval(()=> {   
-        console.log("time is updated")
         refreshArrivalTime();
-          if(estimatedArrivalTime <= 0){
-            // is_deleted to be true when a car arrive 
-            getCancelRequest();
-            clearInterval(interval)
-            }
-            // update every minutes 60000
-      }, 1000)
-
-      return () => {
+        if(estimatedArrivalTime <= 0){
+          // is_deleted to be true when a car arrive 
+          getCancelRequest();
           clearInterval(interval)
+        }
+        // update every minutes 60000
+      }, 1000)
+      
+      return () => {
+        clearInterval(interval)
       }
+    }
   }, [isAfterRequest,estimatedArrivalTime])
 
   async function getArrivalTime(){
@@ -78,7 +79,6 @@ export default function UserPage() {
     if(isAfterRequest && estimatedArrivalTime > 0){
       const sessionToken = window.localStorage.getItem("sessionToken");
       const refreshArrivalTimeRequest = await axios.post("/update_arrival_time", {sessionToken})
-      console.log(refreshArrivalTimeRequest.data)
       const { minute } = refreshArrivalTimeRequest.data
       console.log(estimatedArrivalTime, minute)
       setEstimatedArrivalTime(estimatedArrivalTime + minute)
