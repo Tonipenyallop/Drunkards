@@ -169,10 +169,12 @@ function getServer() {
       res: grpc.sendUnaryData<CreateReservationResponse>
     ) => {
       // check authorized user
-      const validRequest = checkValidSessionToken(req.request.sessionToken);
-      if ((await validRequest).code !== grpc.status.OK)
-        return res((await validRequest) as CreateReservationResponse);
-
+      console.log(`carRequest: ${JSON.stringify(req.request, null, 2)}` )
+      const validRequest = await checkValidSessionToken(req.request.sessionToken);
+      if (validRequest.code !== grpc.status.OK){
+        console.log(`validRequest: ${JSON.stringify(validRequest)}`)
+        return res(validRequest as CreateReservationResponse);
+}
       const isCarArrived = await isAllCarArrived(
         req.request.sessionToken as string
       );
@@ -312,7 +314,12 @@ function getServer() {
 async function checkValidSessionToken(sessionToken: string | undefined) {
   // check authorized user
   const metadata = new grpc.Metadata();
+  // sessionToken = JSON.parse(sessionToken).sessionToken
+  // sessionToken = JSON.parse(req.body.sessionToken).sessionToken
+
+
   if (!sessionToken) {
+    console.log("must print here")
     metadata.add("type", Exceptions.UNAUTHORIZED_USER_EXCEPTION.toString());
     return {
       code: grpc.status.PERMISSION_DENIED,
@@ -321,10 +328,12 @@ async function checkValidSessionToken(sessionToken: string | undefined) {
     };
   }
   const parsedSessionToken = JSON.parse(sessionToken).sessionToken;
-  const requestedUser = await database
+  const requestedUser = database
     .select("*")
     .from("sessions")
     .where("sessionToken", parsedSessionToken);
+
+    console.log(`requestedUser: ${requestedUser}`)
 
   // sessionToken is correct from database and requested token
   if (requestedUser.length === 0) {

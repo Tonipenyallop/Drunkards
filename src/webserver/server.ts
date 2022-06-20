@@ -83,26 +83,7 @@ app.post("/get_reservation", async (req:Request, res: Response) => {
 })
 
 app.post("/reservation", async (req:Request, res: Response) => {
-    console.log(req.body)
-    if (req.body.sessionToken === null) return res.send({Error : Exceptions.INVALID_INPUT_EXCEPTION})
-        let sessionToken;
-    try{
-        sessionToken = JSON.parse(req.body.sessionToken).sessionToken
-    } catch (err) {
-        return res.status(400).send({err})
-    }
-
-
-
-        console.log(`pickupTime ${req.body.pickupTime}`)
-        console.log(`startLocation ${req.body.startLocation}`)
-        console.log(`destination ${req.body.destination}`)
-        console.log(`sessionToken ${sessionToken}`)
-        // const date = new Date(req.body.pickupTime)
         const creationDate = new Date(req.body.pickupTime);
-        console.log(`creationDate : ${creationDate.getSeconds()}`)
-        
-
         const request : CreateReservationRequest = {
             startLocation : req.body.startLocation,
             destination : req.body.destination,
@@ -111,12 +92,14 @@ app.post("/reservation", async (req:Request, res: Response) => {
             sessionToken : req.body.sessionToken
         }
 
-        console.log("request.pickupTime")
-        console.log(request.pickupTime)
+        // console.log("request.pickupTime")
+        // console.log(request.pickupTime)
         
         await client.CreateReservation( request,   async (err , result) => {
+            console.log(`err: ${err}`)
+            console.log(`result : ${JSON.stringify(result)}`)
             if(err){
-                res.status(400).send({err})
+                res.status(401).send({err})
             }
             else{
                 console.log(result)

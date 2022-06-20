@@ -72,7 +72,7 @@ export default function Reservation({isRequestCar, setIsAfterRequest} : any) {
             {/* <button onClick={getLatestReservation}>Get Latest Reservation</button> */}
             <button onClick={cancelReservation}>Cancel Reservation</button>
             {isSuccessCancel === CancelRequestState.success ? <div>Successfully cancel</div> : isSuccessCancel === CancelRequestState.failed ? <div>Failed to cancel</div> : <div></div>}
-            {isRequestCar === true ? <div>Car on the way</div> : <div></div>}
+            {/* {isRequestCar === true ? <div>Car on the way</div> : <div></div>} */}
         </div>
     )
 }

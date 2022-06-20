@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios"
 import Reservation from "./Reservation";
+import { useNavigate } from "react-router";
 export default function UserPage() {
-
+  const navigate = useNavigate();
   const [startLocation, setStartLocation] = useState<string>("");
   const [destination, setDestination] = useState<string>("");
   const [pickupTime, setPickupTime] = useState<string>();
@@ -32,6 +33,7 @@ export default function UserPage() {
       // 1. send the request to get the time 
       const sessionToken = window.localStorage.getItem("sessionToken")
       await axios.post("http://localhost:8080/get_arrival_time", {sessionToken})
+      
       // 2. return to time with minutes
   }
 
@@ -43,13 +45,35 @@ export default function UserPage() {
   
 
   async function getReservationRequest(){
+    try {
+
+    
       const token  = window.localStorage.getItem("sessionToken")
-      const reservationRequest = await axios.post("http://localhost:8080/reservation", {startLocation, destination, pickupTime, sessionToken: token} )
+      console.log("hola was called?")
+      const reservationRequest = await axios.post("http://localhost:8080/reservation", {startLocation, destination, pickupTime, sessionToken: token})
+      console.log(reservationRequest.data)
+      console.log(reservationRequest.status)
+      // navigate("/")
+
+      // console.log(reservationRequest)
+      // console.log(reservationRequest.data)
+      // console.log(reservationRequest.status)
       if(reservationRequest.status === 200) {
         setIsRequestCar(true)
         getCarArrivingTime();
         setIsAfterRequest(true);
-      }
+      } 
+    }
+    catch (err){
+      console.log(err, null, 2)
+      // if user is unauthorized, send back to user page
+      navigate("/")
+      
+    }
+      // else if(reservationRequest.status === 401) {
+      //   navigate("/")
+      // }else console.log("else here")
+
   }
 
   function refreshArrivalTime(){
