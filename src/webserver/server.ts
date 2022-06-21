@@ -86,7 +86,6 @@ app.post("/reservation", (req:Request, res: Response) => {
         
         client.CreateReservation(request, async (err, result) => {
         if(err){
-            console.log(err.code)
             // 16 means unauthenticated user
             if(err.code === 16)
                 res.status(401).send({err})
