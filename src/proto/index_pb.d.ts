@@ -355,6 +355,42 @@ export namespace GetRefreshArrivalTimeResponse {
   }
 }
 
+export class UpdateSessionTokenRequest extends jspb.Message {
+  getSessiontoken(): string;
+  setSessiontoken(value: string): UpdateSessionTokenRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UpdateSessionTokenRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: UpdateSessionTokenRequest): UpdateSessionTokenRequest.AsObject;
+  static serializeBinaryToWriter(message: UpdateSessionTokenRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UpdateSessionTokenRequest;
+  static deserializeBinaryFromReader(message: UpdateSessionTokenRequest, reader: jspb.BinaryReader): UpdateSessionTokenRequest;
+}
+
+export namespace UpdateSessionTokenRequest {
+  export type AsObject = {
+    sessiontoken: string,
+  }
+}
+
+export class UpdateSessionTokenResponse extends jspb.Message {
+  getSessiontoken(): string;
+  setSessiontoken(value: string): UpdateSessionTokenResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UpdateSessionTokenResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: UpdateSessionTokenResponse): UpdateSessionTokenResponse.AsObject;
+  static serializeBinaryToWriter(message: UpdateSessionTokenResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UpdateSessionTokenResponse;
+  static deserializeBinaryFromReader(message: UpdateSessionTokenResponse, reader: jspb.BinaryReader): UpdateSessionTokenResponse;
+}
+
+export namespace UpdateSessionTokenResponse {
+  export type AsObject = {
+    sessiontoken: string,
+  }
+}
+
 export enum Exceptions { 
   INVALID_INPUT_EXCEPTION = 0,
   UNAUTHORIZED_USER_EXCEPTION = 1,

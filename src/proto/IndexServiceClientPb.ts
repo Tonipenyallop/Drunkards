@@ -379,5 +379,48 @@ export class UserClient {
     this.methodDescriptorGetRefreshArrivalTime);
   }
 
+  methodDescriptorUpdateSessionToken = new grpcWeb.MethodDescriptor(
+    '/index.User/UpdateSessionToken',
+    grpcWeb.MethodType.UNARY,
+    src_proto_index_pb.UpdateSessionTokenRequest,
+    src_proto_index_pb.UpdateSessionTokenResponse,
+    (request: src_proto_index_pb.UpdateSessionTokenRequest) => {
+      return request.serializeBinary();
+    },
+    src_proto_index_pb.UpdateSessionTokenResponse.deserializeBinary
+  );
+
+  updateSessionToken(
+    request: src_proto_index_pb.UpdateSessionTokenRequest,
+    metadata: grpcWeb.Metadata | null): Promise<src_proto_index_pb.UpdateSessionTokenResponse>;
+
+  updateSessionToken(
+    request: src_proto_index_pb.UpdateSessionTokenRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: src_proto_index_pb.UpdateSessionTokenResponse) => void): grpcWeb.ClientReadableStream<src_proto_index_pb.UpdateSessionTokenResponse>;
+
+  updateSessionToken(
+    request: src_proto_index_pb.UpdateSessionTokenRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: src_proto_index_pb.UpdateSessionTokenResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/index.User/UpdateSessionToken',
+        request,
+        metadata || {},
+        this.methodDescriptorUpdateSessionToken,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/index.User/UpdateSessionToken',
+    request,
+    metadata || {},
+    this.methodDescriptorUpdateSessionToken);
+  }
+
 }
 

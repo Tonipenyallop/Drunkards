@@ -32,6 +32,8 @@ export interface ProtoGrpcType {
     RegisterRequest: MessageTypeDefinition
     RegisterResponse: MessageTypeDefinition
     Reservation: MessageTypeDefinition
+    UpdateSessionTokenRequest: MessageTypeDefinition
+    UpdateSessionTokenResponse: MessageTypeDefinition
     User: SubtypeConstructor<typeof grpc.Client, _index_UserClient> & { service: _index_UserDefinition }
   }
 }

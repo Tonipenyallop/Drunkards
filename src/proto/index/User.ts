@@ -18,6 +18,8 @@ import type { LoginRequest as _index_LoginRequest, LoginRequest__Output as _inde
 import type { LoginResponse as _index_LoginResponse, LoginResponse__Output as _index_LoginResponse__Output } from '../index/LoginResponse';
 import type { RegisterRequest as _index_RegisterRequest, RegisterRequest__Output as _index_RegisterRequest__Output } from '../index/RegisterRequest';
 import type { RegisterResponse as _index_RegisterResponse, RegisterResponse__Output as _index_RegisterResponse__Output } from '../index/RegisterResponse';
+import type { UpdateSessionTokenRequest as _index_UpdateSessionTokenRequest, UpdateSessionTokenRequest__Output as _index_UpdateSessionTokenRequest__Output } from '../index/UpdateSessionTokenRequest';
+import type { UpdateSessionTokenResponse as _index_UpdateSessionTokenResponse, UpdateSessionTokenResponse__Output as _index_UpdateSessionTokenResponse__Output } from '../index/UpdateSessionTokenResponse';
 
 export interface UserClient extends grpc.Client {
   CancelReservation(argument: _index_CancelReservationRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_index_CancelReservationResponse__Output>): grpc.ClientUnaryCall;
@@ -92,6 +94,15 @@ export interface UserClient extends grpc.Client {
   register(argument: _index_RegisterRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_index_RegisterResponse__Output>): grpc.ClientUnaryCall;
   register(argument: _index_RegisterRequest, callback: grpc.requestCallback<_index_RegisterResponse__Output>): grpc.ClientUnaryCall;
   
+  UpdateSessionToken(argument: _index_UpdateSessionTokenRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_index_UpdateSessionTokenResponse__Output>): grpc.ClientUnaryCall;
+  UpdateSessionToken(argument: _index_UpdateSessionTokenRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_index_UpdateSessionTokenResponse__Output>): grpc.ClientUnaryCall;
+  UpdateSessionToken(argument: _index_UpdateSessionTokenRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_index_UpdateSessionTokenResponse__Output>): grpc.ClientUnaryCall;
+  UpdateSessionToken(argument: _index_UpdateSessionTokenRequest, callback: grpc.requestCallback<_index_UpdateSessionTokenResponse__Output>): grpc.ClientUnaryCall;
+  updateSessionToken(argument: _index_UpdateSessionTokenRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_index_UpdateSessionTokenResponse__Output>): grpc.ClientUnaryCall;
+  updateSessionToken(argument: _index_UpdateSessionTokenRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_index_UpdateSessionTokenResponse__Output>): grpc.ClientUnaryCall;
+  updateSessionToken(argument: _index_UpdateSessionTokenRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_index_UpdateSessionTokenResponse__Output>): grpc.ClientUnaryCall;
+  updateSessionToken(argument: _index_UpdateSessionTokenRequest, callback: grpc.requestCallback<_index_UpdateSessionTokenResponse__Output>): grpc.ClientUnaryCall;
+  
 }
 
 export interface UserHandlers extends grpc.UntypedServiceImplementation {
@@ -111,6 +122,8 @@ export interface UserHandlers extends grpc.UntypedServiceImplementation {
   
   Register: grpc.handleUnaryCall<_index_RegisterRequest__Output, _index_RegisterResponse>;
   
+  UpdateSessionToken: grpc.handleUnaryCall<_index_UpdateSessionTokenRequest__Output, _index_UpdateSessionTokenResponse>;
+  
 }
 
 export interface UserDefinition extends grpc.ServiceDefinition {
@@ -122,4 +135,5 @@ export interface UserDefinition extends grpc.ServiceDefinition {
   GetReservation: MethodDefinition<_index_GetReservationRequest, _index_GetReservationResponse, _index_GetReservationRequest__Output, _index_GetReservationResponse__Output>
   Login: MethodDefinition<_index_LoginRequest, _index_LoginResponse, _index_LoginRequest__Output, _index_LoginResponse__Output>
   Register: MethodDefinition<_index_RegisterRequest, _index_RegisterResponse, _index_RegisterRequest__Output, _index_RegisterResponse__Output>
+  UpdateSessionToken: MethodDefinition<_index_UpdateSessionTokenRequest, _index_UpdateSessionTokenResponse, _index_UpdateSessionTokenRequest__Output, _index_UpdateSessionTokenResponse__Output>
 }
