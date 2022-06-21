@@ -174,8 +174,9 @@ function getServer() {
       // check authorized user
       const validRequest = await checkValidSessionToken(req.request.sessionToken);
       if (validRequest.code !== grpc.status.OK){
+        console.log(`validRequest: ${JSON.stringify(validRequest)}`)
         return res(validRequest as CreateReservationResponse);
-}
+      }
       const isCarArrived = await isAllCarArrived(
         req.request.sessionToken as string
       );

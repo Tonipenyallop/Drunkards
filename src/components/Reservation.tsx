@@ -39,6 +39,7 @@ export default function Reservation({isRequestCar, setIsAfterRequest} : any) {
             }
         } 
         catch (err: any) {
+            console.log(err)
             if(err.response.status === 401){
                 navigate("/")
             }

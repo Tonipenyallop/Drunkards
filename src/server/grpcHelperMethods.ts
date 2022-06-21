@@ -3,10 +3,10 @@ import { Exceptions } from "../proto/index/Exceptions";
 import { Timestamp } from "../proto/google/protobuf/Timestamp";
 
 const database = require("../db/db");
-export async function checkValidSessionToken(sessionToken: string | undefined) {
 
-    const metadata = new grpc.Metadata();
-  
+export async function checkValidSessionToken(sessionToken: string | undefined) {
+  console.log(`is this method called checkValidSessionToken? `)  
+  const metadata = new grpc.Metadata();
     if (!sessionToken) {
       metadata.add("type", Exceptions.UNAUTHORIZED_USER_EXCEPTION.toString());
       return {
@@ -15,12 +15,15 @@ export async function checkValidSessionToken(sessionToken: string | undefined) {
         metadata,
       };
     }
+    console.log("here? middle?")
     const parsedSessionToken = JSON.parse(sessionToken).sessionToken;
-    const requestedUser = database
+    const requestedUser = await database
       .select("*")
       .from("sessions")
       .where("sessionToken", parsedSessionToken);
-  
+    
+      console.log(`requestedUser: ${JSON.stringify(requestedUser)}`)
+
   
     // check token matches from database
     if (requestedUser.length === 0) {
@@ -31,6 +34,9 @@ export async function checkValidSessionToken(sessionToken: string | undefined) {
         metadata,
       };
     }
+
+    console.log(`end of line?`)
+
   
     return {
       code: grpc.status.OK,
