@@ -46,7 +46,6 @@ export function main() {
     grpc.ServerCredentials.createInsecure(),
     (err, port) => {
       if (err) {
-        console.log("error detected");
         console.error(err);
         return;
       }

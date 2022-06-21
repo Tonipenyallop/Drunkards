@@ -44,10 +44,8 @@ app.post("/login", (req: Request, res: Response) => {
         password: req.body.password
     }, (err, result) => {
         if (err) {
-            console.log(`ERROR: ${JSON.stringify(err)}`);
             res.status(400).send({err})
         } else {
-            console.log(`result: ${JSON.stringify(result)}`);
             res.send({sessionToken : result})
         }
         });
@@ -57,10 +55,8 @@ app.post("/login", (req: Request, res: Response) => {
 app.post("/register", (req: Request, res: Response)=> {
     client.Register({username: req.body.username, password :req.body.password}, (err,result) => {
         if(err){
-            console.log(`ERROR : ${err}`)
             res.status(400).send({err})
         } else {
-            console.log(`result: ${JSON.stringify(result)}`)
             res.send({sessionToken : result})
         }
 
@@ -68,11 +64,7 @@ app.post("/register", (req: Request, res: Response)=> {
 });
 
 app.post("/get_reservation", (req:Request, res: Response) => {
-    console.log("req")
-    console.log(req.body)
     client.GetReservation({ sessionToken :req.body.sessionToken}, (err, result)=> {
-        console.log(result)
-        console.log(err)
         if (err) {
             res.status(401).send({err})
             return;
@@ -93,14 +85,11 @@ app.post("/reservation", (req:Request, res: Response) => {
         }
         
         client.CreateReservation( request,   async (err , result) => {
-            console.log(`err: ${err}`)
-            console.log(`result : ${JSON.stringify(result)}`)
             if(err){
                 res.status(401).send({err})
             }
             else{
-                console.log(result)
-                  res.sendStatus(200)
+                  res.status(200).send({result})
                 }
         })
 
@@ -113,8 +102,6 @@ app.post("/reservation", (req:Request, res: Response) => {
 app.post("/cancel",(req:Request, res: Response) => {
     client.CancelReservation({sessionToken : req.body.sessionToken}, (err, result) => {
         if(err){
-            console.log(`err: ${JSON.stringify(err)}`)
-            console.log(`code : ${err.code}`)
             // 16 means unauthenticated user
             if(err.code === 16) {
                 res.status(401).send({err})
@@ -122,8 +109,6 @@ app.post("/cancel",(req:Request, res: Response) => {
             else res.status(400).send({err})
         }
         else {
-            
-            console.log(`result from cancel : ${JSON.stringify(result)}`)
             res.send("success")
         }
     })
@@ -137,7 +122,6 @@ app.get("/arriving_time", (_:Request, res: Response) => {
 
 app.post("/get_arrival_time", (req:Request, res: Response) => {    
     client.GetArrivalTime({sessionToken:req.body.sessionToken}, (err, result) => {
-        console.log("result line")
         if(err){
             res.status(401).send({err})
         }
@@ -160,16 +144,13 @@ app.post("/update_arrival_time", (req: Request, res: Response) => {
             res.status(401).send({err})
             return 
         }else {
-            console.log(`result: ${JSON.stringify(result)}`)
-            console.log(result?.delayedTime?.seconds)
             // convert seconds to minutes
             let minute = Number(result?.delayedTime?.seconds) / 60000;
-            console.log(`minute: ${minute}`)
             // when only minute is 1, delay the time
             if (minute === 0) minute = - 1;
-            console.log(`minute: ${minute}`)
+
             res.send({minute})
-            // from here time is printed!!!
+
         }
     })
 })
@@ -180,7 +161,6 @@ app.listen( expressPORT, () => {
 
 function estimatedArrivalTimeGenerator(max: number = 10, min: number = 5) : number{
     const randomNumber =  Math.floor(Math.random() * (max - min + 1) + min);
-    console.log(`randomNumber: ${randomNumber * 60000}`)
     // times 1000 since convert from milliseconds to minute
     const estimatedArrivalTime = new Date().getTime() + randomNumber * 60000;
     return estimatedArrivalTime

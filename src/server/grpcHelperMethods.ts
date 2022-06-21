@@ -8,7 +8,6 @@ export async function checkValidSessionToken(sessionToken: string | undefined) {
     const metadata = new grpc.Metadata();
   
     if (!sessionToken) {
-      // console.log("must print here")
       metadata.add("type", Exceptions.UNAUTHORIZED_USER_EXCEPTION.toString());
       return {
         code: grpc.status.UNAUTHENTICATED,
@@ -91,7 +90,6 @@ export async function isAllCarArrived(sessionToken: string) {
   
 export function estimatedArrivalTimeGenerator(max: number = 10, min: number = 5) : number{
     const randomNumber =  Math.floor(Math.random() * (max - min + 1) + min);
-    console.log(`randomNumber: ${randomNumber * 60000}`)
     // times 1000 since convert from milliseconds to minute
     const estimatedArrivalTime = new Date().getTime() + randomNumber * 60000;
     return estimatedArrivalTime

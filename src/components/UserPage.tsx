@@ -69,19 +69,18 @@ export default function UserPage() {
     }
   }
 
-  async function updateSessionToken(){
-    const sessionToken  = window.localStorage.getItem("sessionToken")
-    const updateSessionTokenRequest = await axios.post("http://localhost:8080/update_session_token", {sessionToken})
-    console.log(updateSessionTokenRequest.status)
+  // async function updateSessionToken(){
+  //   const sessionToken  = window.localStorage.getItem("sessionToken")
+  //   const updateSessionTokenRequest = await axios.post("http://localhost:8080/update_session_token", {sessionToken})
+  //   console.log(updateSessionTokenRequest.status)
 
-  }
+  // }
 
   async function refreshArrivalTime(){
     if(isAfterRequest && estimatedArrivalTime > 0){
       const sessionToken = window.localStorage.getItem("sessionToken");
       const refreshArrivalTimeRequest = await axios.post("/update_arrival_time", {sessionToken})
       const { minute } = refreshArrivalTimeRequest.data
-      console.log(estimatedArrivalTime, minute)
       setEstimatedArrivalTime(estimatedArrivalTime + minute)
     }
 }
