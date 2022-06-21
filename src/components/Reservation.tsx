@@ -20,8 +20,7 @@ export default function Reservation({isRequestCar, setIsAfterRequest} : any) {
         try {
             const sessionToken = window.localStorage.getItem("sessionToken");
             const getReservationRequest = await axios.post("http://localhost:8080/get_reservation", {sessionToken})
-            console.log(getReservationRequest.request)
-            console.log(getReservationRequest.status)
+
             if(getReservationRequest.status === 200) setReservations(getReservationRequest.data);
         }
         catch (err: any){
@@ -40,7 +39,6 @@ export default function Reservation({isRequestCar, setIsAfterRequest} : any) {
             }
         } 
         catch (err: any) {
-            console.log(err.response.status)
             if(err.response.status === 401){
                 navigate("/")
             }

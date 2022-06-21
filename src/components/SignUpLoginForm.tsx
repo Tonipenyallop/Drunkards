@@ -38,7 +38,6 @@ export default function SignUpLogInForm() {
       password,
     });
 
-    // console.log(registerRequest.data);
     if (registerRequest.status === 200) {
       setIsSuccessRegister(RegisterResponse.success);
     } else {

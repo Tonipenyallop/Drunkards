@@ -10,12 +10,8 @@ export default function UserPage() {
   const [isRequestCar,setIsRequestCar] = useState<boolean>(false)
   const [estimatedArrivalTime, setEstimatedArrivalTime ] = useState<number>(0);
   const [isAfterRequest, setIsAfterRequest] = useState<boolean>(false);
-  const [minimumConstraints, setMinimumConstraints ] = useState<string>("");
-  let isAfterRequestLocal : string | null;
+  
   useEffect(()=> {
-    // isAfterRequestLocal = window.localStorage.getItem("setIsAfterRequest");
-    // console.log('inside of useEffect')
-    // if(isAfterRequestLocal) setIsAfterRequest(true);
     if(isAfterRequest){
       const interval = setInterval(()=> {   
         refreshArrivalTime();
@@ -34,15 +30,12 @@ export default function UserPage() {
   }, [isAfterRequest, estimatedArrivalTime])
 
   async function getArrivalTime(){
-      // 1. send the request to get the time 
-      console.log(`get arrival time is called`)
+
       const sessionToken = window.localStorage.getItem("sessionToken")
       const arrivalTimeRequest = await axios.post("http://localhost:8080/get_arrival_time", {sessionToken})
-      console.log(arrivalTimeRequest.data)
 
       setEstimatedArrivalTime(arrivalTimeRequest.data.arrivalMinutes)
       
-      // 2. return to time with minutes
   }
 
 
