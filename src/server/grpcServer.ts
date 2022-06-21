@@ -180,7 +180,7 @@ function getServer() {
       const isCarArrived = await isAllCarArrived(
         req.request.sessionToken as string
       );
-
+        console.log(`isCarArrived: ${isCarArrived}`)
       if (!isCarArrived) {
         const metadata = new grpc.Metadata();
         metadata.add("type", Exceptions.INVALID_INPUT_EXCEPTION.toString())

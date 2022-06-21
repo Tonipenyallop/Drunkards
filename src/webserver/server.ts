@@ -84,10 +84,15 @@ app.post("/reservation", (req:Request, res: Response) => {
             sessionToken : req.body.sessionToken
         }
         
-        client.CreateReservation( request,   async (err , result) => {
-            if(err){
+        client.CreateReservation(request, async (err, result) => {
+        if(err){
+            console.log(err.code)
+            // 16 means unauthenticated user
+            if(err.code === 16)
                 res.status(401).send({err})
+            else res.status(400).send({err})
             }
+
             else{
                   res.status(200).send({result})
                 }
