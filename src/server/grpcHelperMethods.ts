@@ -56,17 +56,15 @@ export function convertToJSDate(jsDate: number): Date {
     } as Timestamp;
   }
   
- export async function getUserId(sessionToken: string): Promise<number>{
+ export async function getUserId(sessionToken: string): Promise<number> {
     console.log(`getUserId`)
-
     const parsedSessionToken = JSON.parse(sessionToken as string).sessionToken;
     console.log(`parsedSessionToken: ${parsedSessionToken}`)
     const requestedUser = await database
       .select("*")
       .from("sessions")
       .where("sessionToken", parsedSessionToken);
-
-      if(requestedUser.length === 0) return Exceptions.UNAUTHORIZED_USER_EXCEPTION
+      console.log(`requestedUser: ${JSON.stringify(requestedUser)}`)
     return requestedUser[0].userId;
   }
   

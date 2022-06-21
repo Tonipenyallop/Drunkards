@@ -183,10 +183,7 @@ function getServer() {
       if (validRequest.code !== grpc.status.OK){
         // console.log(`validRequest: ${JSON.stringify(validRequest)}`)
         return res(validRequest as CreateReservationResponse);
-      }
-
-
-
+}
       const isCarArrived = await isAllCarArrived(
         req.request.sessionToken as string
       );
@@ -246,16 +243,10 @@ function getServer() {
       req: grpc.ServerUnaryCall<GetReservationRequest, GetReservationResponse>,
       res: grpc.sendUnaryData<GetReservationResponse>
     ) => {
-      const validRequest = await checkValidSessionToken(req.request.sessionToken);
-      if (validRequest.code !== grpc.status.OK)
-        return res(validRequest);
+      const validRequest = checkValidSessionToken(req.request.sessionToken);
+      if ((await validRequest).code !== grpc.status.OK)
+        return res(await validRequest);
       const userId = await getUserId(req.request.sessionToken as string);
-      console.log(`userID: ${userId}`)
-      if(userId === Exceptions.UNAUTHORIZED_USER_EXCEPTION){
-        const metadata = new grpc.Metadata();
-        metadata.add("type", Exceptions.UNAUTHORIZED_USER_EXCEPTION.toString());
-        return res({code : grpc.status.UNAUTHENTICATED, message: "session token doesn't match", metadata});
-      }
 
       const allRequests = await database
         .select("startLocation", "destination", "pickupTime", "reservationID")
