@@ -31,18 +31,6 @@ export default function Reservation({isRequestCar, setIsAfterRequest} : any) {
 
         
     }
-
-
-    // async function getLatestReservation(){
-    //     console.log('latest request');
-    //     const latestReservationRequest = await axios.post("http://localhost:8080/latest_reservation", {sessionToken})
-    //     console.log(latestReservationRequest.data)
-    //     // if(latestReservation.data) {
-    //     //     setIsSuccessCancel(false)
-    //     // }
-    //     // else setIsSuccessCancel(true)
-
-    // }
     
      async function cancelReservation(){
         try {

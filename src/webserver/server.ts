@@ -110,19 +110,6 @@ app.post("/reservation", (req:Request, res: Response) => {
     
 })
 
-app.post("/latest_reservation", async (req:Request, res: Response) => {
-    client.GetLatestReservation({sessionToken : req.body.sessionToken}, (err, result) => {
-
-    })
-    const userIdArray = await database.select("userId").from("sessions").where("sessionToken", req.body.sessionToken);
-    const requestHistory = await database.select("*").from("requests").where("userId", userIdArray[0].userId )
-    console.log("requestHistory")
-    const latestReservation = requestHistory[requestHistory.length - 1];
-    console.log(latestReservation)
-    res.send({latestReservation})
-
-})
-
 app.post("/cancel",(req:Request, res: Response) => {
     client.CancelReservation({sessionToken : req.body.sessionToken}, (err, result) => {
         if(err){
