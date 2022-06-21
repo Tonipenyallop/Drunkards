@@ -350,7 +350,7 @@ function getServer() {
       console.log(`UpdateSessionToken: ${JSON.stringify(req.request)}`)
       const validRequest = await checkValidSessionToken(req.request.sessionToken);
       if ((validRequest).code !== grpc.status.OK)
-        return validRequest as UpdateSessionTokenResponse; 
+        return res(validRequest ); 
 
 
       const newSessionToken = uuidv4();
