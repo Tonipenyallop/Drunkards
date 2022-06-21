@@ -38,7 +38,7 @@ const client = new grpcObj.index.User(
 );
 
 
-app.post("/login", async( req: Request, res: Response ) => {
+app.post("/login", (req: Request, res: Response) => {
     client.Login({
         username: req.body.username, 
         password: req.body.password
@@ -54,7 +54,7 @@ app.post("/login", async( req: Request, res: Response ) => {
 
 } );
 
-app.post("/register", async (req: Request, res: Response)=> {
+app.post("/register", (req: Request, res: Response)=> {
     client.Register({username: req.body.username, password :req.body.password}, (err,result) => {
         if(err){
             console.log(`ERROR : ${err}`)
@@ -67,10 +67,10 @@ app.post("/register", async (req: Request, res: Response)=> {
     })
 });
 
-app.post("/get_reservation", async (req:Request, res: Response) => {
+app.post("/get_reservation", (req:Request, res: Response) => {
     console.log("req")
     console.log(req.body)
-    await client.GetReservation({ sessionToken :req.body.sessionToken}, (err, result)=> {
+    client.GetReservation({ sessionToken :req.body.sessionToken}, (err, result)=> {
         console.log(result)
         console.log(err)
         if (err) {
@@ -82,7 +82,7 @@ app.post("/get_reservation", async (req:Request, res: Response) => {
     })
 })
 
-app.post("/reservation", async (req:Request, res: Response) => {
+app.post("/reservation", (req:Request, res: Response) => {
         const creationDate = new Date(req.body.pickupTime);
         const request : CreateReservationRequest = {
             startLocation : req.body.startLocation,
@@ -92,7 +92,7 @@ app.post("/reservation", async (req:Request, res: Response) => {
             sessionToken : req.body.sessionToken
         }
         
-        await client.CreateReservation( request,   async (err , result) => {
+        client.CreateReservation( request,   async (err , result) => {
             console.log(`err: ${err}`)
             console.log(`result : ${JSON.stringify(result)}`)
             if(err){
@@ -123,8 +123,8 @@ app.post("/latest_reservation", async (req:Request, res: Response) => {
 
 })
 
-app.post("/cancel",async (req:Request, res: Response) => {
-    await client.CancelReservation({sessionToken : req.body.sessionToken}, (err, result) => {
+app.post("/cancel",(req:Request, res: Response) => {
+    client.CancelReservation({sessionToken : req.body.sessionToken}, (err, result) => {
         if(err){
             console.log(`err: ${JSON.stringify(err)}`)
             console.log(`code : ${err.code}`)
