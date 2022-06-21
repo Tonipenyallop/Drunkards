@@ -42,6 +42,7 @@ export default function Reservation({isRequestCar, setIsAfterRequest} : any) {
             if(err.response.status === 401){
                 navigate("/")
             }
+            else console.log(err)
             setIsSuccessCancel(CancelRequestState.failed)
         }
 
