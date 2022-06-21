@@ -26,11 +26,6 @@ import { GetRefreshArrivalTimeResponse} from "../proto/index/GetRefreshArrivalTi
 import { UpdateSessionTokenRequest } from "../proto/index/UpdateSessionTokenRequest";
 import { UpdateSessionTokenResponse } from "../proto/index/UpdateSessionTokenResponse";
 
-//checkValidSessionToken
-// import {isAllCarArrived,convertToJSDate,
-//   getUserId, getLatestReservation, estimatedArrivalTimeGenerator,
-//   updateSessionToken} from "./grpcHelperMethods"
-
 const database = require("../db/db");
 
 const PROTO_PATH = "../proto/index.proto";
@@ -178,8 +173,8 @@ function getServer() {
       res: grpc.sendUnaryData<CreateReservationResponse>
     ) => {
       // check authorized user
+      // console.log(`carRequest: ${JSON.stringify(req.request, null, 2)}` )
       const validRequest = await checkValidSessionToken(req.request.sessionToken);
-      console.log(`validRequest: ${JSON.stringify(validRequest)}`)
       if (validRequest.code !== grpc.status.OK){
         // console.log(`validRequest: ${JSON.stringify(validRequest)}`)
         return res(validRequest as CreateReservationResponse);
@@ -377,7 +372,7 @@ function getServer() {
   return server;
 }
 
-export async function checkValidSessionToken(sessionToken: string | undefined) {
+async function checkValidSessionToken(sessionToken: string | undefined) {
   // check authorized user
   const metadata = new grpc.Metadata();
   // sessionToken = JSON.parse(sessionToken).sessionToken
@@ -399,7 +394,7 @@ export async function checkValidSessionToken(sessionToken: string | undefined) {
     .from("sessions")
     .where("sessionToken", parsedSessionToken);
 
-    console.log(`requestedUser: ${JSON.stringify(requestedUser)}`)
+    // console.log(`requestedUser: ${requestedUser}`)
 
   // sessionToken is correct from database and requested token
   if (requestedUser.length === 0) {
@@ -418,20 +413,18 @@ export async function checkValidSessionToken(sessionToken: string | undefined) {
   };
 }
 
-
-  
-export function convertToJSDate(jsDate: number): Date {
+function convertToJSDate(jsDate: number): Date {
   // convert into milliseconds because Javascript expects milliseconds
   return new Date(jsDate * 1000);
 }
 
-export function fromDate(date: Date): Timestamp {
+function fromDate(date: Date): Timestamp {
   return {
     seconds: date.getTime() / 1000,
   } as Timestamp;
 }
 
-export async function getUserId(sessionToken: string): Promise<number>{
+async function getUserId(sessionToken: string): Promise<number> {
   console.log(`getUserId`)
 
   const parsedSessionToken = JSON.parse(sessionToken as string).sessionToken;
@@ -440,14 +433,13 @@ export async function getUserId(sessionToken: string): Promise<number>{
     .select("*")
     .from("sessions")
     .where("sessionToken", parsedSessionToken);
-
-    if(requestedUser.length === 0) return Exceptions.UNAUTHORIZED_USER_EXCEPTION
+    console.log(`requestedUser: ${JSON.stringify(requestedUser)}`)
   return requestedUser[0].userId;
 }
 
 
 
-export async function getLatestReservation(sessionToken: string): Promise<any> {
+async function getLatestReservation(sessionToken: string): Promise<any> {
   const userId = await getUserId(sessionToken);
   const notDeletedRequests = await database
     .select("*")
@@ -459,7 +451,7 @@ export async function getLatestReservation(sessionToken: string): Promise<any> {
   return notDeletedRequests[notDeletedRequests.length - 1];
 }
 
-export async function updateSessionToken(sessionToken: string, newSessionToken: string){
+async function updateSessionToken(sessionToken: string, newSessionToken: string){
 
   const userId = await getUserId(sessionToken as string);
   console.log(`userID: ${userId}`)
@@ -470,7 +462,7 @@ export async function updateSessionToken(sessionToken: string, newSessionToken: 
 
 // 1. if there is no data, request the car
 // 2. if all the car is arrived, request the car
-export async function isAllCarArrived(sessionToken: string) {
+async function isAllCarArrived(sessionToken: string) {
   const userId = await getUserId(sessionToken);
   const isAllArrived = await database
     .select("*")
@@ -482,7 +474,7 @@ export async function isAllCarArrived(sessionToken: string) {
   return true;
 }
 
-export function estimatedArrivalTimeGenerator(max: number = 10, min: number = 5) : number{
+function estimatedArrivalTimeGenerator(max: number = 10, min: number = 5) : number{
   const randomNumber =  Math.floor(Math.random() * (max - min + 1) + min);
   console.log(`randomNumber: ${randomNumber * 60000}`)
   // times 1000 since convert from milliseconds to minute
@@ -490,6 +482,5 @@ export function estimatedArrivalTimeGenerator(max: number = 10, min: number = 5)
   return estimatedArrivalTime
 
 }
-
 
 main();
