@@ -14,11 +14,12 @@ export default function Reservation({isRequestCar, setIsAfterRequest} : any) {
     const [latestReservation, setLatestReservation] = useState<any>()
     const [isSuccessCancel, setIsSuccessCancel] = useState<CancelRequestState>(CancelRequestState.notChangedYet)
     // const [isRequestCar, setIsRequestCar] = useState<boolean>(false)
-    const sessionToken = window.localStorage.getItem("sessionToken");
+    // const sessionToken = window.localStorage.getItem("sessionToken");
 
 
     async function getReservation(){
         try {
+            const sessionToken = window.localStorage.getItem("sessionToken");
             const getReservationRequest = await axios.post("http://localhost:8080/get_reservation", {sessionToken})
             console.log(getReservationRequest.request)
             console.log(getReservationRequest.status)
@@ -45,14 +46,22 @@ export default function Reservation({isRequestCar, setIsAfterRequest} : any) {
     // }
     
      async function cancelReservation(){
-        const cancelReservationRequest = await axios.post("http://localhost:8080/cancel", {sessionToken})
-
-        if(cancelReservationRequest.status === 200) {
-            setIsAfterRequest(false)
-            setIsSuccessCancel(CancelRequestState.success)
+        try {
+            const sessionToken = window.localStorage.getItem("sessionToken");
+            const cancelReservationRequest = await axios.post("http://localhost:8080/cancel", {sessionToken})
             
+            if(cancelReservationRequest.status === 200) {
+                setIsAfterRequest(false)
+                setIsSuccessCancel(CancelRequestState.success)   
+            }
+        } 
+        catch (err: any) {
+            console.log(err.response.status)
+            if(err.response.status === 401){
+                navigate("/")
+            }
+            setIsSuccessCancel(CancelRequestState.failed)
         }
-        else setIsSuccessCancel(CancelRequestState.failed)
 
     }
 

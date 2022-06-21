@@ -281,9 +281,10 @@ function getServer() {
       >,
       res: grpc.sendUnaryData<CancelReservationResponse>
     ) => {
-      const validRequest = checkValidSessionToken(req.request.sessionToken);
-      if ((await validRequest).code !== grpc.status.OK)
-        return validRequest as CancelReservationResponse;
+
+      const validRequest = await checkValidSessionToken(req.request.sessionToken);
+
+      if ((validRequest).code !== grpc.status.OK) return res(validRequest as CancelReservationResponse)
 
       const latestRequest = await getLatestReservation(req.request.sessionToken as string);
 
@@ -352,12 +353,12 @@ async function checkValidSessionToken(sessionToken: string | undefined) {
   // sessionToken = JSON.parse(sessionToken).sessionToken
   // sessionToken = JSON.parse(req.body.sessionToken).sessionToken
 
-
+  console.log(`sessionToken: ${sessionToken}`)
   if (!sessionToken) {
     console.log("must print here")
     metadata.add("type", Exceptions.UNAUTHORIZED_USER_EXCEPTION.toString());
     return {
-      code: grpc.status.PERMISSION_DENIED,
+      code: grpc.status.UNAUTHENTICATED,
       message: "sessionToken is missing from request",
       metadata,
     };

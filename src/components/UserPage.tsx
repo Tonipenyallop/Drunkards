@@ -47,8 +47,14 @@ export default function UserPage() {
 
 
   async function getCancelRequest() {
-    const sessionToken = window.localStorage.getItem("sessionToken");
-    await axios.post("http://localhost:8080/cancel", {sessionToken});
+    try {
+
+      const sessionToken = window.localStorage.getItem("sessionToken");
+      await axios.post("http://localhost:8080/cancel", {sessionToken});
+    } 
+    catch(err: any) {
+        console.log(err)
+    }
   } 
   
 

@@ -129,7 +129,13 @@ app.post("/latest_reservation", async (req:Request, res: Response) => {
 app.post("/cancel",async (req:Request, res: Response) => {
     await client.CancelReservation({sessionToken : req.body.sessionToken}, (err, result) => {
         if(err){
-            res.status(400).send({err})
+            console.log(`err: ${JSON.stringify(err)}`)
+            console.log(`code : ${err.code}`)
+            // 16 means unauthenticated user
+            if(err.code === 16) {
+                res.status(401).send({err})
+            }
+            else res.status(400).send({err})
         }
         else {
             
