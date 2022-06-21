@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import { TextField, Button } from "@mui/material";
 export default function SignUpLogInForm() {
   enum RegisterResponse {
     success = "success",
@@ -19,6 +19,8 @@ export default function SignUpLogInForm() {
   );
 
   async function requestLogin() {
+    console.log(loginPhoneOrEmail);
+    console.log(loginPassword);
     const response = await axios.post("http://localhost:8080/login", {
       username: loginPhoneOrEmail,
       password: loginPassword,
@@ -49,9 +51,28 @@ export default function SignUpLogInForm() {
   return (
     <div>
       <div className="">
-        LOGIN
+        <p>PLEASE LOGIN HERE </p>
+        <TextField
+          id="filled-basic"
+          label="username"
+          variant="outlined"
+          required
+          onChange={(e) => setLoginPhoneOrEmail(e.target.value)}
+        />
+        <TextField
+          id="filled-basic"
+          label="password"
+          variant="outlined"
+          required
+          type="password"
+          onChange={(e) => setLoginPassword(e.target.value)}
+        />
+        <Button variant="contained" onClick={requestLogin}>
+          Login
+        </Button>
+        {/* LOGIN */}
         <br />
-        <input
+        {/* <input
           type="text"
           placeholder="Phone Or Email"
           onChange={(e) => setLoginPhoneOrEmail(e.target.value)}
@@ -61,13 +82,32 @@ export default function SignUpLogInForm() {
           placeholder="Password"
           onChange={(e) => setLoginPassword(e.target.value)}
         />
-        <button onClick={() => requestLogin()}>LOGIN</button>
+        <button onClick={() => requestLogin()}>LOGIN</button> */}
+        <p>CREATE A ACCOUNT</p>
+        <TextField
+          id="filled-basic"
+          label="username"
+          variant="outlined"
+          required
+          onChange={(e) => setPhoneOrEmail(e.target.value)}
+        />
+        <TextField
+          id="filled-basic"
+          label="password"
+          variant="outlined"
+          required
+          type="password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button variant="contained" onClick={register}>
+          Register
+        </Button>
       </div>
       <br />
       <div className="">
-        REGISTER ACCOUNT
+        {/* REGISTER ACCOUNT */}
         <br />
-        <input
+        {/* <input
           id="phone_email"
           type="text"
           placeholder="Phone Or Email"
@@ -79,7 +119,7 @@ export default function SignUpLogInForm() {
           placeholder="Password"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button onClick={() => register()}>SIGN UP</button>
+        <button onClick={() => register()}>SIGN UP</button> */}
         {isSuccessRegister === RegisterResponse.success ? (
           <div>Successfully Register</div>
         ) : isSuccessRegister === RegisterResponse.fail ? (
