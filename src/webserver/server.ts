@@ -91,9 +91,6 @@ app.post("/reservation", async (req:Request, res: Response) => {
             pickupTime :  {seconds : creationDate.getTime() / 1000} as Timestamp,
             sessionToken : req.body.sessionToken
         }
-
-        // console.log("request.pickupTime")
-        // console.log(request.pickupTime)
         
         await client.CreateReservation( request,   async (err , result) => {
             console.log(`err: ${err}`)
@@ -150,29 +147,21 @@ app.get("/arriving_time", (_:Request, res: Response) => {
     res.send({estimatedArrivalTime});
 })
 
-// await client.GetArrivalTime()
 
-// it is called only once
-app.post("/get_arrival_time",  (req:Request, res: Response) => {
-    // check without working await 
-    
+app.post("/get_arrival_time", (req:Request, res: Response) => {    
     client.GetArrivalTime({sessionToken:req.body.sessionToken}, (err, result) => {
         console.log("result line")
         if(err){
             res.status(401).send({err})
         }
-        // console.log(`result: ${JSON.stringify(result)}`)
-        // console.log(Number(result?.arrivalTime?.seconds))
-        // can I comment this out?
+
         const milliseconds = Number(result?.arrivalTime?.seconds);
         let min = new Date(milliseconds).getMinutes()
         const now = new Date(new Date().getTime()).getMinutes()
-
-        console.log(`now : ${now}`)
-        console.log(`min : ${min}`)
+        
+        // for adjust the time
         if(min < now ) min += 60;
         const arrivalMinutes = min - now
-        console.log(`return Value: ${min - now}`)
         res.send({arrivalMinutes})
 
     })
