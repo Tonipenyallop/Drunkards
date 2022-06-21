@@ -173,10 +173,8 @@ function getServer() {
       res: grpc.sendUnaryData<CreateReservationResponse>
     ) => {
       // check authorized user
-      console.log(`carRequest: ${JSON.stringify(req.request, null, 2)}` )
       const validRequest = await checkValidSessionToken(req.request.sessionToken);
       if (validRequest.code !== grpc.status.OK){
-        console.log(`validRequest: ${JSON.stringify(validRequest)}`)
         return res(validRequest as CreateReservationResponse);
 }
       const isCarArrived = await isAllCarArrived(
@@ -221,7 +219,7 @@ function getServer() {
       );
 
       const userId = await getUserId(req.request.sessionToken as string);
-      if(userId === Exceptions.UNAUTHORIZED_USER_EXCEPTION) {console.log("error here we need to fix tonight!!!")}
+      if(userId === Exceptions.UNAUTHORIZED_USER_EXCEPTION) { return res({code: grpc.status.UNAUTHENTICATED, message: "sessionToken doesn't match"})}
 
       const reservationID: string = uuidv4();
       await database("requests").insert({
@@ -287,7 +285,6 @@ function getServer() {
     ) => {
 
       const validRequest = await checkValidSessionToken(req.request.sessionToken);
-      console.log(`validRequest: ${JSON.stringify(validRequest)}`)
       if ((validRequest).code !== grpc.status.OK) return res(validRequest as CancelReservationResponse)
 
       const latestRequest = await getLatestReservation(req.request.sessionToken as string);
@@ -312,13 +309,11 @@ function getServer() {
       res(null, {} as CancelReservationResponse);
     },
     GetArrivalTime : async (req: grpc.ServerUnaryCall<GetArrivalTimeRequest, GetArrivalTimeResponse>, res: grpc.sendUnaryData<GetArrivalTimeResponse>) => {
-      // console.log(`GetArrivalTime: ${JSON.stringify(req.request)}`)
       const validRequest = await checkValidSessionToken(req.request.sessionToken);
       if ((validRequest).code !== grpc.status.OK)
         return validRequest as GetArrivalTimeResponse; 
         const estimatedArrivalTime = estimatedArrivalTimeGenerator()
-        // console.log(`estimatedArrivalTime: ${estimatedArrivalTime}`)
-        // console.log(`new Date(estimatedArrivalTime): ${new Date(estimatedArrivalTime)}`)
+
         const timeStampObj: Timestamp = {
         seconds : estimatedArrivalTime 
         }
@@ -329,15 +324,13 @@ function getServer() {
     },
 
     GetRefreshArrivalTime: async (req: grpc.ServerUnaryCall<GetRefreshArrivalTimeRequest,GetRefreshArrivalTimeResponse>, res: grpc.sendUnaryData<GetRefreshArrivalTimeResponse>) => {
-      console.log(`GetRefreshArrivalTime: ${JSON.stringify(req.request)}`)
       const validRequest = await checkValidSessionToken(req.request.sessionToken);
       if ((validRequest).code !== grpc.status.OK)
         return validRequest as GetArrivalTimeResponse; 
-      // console.log(`validRequest: ${JSON.stringify(validRequest)}`)
+        
       const max = 1
       const min = -1
       const randomDelay = Math.floor(Math.random() *(max - min + 1) + min);
-      console.log(`randomDelay: ${randomDelay}`)
       const timestampObj : Timestamp = {
         seconds : randomDelay * 60000
       }
