@@ -13,8 +13,7 @@ export default function Reservation({isRequestCar, setIsAfterRequest} : any) {
     const [reservations, setReservations] = useState<any>()
     const [latestReservation, setLatestReservation] = useState<any>()
     const [isSuccessCancel, setIsSuccessCancel] = useState<CancelRequestState>(CancelRequestState.notChangedYet)
-    // const [isRequestCar, setIsRequestCar] = useState<boolean>(false)
-    // const sessionToken = window.localStorage.getItem("sessionToken");
+
 
 
     async function getReservation(){
