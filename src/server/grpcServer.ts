@@ -23,6 +23,8 @@ import { GetArrivalTimeRequest } from "../proto/index/GetArrivalTimeRequest";
 import { GetArrivalTimeResponse } from "../proto/index/GetArrivalTimeResponse";
 import { GetRefreshArrivalTimeRequest } from "../proto/index/GetRefreshArrivalTimeRequest";
 import { GetRefreshArrivalTimeResponse} from "../proto/index/GetRefreshArrivalTimeResponse"
+import { UpdateSessionTokenRequest } from "../proto/index/UpdateSessionTokenRequest";
+import { UpdateSessionTokenResponse } from "../proto/index/UpdateSessionTokenResponse";
 
 const database = require("../db/db");
 
@@ -171,30 +173,20 @@ function getServer() {
       res: grpc.sendUnaryData<CreateReservationResponse>
     ) => {
       // check authorized user
-      console.log(`carRequest: ${JSON.stringify(req.request, null, 2)}` )
+      // console.log(`carRequest: ${JSON.stringify(req.request, null, 2)}` )
       const validRequest = await checkValidSessionToken(req.request.sessionToken);
       if (validRequest.code !== grpc.status.OK){
-        console.log(`validRequest: ${JSON.stringify(validRequest)}`)
+        // console.log(`validRequest: ${JSON.stringify(validRequest)}`)
         return res(validRequest as CreateReservationResponse);
 }
       const isCarArrived = await isAllCarArrived(
         req.request.sessionToken as string
       );
 
-      if (!isCarArrived) {
-        const metadata = new grpc.Metadata();
-        metadata.add("type", Exceptions.INVALID_INPUT_EXCEPTION.toString())
-        return res({
-          code: grpc.status.CANCELLED,
-          message:
-            "Not all the cars are arrived yet. You cannot use this method yet",
-          metadata,
-        });
-      }
-
+      
       const startLocation = req.request.startLocation;
       const destination = req.request.destination;
-
+      
       // check all the input is fill out
       if (startLocation === "" || destination === "") {
         const metadata = new grpc.Metadata();
@@ -202,6 +194,17 @@ function getServer() {
         return res({
           code: grpc.status.INVALID_ARGUMENT,
           message: "startLocation and destination must be filled",
+          metadata,
+        });
+      }
+      
+      if (!isCarArrived) {
+        const metadata = new grpc.Metadata();
+        metadata.add("type", Exceptions.INVALID_INPUT_EXCEPTION.toString())
+        return res({
+          code: grpc.status.CANCELLED,
+          message:
+            "Not all the cars are arrived yet",
           metadata,
         });
       }
@@ -325,7 +328,7 @@ function getServer() {
     },
 
     GetRefreshArrivalTime: async (req: grpc.ServerUnaryCall<GetRefreshArrivalTimeRequest,GetRefreshArrivalTimeResponse>, res: grpc.sendUnaryData<GetRefreshArrivalTimeResponse>) => {
-      console.log(`GetRefreshArrivalTime: ${JSON.stringify(req.request)}`)
+      // console.log(`GetRefreshArrivalTime: ${JSON.stringify(req.request)}`)
       const validRequest = await checkValidSessionToken(req.request.sessionToken);
       if ((validRequest).code !== grpc.status.OK)
         return validRequest as GetArrivalTimeResponse; 
@@ -333,7 +336,7 @@ function getServer() {
       const max = 1
       const min = -1
       const randomDelay = Math.floor(Math.random() *(max - min + 1) + min);
-      console.log(`randomDelay: ${randomDelay}`)
+      // console.log(`randomDelay: ${randomDelay}`)
       const timestampObj : Timestamp = {
         seconds : randomDelay * 60000
       }
@@ -342,6 +345,28 @@ function getServer() {
         delayedTime : timestampObj
       }
       return res(null, refreshArrivalTimeResponse);
+    },
+    UpdateSessionToken : async (req: grpc.ServerUnaryCall<UpdateSessionTokenRequest,UpdateSessionTokenResponse>, res: grpc.sendUnaryData<UpdateSessionTokenResponse>) => {
+      console.log(`UpdateSessionToken: ${JSON.stringify(req.request)}`)
+      const validRequest = await checkValidSessionToken(req.request.sessionToken);
+      if ((validRequest).code !== grpc.status.OK)
+        return validRequest as UpdateSessionTokenResponse; 
+
+
+      const newSessionToken = uuidv4();
+
+      await updateSessionToken(req.request.sessionToken as string, newSessionToken);
+      // const userId = await getUserId(req.request.sessionToken as string);
+      // console.log(`userID: ${userId}`)
+
+      // const newSessionToken = uuidv4();
+      // const parsedSessionToken = JSON.parse(req.request.sessionToken as string).sessionToken;
+      // await database("sessions").update("sessionToken", newSessionToken).where("userId", userId).andWhere("sessionToken", parsedSessionToken)
+
+      const newSessionTokenObj : UpdateSessionTokenResponse = {
+        sessionToken : newSessionToken
+      }
+      res(null, newSessionTokenObj)
     }
   });
   return server;
@@ -353,9 +378,9 @@ async function checkValidSessionToken(sessionToken: string | undefined) {
   // sessionToken = JSON.parse(sessionToken).sessionToken
   // sessionToken = JSON.parse(req.body.sessionToken).sessionToken
 
-  console.log(`sessionToken: ${sessionToken}`)
+  // console.log(`sessionToken: ${sessionToken}`)
   if (!sessionToken) {
-    console.log("must print here")
+    // console.log("must print here")
     metadata.add("type", Exceptions.UNAUTHORIZED_USER_EXCEPTION.toString());
     return {
       code: grpc.status.UNAUTHENTICATED,
@@ -369,7 +394,7 @@ async function checkValidSessionToken(sessionToken: string | undefined) {
     .from("sessions")
     .where("sessionToken", parsedSessionToken);
 
-    console.log(`requestedUser: ${requestedUser}`)
+    // console.log(`requestedUser: ${requestedUser}`)
 
   // sessionToken is correct from database and requested token
   if (requestedUser.length === 0) {
@@ -400,13 +425,19 @@ function fromDate(date: Date): Timestamp {
 }
 
 async function getUserId(sessionToken: string): Promise<number> {
+  console.log(`getUserId`)
+
   const parsedSessionToken = JSON.parse(sessionToken as string).sessionToken;
+  console.log(`parsedSessionToken: ${parsedSessionToken}`)
   const requestedUser = await database
     .select("*")
     .from("sessions")
     .where("sessionToken", parsedSessionToken);
+    console.log(`requestedUser: ${JSON.stringify(requestedUser)}`)
   return requestedUser[0].userId;
 }
+
+
 
 async function getLatestReservation(sessionToken: string): Promise<any> {
   const userId = await getUserId(sessionToken);
@@ -415,9 +446,18 @@ async function getLatestReservation(sessionToken: string): Promise<any> {
     .from("requests").where("userId", userId)
     .where("is_deleted", false);
 
-    console.log(`notDeletedRequest: ${JSON.stringify(notDeletedRequests)}`)
+    // console.log(`notDeletedRequest: ${JSON.stringify(notDeletedRequests)}`)
 
   return notDeletedRequests[notDeletedRequests.length - 1];
+}
+
+async function updateSessionToken(sessionToken: string, newSessionToken: string){
+
+  const userId = await getUserId(sessionToken as string);
+  console.log(`userID: ${userId}`)
+
+  const parsedSessionToken = JSON.parse(sessionToken as string).sessionToken;
+  await database("sessions").update("sessionToken", newSessionToken).where("userId", userId).andWhere("sessionToken", parsedSessionToken)
 }
 
 // 1. if there is no data, request the car

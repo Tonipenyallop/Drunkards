@@ -60,18 +60,27 @@ export default function UserPage() {
 
   async function getReservationRequest(){
     try{
-      const token  = window.localStorage.getItem("sessionToken")
-      const reservationRequest = await axios.post("http://localhost:8080/reservation", {startLocation, destination, pickupTime, sessionToken: token})
+      const sessionToken  = window.localStorage.getItem("sessionToken")
+      const reservationRequest = await axios.post("http://localhost:8080/reservation", {startLocation, destination, pickupTime, sessionToken})
       
       if(reservationRequest.status === 200) {
         setIsRequestCar(true)
         setIsAfterRequest(true);
         // window.localStorage.setItem("isAfterRequest", "true");
         await getArrivalTime()
+        // updateSessionToken()
       } 
     } catch(err: any) {
       if(err.response.status === 401) navigate("/")
+      else console.error(err)
     }
+  }
+
+  async function updateSessionToken(){
+    const sessionToken  = window.localStorage.getItem("sessionToken")
+    const updateSessionTokenRequest = await axios.post("http://localhost:8080/update_session_token", {sessionToken})
+    console.log(updateSessionTokenRequest.status)
+
   }
 
   async function refreshArrivalTime(){

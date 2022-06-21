@@ -91,15 +91,14 @@ app.post("/reservation", async (req:Request, res: Response) => {
             pickupTime :  {seconds : creationDate.getTime() / 1000} as Timestamp,
             sessionToken : req.body.sessionToken
         }
-
-        // console.log("request.pickupTime")
-        // console.log(request.pickupTime)
         
-        await client.CreateReservation( request,   async (err , result) => {
-            console.log(`err: ${err}`)
-            console.log(`result : ${JSON.stringify(result)}`)
+        await client.CreateReservation(request, async (err, result) => {
             if(err){
-                res.status(401).send({err})
+                //16 means unauthenticated user
+                if(err.code === 16) 
+                    res.status(401).send({err})
+                else 
+                    res.status(400).send({err})
             }
             else{
                 console.log(result)
@@ -184,17 +183,26 @@ app.post("/update_arrival_time", (req: Request, res: Response) => {
             res.status(401).send({err})
             return 
         }else {
-            console.log(`result: ${JSON.stringify(result)}`)
-            console.log(result?.delayedTime?.seconds)
+            // console.log(`result: ${JSON.stringify(result)}`)
+            // console.log(result?.delayedTime?.seconds)
             // convert seconds to minutes
             let minute = Number(result?.delayedTime?.seconds) / 60000;
-            console.log(`minute: ${minute}`)
+            // console.log(`minute: ${minute}`)
             // when only minute is 1, delay the time
             if (minute === 0) minute = - 1;
-            console.log(`minute: ${minute}`)
+            // console.log(`minute: ${minute}`)
             res.send({minute})
             // from here time is printed!!!
         }
+    })
+})
+
+app.post("/update_session_token", (req:Request, res:Response) => {
+    client.UpdateSessionToken({sessionToken :req.body.sessionToken}, (err, result) => {
+        if(err){
+            console.log(`err: ${err}`)
+        }
+        console.log(`result: ${JSON.stringify(result)}`)
     })
 })
 
