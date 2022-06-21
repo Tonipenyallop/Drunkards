@@ -1,50 +1,54 @@
 import * as grpc from "@grpc/grpc-js";
+
 import { Exceptions } from "../proto/index/Exceptions";
 import { Timestamp } from "../proto/google/protobuf/Timestamp";
 
 const database = require("../db/db");
 
 
-export async function checkValidSessionToken(sessionToken: string | undefined) {
-    // check authorized user
-    const metadata = new grpc.Metadata();
-    // sessionToken = JSON.parse(sessionToken).sessionToken
-    // sessionToken = JSON.parse(req.body.sessionToken).sessionToken
+
+// export async function checkValidSessionToken(sessionToken: string | undefined) {
+//     // check authorized user
+//     const metadata = new grpc.Metadata();
+//     // sessionToken = JSON.parse(sessionToken).sessionToken
+//     // sessionToken = JSON.parse(req.body.sessionToken).sessionToken
   
-    // console.log(`sessionToken: ${sessionToken}`)
-    if (!sessionToken) {
-      // console.log("must print here")
-      metadata.add("type", Exceptions.UNAUTHORIZED_USER_EXCEPTION.toString());
-      return {
-        code: grpc.status.UNAUTHENTICATED,
-        message: "sessionToken is missing from request",
-        metadata,
-      };
-    }
-    const parsedSessionToken = JSON.parse(sessionToken).sessionToken;
-    const requestedUser = database
-      .select("*")
-      .from("sessions")
-      .where("sessionToken", parsedSessionToken);
+//     // console.log(`sessionToken: ${sessionToken}`)
+//     if (!sessionToken) {
+//       // console.log("must print here")
+//       metadata.add("type", Exceptions.UNAUTHORIZED_USER_EXCEPTION.toString());
+//       return {
+//         code: grpc.status.UNAUTHENTICATED,
+//         message: "sessionToken is missing from request",
+//         metadata,
+//       };
+//     }
+//     const parsedSessionToken = JSON.parse(sessionToken).sessionToken;
+//     console.log(`parsedSessionToken: ${parsedSessionToken}`)
+//     const requestedUser = database
+//       .select("*")
+//       .from("sessions")
+//       .where("sessionToken", parsedSessionToken);
+    
+      
+//       console.log(`requestedUser: ${JSON.stringify(requestedUser)}`)
   
-      // console.log(`requestedUser: ${requestedUser}`)
+//     // sessionToken is correct from database and requested token
+//     if (requestedUser.length === 0) {
+//       metadata.add("type", Exceptions.UNAUTHORIZED_USER_EXCEPTION.toString());
+//       return {
+//         code: grpc.status.UNAUTHENTICATED,
+//         message: "sessionToken doesn't match from database",
+//         metadata,
+//       };
+//     }
   
-    // sessionToken is correct from database and requested token
-    if (requestedUser.length === 0) {
-      metadata.add("type", Exceptions.UNAUTHORIZED_USER_EXCEPTION.toString());
-      return {
-        code: grpc.status.UNAUTHENTICATED,
-        message: "sessionToken doesn't match from database",
-        metadata,
-      };
-    }
-  
-    return {
-      code: grpc.status.OK,
-      message: "sessionToken valid",
-      metadata,
-    };
-  }
+//     return {
+//       code: grpc.status.OK,
+//       message: "sessionToken valid",
+//       metadata,
+//     };
+//   }
   
 export function convertToJSDate(jsDate: number): Date {
     // convert into milliseconds because Javascript expects milliseconds
@@ -57,16 +61,18 @@ export function convertToJSDate(jsDate: number): Date {
     } as Timestamp;
   }
   
- export async function getUserId(sessionToken: string): Promise<number> {
+ export async function getUserId(sessionToken: string): Promise<number>{
     console.log(`getUserId`)
-  
+    
+
     const parsedSessionToken = JSON.parse(sessionToken as string).sessionToken;
     console.log(`parsedSessionToken: ${parsedSessionToken}`)
     const requestedUser = await database
       .select("*")
       .from("sessions")
       .where("sessionToken", parsedSessionToken);
-      console.log(`requestedUser: ${JSON.stringify(requestedUser)}`)
+
+      if(requestedUser.length === 0) return Exceptions.UNAUTHORIZED_USER_EXCEPTION
     return requestedUser[0].userId;
   }
   
