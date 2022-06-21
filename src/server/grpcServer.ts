@@ -241,7 +241,7 @@ function getServer() {
       if ((await validRequest).code !== grpc.status.OK)
         return res(await validRequest);
       const userId = await getUserId(req.request.sessionToken as string);
-      if(userId === Exceptions.UNAUTHORIZED_USER_EXCEPTION) {console.log("error here we need to fix tonight!!!")}
+      if(userId === Exceptions.UNAUTHORIZED_USER_EXCEPTION) {return res({code:grpc.status.UNAUTHENTICATED, message:"sessionToken not matches"})}
       const allRequests = await database
         .select("startLocation", "destination", "pickupTime", "reservationID")
         .from("requests")
