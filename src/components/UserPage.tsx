@@ -20,8 +20,8 @@ export default function UserPage() {
           getCancelRequest();
           clearInterval(interval)
         }
-        // update every minutes 60000
-      }, 1000)
+        // update every minutes
+      }, 60000)
       
       return () => {
         clearInterval(interval)
