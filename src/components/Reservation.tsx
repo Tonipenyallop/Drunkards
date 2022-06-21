@@ -25,11 +25,8 @@ export default function Reservation({isRequestCar, setIsAfterRequest} : any) {
             if(getReservationRequest.status === 200) setReservations(getReservationRequest.data);
         }
         catch (err: any){
-            // console.log(err.response.status)
             if(err.response.status === 401) navigate("/")
         }
-
-        
     }
     
      async function cancelReservation(){
@@ -75,10 +72,8 @@ export default function Reservation({isRequestCar, setIsAfterRequest} : any) {
             })}
             </div>
            
-            {/* <button onClick={getLatestReservation}>Get Latest Reservation</button> */}
             <button onClick={cancelReservation}>Cancel Reservation</button>
             {isSuccessCancel === CancelRequestState.success ? <div>Successfully cancel</div> : isSuccessCancel === CancelRequestState.failed ? <div>Failed to cancel</div> : <div></div>}
-            {/* {isRequestCar === true ? <div>Car on the way</div> : <div></div>} */}
         </div>
     )
 }
