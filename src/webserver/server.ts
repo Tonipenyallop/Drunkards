@@ -74,7 +74,7 @@ app.post("/get_reservation", async (req:Request, res: Response) => {
         console.log(result)
         console.log(err)
         if (err) {
-            console.log(`Error thrown: ${JSON.stringify(err)}`);
+            res.status(401).send({err})
             return;
         }
 

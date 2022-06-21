@@ -1,14 +1,15 @@
 import React, {useState, useEffect, ReactElement} from 'react'
 import axios from 'axios'
+import {useNavigate} from "react-router-dom"
 
 
 export default function Reservation({isRequestCar, setIsAfterRequest} : any) {
-
     enum CancelRequestState {
         success = "success",
         failed = "failed", 
         notChangedYet = "notChangedYet"
     }
+    const navigate = useNavigate();
     const [reservations, setReservations] = useState<any>()
     const [latestReservation, setLatestReservation] = useState<any>()
     const [isSuccessCancel, setIsSuccessCancel] = useState<CancelRequestState>(CancelRequestState.notChangedYet)
@@ -17,8 +18,17 @@ export default function Reservation({isRequestCar, setIsAfterRequest} : any) {
 
 
     async function getReservation(){
-        const getReservationRequest = await axios.post("http://localhost:8080/get_reservation", {sessionToken})
-        setReservations(getReservationRequest.data);
+        try {
+            const getReservationRequest = await axios.post("http://localhost:8080/get_reservation", {sessionToken})
+            console.log(getReservationRequest.request)
+            console.log(getReservationRequest.status)
+            if(getReservationRequest.status === 200) setReservations(getReservationRequest.data);
+        }
+        catch (err: any){
+            // console.log(err.response.status)
+            if(err.response.status === 401) navigate("/")
+        }
+
         
     }
 

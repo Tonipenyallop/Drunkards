@@ -293,7 +293,7 @@ function getServer() {
         return res({
           code: grpc.status.OUT_OF_RANGE,
           message:
-            "Latest request doesn't exit since all the requests are deleted",
+            "All the requests are already deleted or arrived yet",
           metadata,
         });
       }

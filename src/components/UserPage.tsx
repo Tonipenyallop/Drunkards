@@ -11,8 +11,11 @@ export default function UserPage() {
   const [estimatedArrivalTime, setEstimatedArrivalTime ] = useState<number>(0);
   const [isAfterRequest, setIsAfterRequest] = useState<boolean>(false);
   const [minimumConstraints, setMinimumConstraints ] = useState<string>("");
-  
+  let isAfterRequestLocal : string | null;
   useEffect(()=> {
+    // isAfterRequestLocal = window.localStorage.getItem("setIsAfterRequest");
+    // console.log('inside of useEffect')
+    // if(isAfterRequestLocal) setIsAfterRequest(true);
     if(isAfterRequest){
       const interval = setInterval(()=> {   
         refreshArrivalTime();
@@ -28,7 +31,7 @@ export default function UserPage() {
         clearInterval(interval)
       }
     }
-  }, [isAfterRequest,estimatedArrivalTime])
+  }, [isAfterRequest, estimatedArrivalTime])
 
   async function getArrivalTime(){
       // 1. send the request to get the time 
@@ -50,29 +53,19 @@ export default function UserPage() {
   
 
   async function getReservationRequest(){
-    try {
+
       const token  = window.localStorage.getItem("sessionToken")
 
       const reservationRequest = await axios.post("http://localhost:8080/reservation", {startLocation, destination, pickupTime, sessionToken: token})
 
       if(reservationRequest.status === 200) {
         setIsRequestCar(true)
-        // getCarArrivingTime();
+
         setIsAfterRequest(true);
+        // window.localStorage.setItem("isAfterRequest", "true");
         await getArrivalTime()
         
       } 
-    }
-    catch (err){
-      console.log(err, null, 2)
-      // if user is unauthorized, send back to user page
-      // navigate("/")
-      
-    }
-      // else if(reservationRequest.status === 401) {
-      //   navigate("/")
-      // }else console.log("else here")
-
   }
 
   async function refreshArrivalTime(){
@@ -84,22 +77,6 @@ export default function UserPage() {
       setEstimatedArrivalTime(estimatedArrivalTime + minute)
     }
 }
-
-
-
-  // async function getCarArrivingTime(): Promise<void>{
-  //   const carArrivingTimeRequest = await axios.get("http://localhost:8080/arriving_time")
-  //   const estimatedArrivalTime = carArrivingTimeRequest.data.estimatedArrivalTime
-
-
-  //   const responseMinutes = new Date(estimatedArrivalTime).getMinutes();
-  //   const currentMinutes = new Date(new Date().getTime()).getMinutes();
-
-  //   const estimatedMinutes = responseMinutes - currentMinutes 
-
-
-  //   setEstimatedArrivalTime(estimatedMinutes)
-  // }
 
 
   return (
