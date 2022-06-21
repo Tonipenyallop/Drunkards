@@ -91,10 +91,9 @@ app.post("/reservation", (req:Request, res: Response) => {
                 res.status(401).send({err})
             else res.status(400).send({err})
             }
-
-            else{
-                  res.status(200).send({result})
-                }
+        else{
+            res.status(200).send({result})
+            }
         })
 
 
