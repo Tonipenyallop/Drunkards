@@ -12,6 +12,13 @@ For this project, I have learnt how to design APIs as well as how to use gRPC. A
 ## Instructions
 In order to run this app, please run these commands below
 
+.env file configuration
+  * Change "NAME_OF_YOUR_POSTGRESQL_DATABASE" to your postgresql name
+  * If you are new to postgresql, click [here](https://www.postgresql.org/docs/current/tutorial-start.html)
+```
+DB_USER=NAME_OF_YOUR_POSTGRESQL_DATABASE
+```
+
 Initiate node server
 ```
 npm run webserver
