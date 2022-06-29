@@ -27,3 +27,13 @@ Run the react app
 npm start
 ```
 
+Migrate database
+```
+npx knex migrate:latest
+```
+If you want to seed the database
+```
+npx knex seed:run   
+```
+
+
